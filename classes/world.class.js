@@ -5,6 +5,9 @@ class World {
         new JellyFish(),
         new JellyFish(),
     ];
+    clouds = [
+        new Light()
+    ]
     canvas;
     ctx;
 
@@ -21,6 +24,10 @@ class World {
             this.ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
         });
 
+        this.clouds.forEach(cloud => {
+            this.ctx.drawImage(cloud.img, cloud.x , cloud.y, cloud.width, cloud.height);
+        });
+        
         let self = this;
         requestAnimationFrame(function(){
             self.draw();
