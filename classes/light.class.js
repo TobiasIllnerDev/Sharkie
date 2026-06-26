@@ -6,6 +6,12 @@ class Light extends MovableObject {
     constructor() {
         super().loadImage('../assets/img/Background/Layers/1. Light/1.png');
         
-        
+        this.animate();
+    }
+
+    animate() {
+        setInterval(() => {
+            this.x -= 0.15;
+        }, 1000 / 60);
     }
 }
