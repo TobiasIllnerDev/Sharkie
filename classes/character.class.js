@@ -9,6 +9,7 @@ class Character extends MovableObject {
         ];
     world;    
     height = 300;
+    speed = 4;
 
     constructor() {
         super().loadImage('../assets/img/Sharkie/1.IDLE/1.png')
@@ -18,14 +19,31 @@ class Character extends MovableObject {
 
     animate() {
         setInterval(() => {
-            if(this.world.keyboard.RIGHT) {
+            if(this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.UP || this.world.keyboard.DOWN) {
+                //SWIM Animation
                 let i = this.currentImage % this.IMAGES_SWIM.length;
                 let path = this.IMAGES_SWIM[i];
                 this.img = this.imageCache[path];
                 this.currentImage ++;
             }
            
-        }, 100);
+        }, 50);
+
+        setInterval(() => {
+            if(this.world.keyboard.RIGHT) {
+                this.x += this.speed;
+            }
+
+            if(this.world.keyboard.LEFT) {
+                this.x -= this.speed;
+            }
+            if(this.world.keyboard.UP) {
+                this.y -= this.speed;
+            }
+            if(this.world.keyboard.DOWN) {
+                this.y += this.speed;
+            }
+        }, 1000 / 60);
         
     }
 }
