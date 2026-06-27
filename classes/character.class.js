@@ -7,7 +7,6 @@ class Character extends MovableObject {
             '../assets/img/Sharkie/1.IDLE/5.png',
             '../assets/img/Sharkie/1.IDLE/6.png'
         ];
-    currentImage = 0;
     height = 300;
 
     constructor() {
