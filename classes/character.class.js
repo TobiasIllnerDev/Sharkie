@@ -1,5 +1,5 @@
 class Character extends MovableObject {
-    IMAGES_WALKING = [
+    IMAGES_IDLE = [
             '../assets/img/Sharkie/1.IDLE/1.png',
             '../assets/img/Sharkie/1.IDLE/2.png',
             '../assets/img/Sharkie/1.IDLE/3.png',
@@ -12,7 +12,7 @@ class Character extends MovableObject {
 
     constructor() {
         super().loadImage('../assets/img/Sharkie/1.IDLE/1.png')
-        this.loadImages(this.IMAGES_WALKING);
+        this.loadImages(this.IMAGES_IDLE);
 
         this.animate();
     }
@@ -20,8 +20,8 @@ class Character extends MovableObject {
     animate() {
 
         setInterval(() => {
-            let i = this.currentImage % this.IMAGES_WALKING.length;
-            let path = this.IMAGES_WALKING[i];
+            let i = this.currentImage % this.IMAGES_IDLE.length;
+            let path = this.IMAGES_IDLE[i];
             this.img = this.imageCache[path];
             this.currentImage ++;
         }, 100);
