@@ -8,7 +8,8 @@ class Character extends MovableObject {
             '../assets/img/Sharkie/3.Swim/6.png',
         ];
     world;    
-    height = 300;
+    height = 200;
+    width = 200;
     speed = 4;
 
     constructor() {
@@ -21,10 +22,7 @@ class Character extends MovableObject {
         setInterval(() => {
             if(this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.UP || this.world.keyboard.DOWN) {
                 //SWIM Animation
-                let i = this.currentImage % this.IMAGES_SWIM.length;
-                let path = this.IMAGES_SWIM[i];
-                this.img = this.imageCache[path];
-                this.currentImage ++;
+                this.playAnimation(this.IMAGES_SWIM)
             }
            
         }, 50);
