@@ -30,6 +30,7 @@ class World {
         
         this.ctx.translate(-this.camera_x, 0);
         
+        
         let self = this;
         requestAnimationFrame(function(){
             self.draw();
@@ -50,6 +51,13 @@ class World {
             mo.x = mo.x * -1;
         }
         this.ctx.drawImage(mo.img, mo.x , mo.y, mo.width, mo.height);
+
+        this.ctx.beginPath();
+        this.ctx.lineWidth = '10';
+        this.ctx.strokeStyle = 'blue';
+        this.ctx.rect(mo.x, mo.y, mo.x + mo.width, mo.y + mo.height);
+        this.ctx.stroke();
+
         if(mo.otherDiretion) {
             this.ctx.restore();
             mo.x = mo.x * -1;
