@@ -8,14 +8,14 @@ class Character extends MovableObject {
             '../assets/img/Sharkie/3.Swim/6.png',
         ];
     world;    
-    height = 200;
-    width = 200;
     speed = 4;
 
     constructor() {
         super().loadImage('../assets/img/Sharkie/1.IDLE/1.png')
         this.loadImages(this.IMAGES_SWIM);
         this.animate();
+        this.height = 200;
+        this.width = 200;
     }
 
     animate() {
