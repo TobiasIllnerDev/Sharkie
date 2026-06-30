@@ -38,4 +38,16 @@ class MovableObject {
                 this.img = this.imageCache[path];
                 this.currentImage ++;
     }
+
+    draw(ctx) {
+        ctx.drawImage(this.img, this.x , this.y, this.width, this.height);
+    }
+
+    drawFrame(ctx) {
+        ctx.beginPath();
+        ctx.lineWidth = '10';
+        ctx.strokeStyle = 'blue';
+        ctx.rect(this.x , this.y, this.width, this.height);
+        ctx.stroke(); 
+    }
 }
