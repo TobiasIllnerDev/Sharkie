@@ -62,25 +62,5 @@ class MovableObject extends DrawableObject{
     isDead() {
         return this.energy == 0;
     }
-    
-    drawFrame(ctx) {
-        if(this instanceof JellyFish || this instanceof Endboss) {
-            ctx.beginPath();
-            ctx.lineWidth = '3';
-            ctx.strokeStyle = 'blue';
-            ctx.rect(this.x , this.y, this.width, this.height);
-            ctx.stroke(); 
-        } 
-    }
-
-    drawFrameCharater(ctx) {
-        if(this instanceof Character) {
-            ctx.beginPath();
-            ctx.lineWidth = '3';
-            ctx.strokeStyle = 'red';
-            ctx.rect(this.x + 40 , this.y + 90, this.width -75, this.height -120);
-            ctx.stroke(); 
-        } 
-    }
 
 }
