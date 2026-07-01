@@ -17,6 +17,10 @@ class Character extends MovableObject {
         this.animate();
         this.height = 200;
         this.width = 200;
+        this.offsetX = 40;
+        this.offsetY = 90;
+        this.offsetWidth = 75;
+        this.offsetHeight = 120;
     }
 
     animate() {

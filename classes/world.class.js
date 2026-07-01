@@ -62,11 +62,11 @@ class World {
 
         mo.draw(this.ctx);
         mo.drawFrame(this.ctx);
+        mo.drawFrameCharater(this.ctx);
 
         if(mo.otherDiretion) {
             this.flipImageBack(mo);
-        }
-        
+        }    
     }
 
     flipImage(mo) {

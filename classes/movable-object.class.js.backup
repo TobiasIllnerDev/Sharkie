@@ -11,10 +11,6 @@ class MovableObject {
     energy = 100;
     lastHit = 0;
     lastMove = 0;
-    offsetX = 0;
-    offsetY = 0;
-    offsetWidth = 0;
-    offsetHeight = 0;
 
     loadImage(path) {
         this.img = new Image();
@@ -46,12 +42,11 @@ class MovableObject {
                 this.currentImage ++;
     }
 
-    
-    isColliding(mo) {
-        return this.x + this.offsetX + (this.width - this.offsetWidth) > mo.x + mo.offsetX &&
-            this.y + this.offsetY + (this.height - this.offsetHeight) > mo.y + mo.offsetY &&
-            this.x + this.offsetX < mo.x + mo.offsetX + (mo.width - mo.offsetWidth) &&
-            this.y + this.offsetY < mo.y + mo.offsetY + (mo.height - mo.offsetHeight)
+    isColliding(mo){
+        return this.x + this.width > mo.x &&
+            this.y + this.height > mo.y &&
+            this.x < mo.x &&
+            this.y < mo.y + mo.height
     }
 
     draw(ctx) {
