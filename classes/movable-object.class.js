@@ -10,6 +10,7 @@ class MovableObject {
     otherDiretion = false;
     energy = 100;
     lastHit = 0;
+    lastMove = 0;
 
     loadImage(path) {
         this.img = new Image();
@@ -59,6 +60,19 @@ class MovableObject {
         } else {
             this.lastHit = new Date().getTime();
         }
+    }
+
+    dontMove() {
+        if(!this.isDead() && !this.isHurt()) {
+            this.lastMove = new Date().getTime();
+        }
+    }
+
+    isAFK() {
+        if(this.lastMove == 0) return false;
+        let noMove = new Date().getTime() - this.lastMove;
+        noMove = noMove / 1000;
+        return noMove > 5;
     }
 
     isHurt() {
