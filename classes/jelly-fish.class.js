@@ -1,11 +1,6 @@
 class JellyFish extends MovableObject {
 
-    IMAGES_IDLE = [
-            '../assets/img/Enemy/JellyFish/Regular/Purpel1.png',
-            '../assets/img/Enemy/JellyFish/Regular/Purpel2.png',
-            '../assets/img/Enemy/JellyFish/Regular/Purpel3.png',
-            '../assets/img/Enemy/JellyFish/Regular/Purpel4.png'
-        ];
+    IMAGES_IDLE =  Array.from({length: 4}, (_, i) => `../assets/img/Enemy/JellyFish/Regular/Purpel${i+1}.png`);
     
 
     constructor() {
