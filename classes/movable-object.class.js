@@ -6,7 +6,10 @@ class MovableObject extends DrawableObject{
     lastMove = 0;
 
     moveRight() {
-        console.log('Moving right')
+        setInterval(() => {
+            let speedX = 10;
+            this.x += speedX;
+        }, 1000 / 60);
     }
 
     moveLeft() {
