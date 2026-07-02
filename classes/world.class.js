@@ -7,6 +7,7 @@ class World {
     camera_x = 0;
     statusBarLife = new StatusBarLife();
     statusBarCoin = new StatusBarCoin();
+    statusBarPosion = new StatusBarPosion();
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -41,7 +42,8 @@ class World {
         
         this.ctx.translate(-this.camera_x, 0);
         this.addToMap(this.statusBarLife);
-        this.addToMap(this.statusBarCoin)
+        this.addToMap(this.statusBarCoin);
+        this.addToMap(this.statusBarPosion);
         this.ctx.translate(this.camera_x, 0);
 
         this.addToMap(this.character);
