@@ -6,6 +6,7 @@ class Endboss extends MovableObject {
     height = 400;
     width = 400;
     y  = -20
+    damage = 20;
 
     constructor() {
         super().loadImage(this.IMAGES_FLOATING[0]);
