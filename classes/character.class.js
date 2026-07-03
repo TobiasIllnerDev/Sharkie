@@ -6,6 +6,8 @@ class Character extends MovableObject {
     IMAGES_SLEEP = Array.from({length: 14}, (_, i) => `../assets/img/Sharkie/2.Long_IDLE/i${i+1}.png`);
     IMAGES_ATTACK = Array.from({length: 8}, (_, i) => `../assets/img/Sharkie/4.Attack/Bubbletrap/op1 (with bubble formation)/${i+1}.png`)
     world;
+    isAttaking = false;
+    attackAnimationFinished = false;
     speed = 4;
 
     constructor() {
@@ -37,9 +39,15 @@ class Character extends MovableObject {
                 //SWIM Animation
                 this.playAnimation(this.IMAGES_SWIM);
             }
-            else if (this.world.keyboard.SPACE) {
+           else if(this.world.keyboard.SPACE && !this.isAttacking) {
+        
+            }
+            if(this.isAttacking) {
                 this.playAnimation(this.IMAGES_ATTACK);
-                
+
+                if(this.currentImage >= this.IMAGES_ATTACK.length) {
+                    this.attackAnimationFinished = true;
+                }
             }
             else {
                 if(this.isAFK()) {
@@ -74,6 +82,17 @@ class Character extends MovableObject {
 
             this.world.camera_x = -this.x + 50;
         }, 1000 / 60);
+    }
+
+    startAttack() {
+        this.isAttacking = true;
+        this.attackAnimationFinished = false;
+        this.currentImage = 0; 
+    }
+
+    resetAttack() {
+        this.isAttacking = false;
+        this.attackAnimationFinished = false;
     }
 
 }

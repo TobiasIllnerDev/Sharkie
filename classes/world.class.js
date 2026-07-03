@@ -31,11 +31,24 @@ class World {
     }
 
     checkThrowObjects() {
-        if(this.keyboard.SPACE) {
-            let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100)
-            this.throwableObjects.push(bottle);
-        }
+    // 1. Attack-Logik
+    if(this.keyboard.SPACE && !this.character.isAttacking) {
+        this.character.startAttack();
     }
+
+    // 2. Blase erstellen wenn Animation fertig
+    if(this.character.attackAnimationFinished) {
+        let bubble = new ThrowableObject(this.character.x + 100, this.character.y + 100);
+        this.throwableObjects.push(bubble);
+        this.character.resetAttack();
+    }
+
+    // 3. ⬇️ HIER EINFÜGEN: Blasen mit zu großer Entfernung entfernen
+    this.throwableObjects = this.throwableObjects.filter((bubble) => {
+        const distance = Math.abs(bubble.x - bubble.startX);
+        return distance < (bubble.maxDistance || 500); // Fallback: 500px
+    });
+}
 
     checkCollisions() {
         this.level.enemies.forEach((enemy) => {
