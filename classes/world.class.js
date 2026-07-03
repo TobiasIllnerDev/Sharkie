@@ -16,6 +16,7 @@ class World {
         this.keyboard = keyboard;
         this.draw();
         this.setWorld();
+        this.character.animate();
         this.run();
     }
 
@@ -50,6 +51,7 @@ class World {
         this.level.enemies.forEach((enemy) => {
             if(this.character.isColliding(enemy)) {
                 this.character.hit(enemy.damage);
+                console.log(this.character.energy)
                 this.statusBarLife.setPercentage(this.character.energy);
             }
         });
@@ -94,18 +96,23 @@ class World {
         })
     }
 
-    addToMap(mo) {
+   addToMap(mo) {
         if(mo.otherDiretion) {
             this.flipImage(mo);
         }
 
         mo.draw(this.ctx);
-        mo.drawFrame(this.ctx);
-        mo.drawFrameCharater(this.ctx);
+
+        if (mo instanceof Character) {
+            mo.drawFrameCharater(this.ctx);
+        }
+        else if (mo instanceof JellyFish || mo instanceof Endboss) {
+            mo.drawFrame(this.ctx);
+        }
 
         if(mo.otherDiretion) {
             this.flipImageBack(mo);
-        }    
+        }
     }
 
     flipImage(mo) {

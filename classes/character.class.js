@@ -6,7 +6,7 @@ class Character extends MovableObject {
     IMAGES_SLEEP = Array.from({length: 14}, (_, i) => `../assets/img/Sharkie/2.Long_IDLE/i${i+1}.png`);
     IMAGES_ATTACK = Array.from({length: 8}, (_, i) => `../assets/img/Sharkie/4.Attack/Bubbletrap/op1 (with bubble formation)/${i+1}.png`)
     world;
-    isAttaking = false;
+    isAttacking = false;
     attackAnimationFinished = false;
     speed = 4;
 
@@ -18,7 +18,6 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_IDLE);
         this.loadImages(this.IMAGES_SLEEP);
         this.loadImages(this.IMAGES_ATTACK);
-        this.animate();
         this.height = 200;
         this.width = 200;
         this.offsetX = 40;
@@ -28,61 +27,53 @@ class Character extends MovableObject {
     }
 
     animate() {
-        setInterval(() => {
-            if (this.isDead()) {
-                this.playAnimation(this.IMAGES_DEAD);
+    setInterval(() => {
+        if (this.isDead()) {
+            this.playAnimation(this.IMAGES_DEAD);
+        }
+        else if (this.isHurt()) {
+            this.playAnimation(this.IMAGES_HURT);
+        }
+        else if (this.isAttacking) {
+            this.playAnimation(this.IMAGES_ATTACK);
+            if (this.currentImage >= this.IMAGES_ATTACK.length) {
+                this.attackAnimationFinished = true;
             }
-            else if (this.isHurt()) {
-                this.playAnimation(this.IMAGES_HURT);
-            }
-            else if(this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.UP || this.world.keyboard.DOWN) {
-                //SWIM Animation
-                this.playAnimation(this.IMAGES_SWIM);
-            }
-           else if(this.world.keyboard.SPACE && !this.isAttacking) {
-        
-            }
-            if(this.isAttacking) {
-                this.playAnimation(this.IMAGES_ATTACK);
+        }
+        else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT || 
+                 this.world.keyboard.UP || this.world.keyboard.DOWN) {
+            this.playAnimation(this.IMAGES_SWIM);
+        }
+        else if (this.isAFK()) {
+            this.playAnimation(this.IMAGES_SLEEP);
+        }
+        else {
+            this.playAnimation(this.IMAGES_IDLE);
+        }
+    }, 150);
 
-                if(this.currentImage >= this.IMAGES_ATTACK.length) {
-                    this.attackAnimationFinished = true;
-                }
-            }
-            else {
-                if(this.isAFK()) {
-                    this.playAnimation(this.IMAGES_SLEEP);
-                } else {
-                    this.playAnimation(this.IMAGES_IDLE);
-                }
-            }
-           
-        }, 150);
-
-        setInterval(() => {
-            if(this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
-                this.x += this.speed;
-                this.otherDiretion = false;
-                this.lastMove = new Date().getTime();
-            }
-
-            if(this.world.keyboard.LEFT && this.x > -650) {
-                this.x -= this.speed;
-                this.otherDiretion = true;
-                this.lastMove = new Date().getTime();
-            }
-            if(this.world.keyboard.UP) {
-                this.y -= this.speed;
-                this.lastMove = new Date().getTime();
-            }
-            if(this.world.keyboard.DOWN) {
-                this.y += this.speed;
-                this.lastMove = new Date().getTime();
-            }
-
-            this.world.camera_x = -this.x + 50;
-        }, 1000 / 60);
-    }
+    setInterval(() => {
+        if(this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
+            this.x += this.speed;
+            this.otherDiretion = false;
+            this.lastMove = new Date().getTime();
+        }
+        if(this.world.keyboard.LEFT && this.x > -650) {
+            this.x -= this.speed;
+            this.otherDiretion = true;
+            this.lastMove = new Date().getTime();
+        }
+        if(this.world.keyboard.UP) {
+            this.y -= this.speed;
+            this.lastMove = new Date().getTime();
+        }
+        if(this.world.keyboard.DOWN) {
+            this.y += this.speed;
+            this.lastMove = new Date().getTime();
+        }
+        this.world.camera_x = -this.x + 50;
+    }, 1000 / 60);
+}
 
     startAttack() {
         this.isAttacking = true;

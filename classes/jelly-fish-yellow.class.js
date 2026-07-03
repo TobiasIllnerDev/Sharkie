@@ -8,6 +8,10 @@ class JellyFishYellow extends JellyFish {
         this.y = 0 + Math.random() * 400;
         this.height = 55;
         this.width = 55;
+        this.offsetX = 5;
+        this.offsetY = 5;
+        this.offsetWidth = 10;
+        this.offsetHeight = 10;
         this.speed = 0.15 + Math.random() * 0.25;
         this.animate();
     }

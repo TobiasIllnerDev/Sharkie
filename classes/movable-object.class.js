@@ -35,12 +35,12 @@ class MovableObject extends DrawableObject{
 
 
     hit(damage = 10){
-    this.energy -= damage;
-    this.lastHit = new Date().getTime(); // ⬅️ IMMER setzen, auch beim Tod!
-    if(this.energy < 0 ){
-        this.energy = 0;
+        this.energy -= damage;
+        this.lastHit = new Date().getTime(); 
+        if(this.energy < 0 ){
+            this.energy = 0;
+        }
     }
-}
 
     dontMove() {
         if(!this.isDead() && !this.isHurt()) {
