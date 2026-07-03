@@ -9,6 +9,7 @@ class Character extends MovableObject {
     isAttacking = false;
     attackAnimationFinished = false;
     speed = 4;
+    attackPower = 1;
 
     constructor() {
         super().loadImage('../assets/img/Sharkie/1.IDLE/1.png')
@@ -27,53 +28,53 @@ class Character extends MovableObject {
     }
 
     animate() {
-    setInterval(() => {
-        if (this.isDead()) {
-            this.playAnimation(this.IMAGES_DEAD);
-        }
-        else if (this.isHurt()) {
-            this.playAnimation(this.IMAGES_HURT);
-        }
-        else if (this.isAttacking) {
-            this.playAnimation(this.IMAGES_ATTACK);
-            if (this.currentImage >= this.IMAGES_ATTACK.length) {
-                this.attackAnimationFinished = true;
+        setInterval(() => {
+            if (this.isDead()) {
+                this.playAnimation(this.IMAGES_DEAD);
             }
-        }
-        else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT || 
-                 this.world.keyboard.UP || this.world.keyboard.DOWN) {
-            this.playAnimation(this.IMAGES_SWIM);
-        }
-        else if (this.isAFK()) {
-            this.playAnimation(this.IMAGES_SLEEP);
-        }
-        else {
-            this.playAnimation(this.IMAGES_IDLE);
-        }
-    }, 150);
+            else if (this.isHurt()) {
+                this.playAnimation(this.IMAGES_HURT);
+            }
+            else if (this.isAttacking) {
+                this.playAnimation(this.IMAGES_ATTACK);
+                if (this.currentImage >= this.IMAGES_ATTACK.length) {
+                    this.attackAnimationFinished = true;
+                }
+            }
+            else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT || 
+                    this.world.keyboard.UP || this.world.keyboard.DOWN) {
+                this.playAnimation(this.IMAGES_SWIM);
+            }
+            else if (this.isAFK()) {
+                this.playAnimation(this.IMAGES_SLEEP);
+            }
+            else {
+                this.playAnimation(this.IMAGES_IDLE);
+            }
+        }, 150);
 
-    setInterval(() => {
-        if(this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
-            this.x += this.speed;
-            this.otherDiretion = false;
-            this.lastMove = new Date().getTime();
-        }
-        if(this.world.keyboard.LEFT && this.x > -650) {
-            this.x -= this.speed;
-            this.otherDiretion = true;
-            this.lastMove = new Date().getTime();
-        }
-        if(this.world.keyboard.UP) {
-            this.y -= this.speed;
-            this.lastMove = new Date().getTime();
-        }
-        if(this.world.keyboard.DOWN) {
-            this.y += this.speed;
-            this.lastMove = new Date().getTime();
-        }
-        this.world.camera_x = -this.x + 50;
-    }, 1000 / 60);
-}
+        setInterval(() => {
+            if(this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
+                this.x += this.speed;
+                this.otherDiretion = false;
+                this.lastMove = new Date().getTime();
+            }
+            if(this.world.keyboard.LEFT && this.x > -650) {
+                this.x -= this.speed;
+                this.otherDiretion = true;
+                this.lastMove = new Date().getTime();
+            }
+            if(this.world.keyboard.UP) {
+                this.y -= this.speed;
+                this.lastMove = new Date().getTime();
+            }
+            if(this.world.keyboard.DOWN) {
+                this.y += this.speed;
+                this.lastMove = new Date().getTime();
+            }
+            this.world.camera_x = -this.x + 50;
+        }, 1000 / 60);
+    }
 
     startAttack() {
         this.isAttacking = true;
