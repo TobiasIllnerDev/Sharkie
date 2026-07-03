@@ -34,14 +34,13 @@ class MovableObject extends DrawableObject{
     }
 
 
-    hit(damage){        
-        this.energy -= damage;
-        if(this.energy < 0 ){
-            this.energy = 0;
-        } else {
-            this.lastHit = new Date().getTime();
-        }
+    hit(damage = 10){
+    this.energy -= damage;
+    this.lastHit = new Date().getTime(); // ⬅️ IMMER setzen, auch beim Tod!
+    if(this.energy < 0 ){
+        this.energy = 0;
     }
+}
 
     dontMove() {
         if(!this.isDead() && !this.isHurt()) {

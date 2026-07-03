@@ -31,33 +31,36 @@ class World {
     }
 
     checkThrowObjects() {
-    // 1. Attack-Logik
-    if(this.keyboard.SPACE && !this.character.isAttacking) {
-        this.character.startAttack();
+        if(this.keyboard.SPACE && !this.character.isAttacking) {
+            this.character.startAttack();
+        }
+        if(this.character.attackAnimationFinished) {
+            let bubble = new ThrowableObject(this.character.x + 100, this.character.y + 100);
+            this.throwableObjects.push(bubble);
+            this.character.resetAttack();
+        }
+        this.throwableObjects = this.throwableObjects.filter((bubble) => {
+            const distance = Math.abs(bubble.x - bubble.startX);
+            return distance < (bubble.maxDistance || 500);
+        });
     }
 
-    // 2. Blase erstellen wenn Animation fertig
-    if(this.character.attackAnimationFinished) {
-        let bubble = new ThrowableObject(this.character.x + 100, this.character.y + 100);
-        this.throwableObjects.push(bubble);
-        this.character.resetAttack();
-    }
-
-    // 3. ⬇️ HIER EINFÜGEN: Blasen mit zu großer Entfernung entfernen
-    this.throwableObjects = this.throwableObjects.filter((bubble) => {
-        const distance = Math.abs(bubble.x - bubble.startX);
-        return distance < (bubble.maxDistance || 500); // Fallback: 500px
-    });
-}
 
     checkCollisions() {
         this.level.enemies.forEach((enemy) => {
-                if(this.character.isColliding(enemy)) {
-                    this.character.hit(enemy.damage);
-                    console.log('Energy = ', this.character.energy)
-                    this.statusBarLife.setPercentage(this.character.energy)
+            if(this.character.isColliding(enemy)) {
+                this.character.hit(enemy.damage);
+                this.statusBarLife.setPercentage(this.character.energy);
+            }
+        });
+        this.throwableObjects.forEach((bubble, bubbleIndex) => {
+            this.level.enemies.forEach((enemy) => {
+                if(bubble.isColliding(enemy)) {
+                    enemy.hit(this.character.attackPower); 
+                    this.throwableObjects.splice(bubbleIndex, 1); 
                 }
             });
+        });
     }
 
     draw() {

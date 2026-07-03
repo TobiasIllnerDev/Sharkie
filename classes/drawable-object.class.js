@@ -29,22 +29,41 @@ class DrawableObject {
     }
 
     drawFrame(ctx) {
-        if(this instanceof JellyFish || this instanceof Endboss) {
-            ctx.beginPath();
-            ctx.lineWidth = '3';
-            ctx.strokeStyle = 'blue';
-            ctx.rect(this.x , this.y, this.width, this.height);
-            ctx.stroke(); 
-        } 
+    if(this instanceof JellyFish || this instanceof Endboss) {
+        ctx.beginPath();
+        ctx.lineWidth = '3';
+        ctx.strokeStyle = 'blue';
+        // ⬇️ Offsets nutzen!
+        ctx.rect(
+            this.x + this.offsetX,
+            this.y + this.offsetY,
+            this.width - this.offsetWidth,
+            this.height - this.offsetHeight
+        );
+        ctx.stroke();
     }
+}
 
     drawFrameCharater(ctx) {
-        if(this instanceof Character) {
-            ctx.beginPath();
-            ctx.lineWidth = '3';
-            ctx.strokeStyle = 'red';
-            ctx.rect(this.x + 40 , this.y + 90, this.width -75, this.height -120);
-            ctx.stroke(); 
-        } 
+    if(this instanceof Character) {
+        ctx.beginPath();
+        ctx.lineWidth = '3';
+        ctx.strokeStyle = 'red';
+        ctx.rect(this.x + 40, this.y + 90, this.width -75, this.height -120);
+        ctx.stroke();
     }
+    // ⬇️ Für Endboss (wenn gewünscht)
+    else if(this instanceof Endboss) {
+        ctx.beginPath();
+        ctx.lineWidth = '3';
+        ctx.strokeStyle = 'purple';
+        ctx.rect(
+            this.x + this.offsetX,
+            this.y + this.offsetY,
+            this.width - this.offsetWidth,
+            this.height - this.offsetHeight
+        );
+        ctx.stroke();
+    }
+}
 }
