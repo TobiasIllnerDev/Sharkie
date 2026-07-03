@@ -1,8 +1,34 @@
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Luckiest Guy';
+  font-style: normal;
+  font-weight: 400;
+  src: url('./assets/fonts/luckiest-guy-v25-latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
 body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    background-image: url('./assets/img/Background/underwater.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed; 
+    background-size: 100% 100%;
+    font-family: 'Luckiest Guy';
 }
+
+h1 {
+    font-size: 4rem;
+    color: black;
+    letter-spacing: 3px;
+    text-shadow: 4px 4px 8px darkblue;
+}
+
 canvas {
+    border: 3px solid black;
     background-color: black;
 }
