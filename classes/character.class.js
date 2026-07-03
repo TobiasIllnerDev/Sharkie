@@ -4,6 +4,7 @@ class Character extends MovableObject {
     IMAGES_HURT = Array.from({length: 4}, (_, i) => `../assets/img/Sharkie/5.Hurt/1.Poisoned/${i+1}.png`);
     IMAGES_IDLE = Array.from({length: 18}, (_, i) => `../assets/img/Sharkie/1.IDLE/${i+1}.png`);
     IMAGES_SLEEP = Array.from({length: 14}, (_, i) => `../assets/img/Sharkie/2.Long_IDLE/i${i+1}.png`);
+    IMAGES_ATTACK = Array.from({length: 8}, (_, i) => `../assets/img/Sharkie/4.Attack/Bubbletrap/op1 (with bubble formation)/${i+1}.png`)
     world;
     speed = 4;
 
@@ -14,6 +15,7 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_IDLE);
         this.loadImages(this.IMAGES_SLEEP);
+        this.loadImages(this.IMAGES_ATTACK);
         this.animate();
         this.height = 200;
         this.width = 200;
@@ -35,6 +37,10 @@ class Character extends MovableObject {
                 //SWIM Animation
                 this.playAnimation(this.IMAGES_SWIM);
             }
+            else if (this.world.keyboard.SPACE) {
+                this.playAnimation(this.IMAGES_ATTACK);
+                
+            }
             else {
                 if(this.isAFK()) {
                     this.playAnimation(this.IMAGES_SLEEP);
@@ -43,7 +49,7 @@ class Character extends MovableObject {
                 }
             }
            
-        }, 100);
+        }, 150);
 
         setInterval(() => {
             if(this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
@@ -68,6 +74,6 @@ class Character extends MovableObject {
 
             this.world.camera_x = -this.x + 50;
         }, 1000 / 60);
-
     }
+
 }

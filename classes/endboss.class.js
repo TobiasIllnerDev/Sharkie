@@ -11,10 +11,8 @@ class Endboss extends MovableObject {
     constructor() {
         super().loadImage(this.IMAGES_FLOATING[0]);
         this.loadImages(this.IMAGES_FLOATING);
-
         this.x = 4200 + Math.random() * 500;
-        this.speed = 0.15 ;
-
+        this.speed = 0.15;
         this.animate();
     }
 
