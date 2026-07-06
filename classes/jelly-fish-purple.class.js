@@ -23,10 +23,13 @@ class JellyFishPurple extends JellyFish {
         setInterval(() => {
             if(this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
+                if(this.currentImage >= this.IMAGES_DEAD.length) {
+                     this.shouldRemove = true; 
+                }
             }
             else {
                 this.playAnimation(this.IMAGES_FLOATING);
             }
-        }, 150);
+        }, 250);
     }
 }

@@ -8,6 +8,7 @@ class Endboss extends MovableObject {
     width = 400;
     y  = -20
     damage = 20;
+    shouldRemove = false;
 
     constructor() {
         super().loadImage(this.IMAGES_FLOATING[0]);
@@ -29,6 +30,9 @@ class Endboss extends MovableObject {
         setInterval(() => {
             if(this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
+                if(this.currentImage >= this.IMAGES_DEAD.length) {
+                     this.shouldRemove = true; 
+                }
             }
             else if(this.isHurt()) {
                 this.playAnimation(this.IMAGES_HURT); 

@@ -4,5 +4,6 @@ class JellyFish extends MovableObject {
     width = 55;
     speed = 0.15 + Math.random() * 0.25;
     energy = 10;
+    shouldRemove = false;
   
 }

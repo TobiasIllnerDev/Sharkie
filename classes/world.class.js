@@ -44,8 +44,8 @@ class World {
             const distance = Math.abs(bubble.x - bubble.startX);
             return distance < (bubble.maxDistance || 500);
         });
+        this.level.enemies = this.level.enemies.filter(enemy => !enemy.shouldRemove);
     }
-
 
     checkCollisions() {
         this.level.enemies.forEach((enemy) => {
@@ -79,7 +79,7 @@ class World {
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.throwableObjects);
         this.ctx.translate(-this.camera_x, 0);
-        
+
         let self = this;
         requestAnimationFrame(function(){
             self.draw();

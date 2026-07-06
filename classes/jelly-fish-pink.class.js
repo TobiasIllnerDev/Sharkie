@@ -2,6 +2,7 @@ class JellyFishPink extends JellyFish {
     damage = 10;
     IMAGES_FLOATING = Array.from({length: 4}, (_, i) => `../assets/img/Enemy/JellyFish/Súper dangerous/Pink ${i+1}.png`)
     IMAGES_DEAD = Array.from({length: 4}, (_, i) => `../assets/img/Enemy/JellyFish/Dead/Pink/P${i+1}.png`);
+
     constructor(x = 200) {
         super();
         this.loadImage(this.IMAGES_FLOATING[0]);
@@ -22,11 +23,13 @@ class JellyFishPink extends JellyFish {
         setInterval(() => {
             if(this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
+                if(this.currentImage >= this.IMAGES_DEAD.length) {
+                     this.shouldRemove = true; 
+                }
             }
             else {
                 this.playAnimation(this.IMAGES_FLOATING);
             }
-        }, 150);
+        }, 250);
     }
-
 }
