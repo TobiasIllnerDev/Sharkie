@@ -86,5 +86,4 @@ class Character extends MovableObject {
         this.isAttacking = false;
         this.attackAnimationFinished = false;
     }
-
 }

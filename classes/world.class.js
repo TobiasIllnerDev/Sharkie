@@ -36,7 +36,7 @@ class World {
             this.character.startAttack();
         }
         if(this.character.attackAnimationFinished) {
-            let bubble = new ThrowableObject(this.character.x + 100, this.character.y + 100);
+            let bubble = new ThrowableObject(this.character.x + 100, this.character.y + 100, this.character.otherDiretion);
             this.throwableObjects.push(bubble);
             this.character.resetAttack();
         }
