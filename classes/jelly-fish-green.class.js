@@ -1,25 +1,29 @@
 class JellyFishGreen extends JellyFish {
     damage = 10;
-    constructor(x) {
+    IMAGES_FLOATING = Array.from({length: 4}, (_, i) => `../assets/img/Enemy/JellyFish/Súper dangerous/Green ${i+1}.png`);
+    IMAGES_DEAD = Array.from({length: 4}, (_, i) => `../assets/img/Enemy/JellyFish/Dead/green/g${i+1}.png`);
+
+    constructor(x = 200) {
         super();
-        this.loadImage('../assets/img/Enemy/JellyFish/Súper dangerous/Green 1.png');
-        this.loadImages(Array.from({length: 4}, (_, i) => `../assets/img/Enemy/JellyFish/Súper dangerous/Green ${i+1}.png`));
+        this.loadImage(this.IMAGES_FLOATING[0]);
+        this.loadImages(this.IMAGES_FLOATING);
         this.x = x + Math.random() * 500;
         this.y = 0 + Math.random() * 400;
-        this.height = 55;
-        this.width = 55;
-        this.offsetX = 5;
-        this.offsetY = 5;
-        this.offsetWidth = 10;
-        this.offsetHeight = 10;
-        this.speed = 0.15 + Math.random() * 0.25;
         this.animate();
+
     }
 
     animate() {
         this.moveLeft();
+
         setInterval(() => {
-            this.playAnimation(Array.from({length: 4}, (_, i) => `../assets/img/Enemy/JellyFish/Súper dangerous/Green ${i+1}.png`));
-        }, 250);
+            if(this.isDead()) {
+                this.playAnimation(this.IMAGES_DEAD);
+            }
+            else {
+                this.playAnimation(this.IMAGES_FLOATING);
+            }
+        }, 150);
     }
+
 }

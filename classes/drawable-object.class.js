@@ -33,7 +33,6 @@ class DrawableObject {
         ctx.beginPath();
         ctx.lineWidth = '3';
         ctx.strokeStyle = 'blue';
-        // ⬇️ Offsets nutzen!
         ctx.rect(
             this.x + this.offsetX,
             this.y + this.offsetY,
@@ -52,7 +51,6 @@ class DrawableObject {
         ctx.rect(this.x + 40, this.y + 90, this.width -75, this.height -120);
         ctx.stroke();
     }
-    // ⬇️ Für Endboss (wenn gewünscht)
     else if(this instanceof Endboss) {
         ctx.beginPath();
         ctx.lineWidth = '3';

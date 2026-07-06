@@ -36,7 +36,7 @@ class Endboss extends MovableObject {
             else {
                 this.playAnimation(this.IMAGES_FLOATING);
             }
-        }, 100);
+        }, 150);
     }
 }
 

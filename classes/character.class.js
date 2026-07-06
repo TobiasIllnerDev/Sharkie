@@ -9,7 +9,7 @@ class Character extends MovableObject {
     isAttacking = false;
     attackAnimationFinished = false;
     speed = 4;
-    attackPower = 1;
+    attackPower = 90;
 
     constructor() {
         super().loadImage('../assets/img/Sharkie/1.IDLE/1.png')

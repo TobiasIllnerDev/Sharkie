@@ -1,0 +1,387 @@
+<mxfile host="65bd71144e">
+    <diagram id="xW3oiyclfD99Pfo_fyzZ" name="Sharkie Klassendiagramm">
+        <mxGraphModel dx="5775" dy="5555" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="DrawableObject" style="uml=class;whiteSpace=wrap;html=1;aspect=fixed;backgroundOutline=1;fillColor=#eeeeee;" parent="1" vertex="1">
+                    <mxGeometry x="-1582.31" y="-500" width="812.31" height="480" as="geometry"/>
+                </mxCell>
+                <mxCell id="DrawableObject_name" value="&lt;b&gt;&lt;font size=&#39;5&#39;&gt;DrawableObject&lt;/font&gt;&lt;/b&gt;" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontSize=14;" parent="DrawableObject" vertex="1">
+                    <mxGeometry width="812.31" height="110.76923076923077" as="geometry"/>
+                </mxCell>
+                <mxCell id="DrawableObject_attrs" value="&lt;b&gt;Attribute:&lt;/b&gt;&#xa;- img&#xa;- imageCache[]&#xa;- currentImage&#xa;- x, y&#xa;- height, width&#xa;- offsetX, offsetY&#xa;- offsetWidth, offsetHeight" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="DrawableObject" vertex="1">
+                    <mxGeometry y="110.76923076923077" width="775.3868181818183" height="258.46153846153845" as="geometry"/>
+                </mxCell>
+                <mxCell id="DrawableObject_sep1" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;strokeColor=black;" parent="DrawableObject" vertex="1">
+                    <mxGeometry y="369.2307692307692" width="812.31" height="3.692307692307692" as="geometry"/>
+                </mxCell>
+                <mxCell id="DrawableObject_methods" value="&lt;b&gt;Methoden:&lt;/b&gt;&#xa;+ loadImage(path)&#xa;+ draw(ctx)&#xa;+ loadImages(arr)&#xa;+ drawFrame(ctx)&#xa;+ drawFrameCharater(ctx)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="DrawableObject" vertex="1">
+                    <mxGeometry y="372.92307692307685" width="775.3868181818183" height="121.84615384615384" as="geometry"/>
+                </mxCell>
+                <mxCell id="MovableObject" style="uml=class;whiteSpace=wrap;html=1;aspect=fixed;backgroundOutline=1;fillColor=#eeeeee;" parent="1" vertex="1">
+                    <mxGeometry x="90" y="-230" width="572" height="390" as="geometry"/>
+                </mxCell>
+                <mxCell id="MovableObject_name" value="&lt;b&gt;&lt;font size=&#39;5&#39;&gt;MovableObject&lt;/font&gt;&lt;/b&gt;" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontSize=14;" parent="MovableObject" vertex="1">
+                    <mxGeometry width="572.0000000000001" height="78" as="geometry"/>
+                </mxCell>
+                <mxCell id="MovableObject_attrs" value="&lt;b&gt;Attribute:&lt;/b&gt;&#xa;- speed&#xa;- otherDiretion&#xa;- energy&#xa;- lastHit&#xa;- lastMove" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="MovableObject" vertex="1">
+                    <mxGeometry y="78" width="546.0000000000001" height="130.00000000000003" as="geometry"/>
+                </mxCell>
+                <mxCell id="MovableObject_sep1" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;strokeColor=black;" parent="MovableObject" vertex="1">
+                    <mxGeometry y="208" width="572.0000000000001" height="2.6000000000000005" as="geometry"/>
+                </mxCell>
+                <mxCell id="MovableObject_methods" value="&lt;b&gt;Methoden:&lt;/b&gt;&#xa;+ moveRight()&#xa;+ moveLeft()&#xa;+ playAnimation()&#xa;+ isColliding(mo)&#xa;+ hit(damage)&#xa;+ dontMove()&#xa;+ isAFK()&#xa;+ isHurt()&#xa;+ isDead()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="MovableObject" vertex="1">
+                    <mxGeometry y="210.60000000000002" width="546.0000000000001" height="189.80000000000004" as="geometry"/>
+                </mxCell>
+                <mxCell id="Character" style="uml=class;whiteSpace=wrap;html=1;aspect=fixed;backgroundOutline=1;fillColor=#e6f7ff;" parent="1" vertex="1">
+                    <mxGeometry x="-1200" y="-990" width="452.93" height="350" as="geometry"/>
+                </mxCell>
+                <mxCell id="Character_name" value="&lt;b&gt;&lt;font size=&#39;5&#39;&gt;Character&lt;/font&gt;&lt;/b&gt;" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontSize=14;" parent="Character" vertex="1">
+                    <mxGeometry width="452.93" height="61.764705882352935" as="geometry"/>
+                </mxCell>
+                <mxCell id="Character_attrs" value="&lt;b&gt;Attribute:&lt;/b&gt;&#xa;- IMAGES_SWIM[]&#xa;- IMAGES_DEAD[]&#xa;- IMAGES_HURT[]&#xa;- IMAGES_IDLE[]&#xa;- IMAGES_SLEEP[]&#xa;- IMAGES_ATTACK[]&#xa;- world&#xa;- isAttacking&#xa;- attackAnimationFinished&#xa;- speed&#xa;- attackPower" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="Character" vertex="1">
+                    <mxGeometry y="61.764705882352935" width="432.3422727272728" height="185.2941176470588" as="geometry"/>
+                </mxCell>
+                <mxCell id="Character_sep1" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;strokeColor=black;" parent="Character" vertex="1">
+                    <mxGeometry y="247.05882352941174" width="452.93" height="2.058823529411765" as="geometry"/>
+                </mxCell>
+                <mxCell id="Character_methods" value="&lt;b&gt;Methoden:&lt;/b&gt;&#xa;+ constructor()&#xa;+ animate()&#xa;+ startAttack()&#xa;+ resetAttack()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="Character" vertex="1">
+                    <mxGeometry y="249.1176470588235" width="432.3422727272728" height="109.11764705882351" as="geometry"/>
+                </mxCell>
+                <mxCell id="Endboss" style="uml=class;whiteSpace=wrap;html=1;aspect=fixed;backgroundOutline=1;fillColor=#ffcccc;" parent="1" vertex="1">
+                    <mxGeometry x="260" y="-830" width="507.69" height="300" as="geometry"/>
+                </mxCell>
+                <mxCell id="Endboss_name" value="&lt;b&gt;&lt;font size=&#39;5&#39;&gt;Endboss&lt;/font&gt;&lt;/b&gt;" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontSize=14;" parent="Endboss" vertex="1">
+                    <mxGeometry width="507.69000000000005" height="69.23076923076923" as="geometry"/>
+                </mxCell>
+                <mxCell id="Endboss_attrs" value="&lt;b&gt;Attribute:&lt;/b&gt;&#xa;- IMAGES_HURT[]&#xa;- IMAGES_DEAD[]&#xa;- IMAGES_FLOATING[]&#xa;- height, width&#xa;- y&#xa;- damage" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="Endboss" vertex="1">
+                    <mxGeometry y="69.23076923076923" width="484.6131818181819" height="138.46153846153845" as="geometry"/>
+                </mxCell>
+                <mxCell id="Endboss_sep1" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;strokeColor=black;" parent="Endboss" vertex="1">
+                    <mxGeometry y="207.69230769230768" width="507.69000000000005" height="2.3076923076923075" as="geometry"/>
+                </mxCell>
+                <mxCell id="Endboss_methods" value="&lt;b&gt;Methoden:&lt;/b&gt;&#xa;+ constructor()&#xa;+ animate()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="Endboss" vertex="1">
+                    <mxGeometry y="209.99999999999997" width="484.6131818181819" height="99.23076923076923" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFish" style="uml=class;whiteSpace=wrap;html=1;aspect=fixed;backgroundOutline=1;fillColor=#ffcccc;" parent="1" vertex="1">
+                    <mxGeometry x="1309" y="-420" width="391.11" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFish_name" value="&lt;b&gt;&lt;font size=&#39;5&#39;&gt;JellyFish&lt;/font&gt;&lt;/b&gt;" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontSize=14;" parent="JellyFish" vertex="1">
+                    <mxGeometry width="391.11" height="53.33333333333333" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFish_attrs" value="&lt;b&gt;Attribute:&lt;/b&gt;&#xa;- damage" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="JellyFish" vertex="1">
+                    <mxGeometry y="53.33333333333333" width="373.3322727272727" height="35.55555555555556" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFish_sep1" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;strokeColor=black;" parent="JellyFish" vertex="1">
+                    <mxGeometry y="88.88888888888889" width="391.11" height="1.7777777777777777" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFish_methods" value="" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="JellyFish" vertex="1">
+                    <mxGeometry y="90.66666666666666" width="373.3322727272727" height="76.44444444444444" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFishGreen" style="uml=class;whiteSpace=wrap;html=1;aspect=fixed;backgroundOutline=1;fillColor=#ccffcc;" parent="1" vertex="1">
+                    <mxGeometry x="230" y="700" width="682" height="310" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFishGreen_name" value="&lt;b&gt;&lt;font size=&#39;5&#39;&gt;JellyFishGreen&lt;/font&gt;&lt;/b&gt;" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontSize=14;" parent="JellyFishGreen" vertex="1">
+                    <mxGeometry width="682" height="93" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFishGreen_attrs" value="&lt;b&gt;Attribute:&lt;/b&gt;&#xa;- damage = 10&#xa;- x, y (random)&#xa;- height = 55&#xa;- width = 55&#xa;- speed (random)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="JellyFishGreen" vertex="1">
+                    <mxGeometry y="93" width="651" height="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFishGreen_sep1" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;strokeColor=black;" parent="JellyFishGreen" vertex="1">
+                    <mxGeometry y="248" width="682" height="3.1" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFishGreen_methods" value="&lt;b&gt;Methoden:&lt;/b&gt;&#xa;+ constructor(x)&#xa;+ animate()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="JellyFishGreen" vertex="1">
+                    <mxGeometry y="251.1" width="651" height="71.3" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFishPink" style="uml=class;whiteSpace=wrap;html=1;aspect=fixed;backgroundOutline=1;fillColor=#ffccff;" parent="1" vertex="1">
+                    <mxGeometry x="-425" y="680" width="572" height="260" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFishPink_name" value="&lt;b&gt;&lt;font size=&#39;5&#39;&gt;JellyFishPink&lt;/font&gt;&lt;/b&gt;" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontSize=14;" parent="JellyFishPink" vertex="1">
+                    <mxGeometry width="572" height="78" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFishPink_attrs" value="&lt;b&gt;Attribute:&lt;/b&gt;&#xa;- damage = 10&#xa;- x, y (random)&#xa;- height = 55&#xa;- width = 55&#xa;- speed (random)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="JellyFishPink" vertex="1">
+                    <mxGeometry y="78" width="546" height="130.00000000000003" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFishPink_sep1" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;strokeColor=black;" parent="JellyFishPink" vertex="1">
+                    <mxGeometry y="208.00000000000003" width="572" height="2.6" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFishPink_methods" value="&lt;b&gt;Methoden:&lt;/b&gt;&#xa;+ constructor(x)&#xa;+ animate()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="JellyFishPink" vertex="1">
+                    <mxGeometry y="210.6" width="546" height="59.80000000000002" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFishPurple" style="uml=class;whiteSpace=wrap;html=1;aspect=fixed;backgroundOutline=1;fillColor=#e6e6ff;" parent="1" vertex="1">
+                    <mxGeometry x="970" y="700" width="682" height="310" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFishPurple_name" value="&lt;b&gt;&lt;font size=&#39;5&#39;&gt;JellyFishPurple&lt;/font&gt;&lt;/b&gt;" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontSize=14;" parent="JellyFishPurple" vertex="1">
+                    <mxGeometry width="682" height="93" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFishPurple_attrs" value="&lt;b&gt;Attribute:&lt;/b&gt;&#xa;- damage = 5&#xa;- x, y (random)&#xa;- height = 55&#xa;- width = 55&#xa;- speed (random)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="JellyFishPurple" vertex="1">
+                    <mxGeometry y="93" width="651" height="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFishPurple_sep1" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;strokeColor=black;" parent="JellyFishPurple" vertex="1">
+                    <mxGeometry y="248" width="682" height="3.1" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFishPurple_methods" value="&lt;b&gt;Methoden:&lt;/b&gt;&#xa;+ constructor(x)&#xa;+ animate()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="JellyFishPurple" vertex="1">
+                    <mxGeometry y="251.1" width="651" height="71.3" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFishYellow" style="uml=class;whiteSpace=wrap;html=1;aspect=fixed;backgroundOutline=1;fillColor=#ffffcc;" parent="1" vertex="1">
+                    <mxGeometry x="1710" y="680" width="682" height="310" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFishYellow_name" value="&lt;b&gt;&lt;font size=&#39;5&#39;&gt;JellyFishYellow&lt;/font&gt;&lt;/b&gt;" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontSize=14;" parent="JellyFishYellow" vertex="1">
+                    <mxGeometry width="682" height="93" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFishYellow_attrs" value="&lt;b&gt;Attribute:&lt;/b&gt;&#xa;- damage = 5&#xa;- x, y (random)&#xa;- height = 55&#xa;- width = 55&#xa;- speed (random)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="JellyFishYellow" vertex="1">
+                    <mxGeometry y="93" width="651" height="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFishYellow_sep1" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;strokeColor=black;" parent="JellyFishYellow" vertex="1">
+                    <mxGeometry y="248" width="682" height="3.0999999999999996" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFishYellow_methods" value="&lt;b&gt;Methoden:&lt;/b&gt;&#xa;+ constructor(x)&#xa;+ animate()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="JellyFishYellow" vertex="1">
+                    <mxGeometry y="251.1" width="651" height="71.3" as="geometry"/>
+                </mxCell>
+                <mxCell id="ThrowableObject" style="uml=class;whiteSpace=wrap;html=1;aspect=fixed;backgroundOutline=1;fillColor=#e6f7ff;" parent="1" vertex="1">
+                    <mxGeometry x="2480" y="-1290" width="660" height="330" as="geometry"/>
+                </mxCell>
+                <mxCell id="ThrowableObject_name" value="&lt;b&gt;&lt;font size=&#39;5&#39;&gt;ThrowableObject&lt;/font&gt;&lt;/b&gt;" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontSize=14;" parent="ThrowableObject" vertex="1">
+                    <mxGeometry width="660" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="ThrowableObject_attrs" value="&lt;b&gt;Attribute:&lt;/b&gt;&#xa;- maxDistance = 400&#xa;- startX" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="ThrowableObject" vertex="1">
+                    <mxGeometry y="90" width="630" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="ThrowableObject_sep1" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;strokeColor=black;" parent="ThrowableObject" vertex="1">
+                    <mxGeometry y="180" width="660" height="3" as="geometry"/>
+                </mxCell>
+                <mxCell id="ThrowableObject_methods" value="&lt;b&gt;Methoden:&lt;/b&gt;&#xa;+ constructor(x, y)&#xa;+ trow()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="ThrowableObject" vertex="1">
+                    <mxGeometry y="183" width="630" height="159" as="geometry"/>
+                </mxCell>
+                <mxCell id="BackgroundObject" style="uml=class;whiteSpace=wrap;html=1;aspect=fixed;backgroundOutline=1;fillColor=#f0f0f0;" parent="1" vertex="1">
+                    <mxGeometry x="-680" y="-1010" width="562.22" height="230" as="geometry"/>
+                </mxCell>
+                <mxCell id="BackgroundObject_name" value="&lt;b&gt;&lt;font size=&#39;5&#39;&gt;BackgroundObject&lt;/font&gt;&lt;/b&gt;" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontSize=14;" parent="BackgroundObject" vertex="1">
+                    <mxGeometry width="562.22" height="76.66666666666666" as="geometry"/>
+                </mxCell>
+                <mxCell id="BackgroundObject_attrs" value="&lt;b&gt;Attribute:&lt;/b&gt;&#xa;- width = 720&#xa;- height = 480" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="BackgroundObject" vertex="1">
+                    <mxGeometry y="76.66666666666666" width="536.6645454545454" height="51.11111111111111" as="geometry"/>
+                </mxCell>
+                <mxCell id="BackgroundObject_sep1" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;strokeColor=black;" parent="BackgroundObject" vertex="1">
+                    <mxGeometry y="127.77777777777777" width="562.22" height="2.5555555555555554" as="geometry"/>
+                </mxCell>
+                <mxCell id="BackgroundObject_methods" value="&lt;b&gt;Methoden:&lt;/b&gt;&#xa;+ constructor(imagePath, x)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="BackgroundObject" vertex="1">
+                    <mxGeometry y="130.33333333333331" width="536.6645454545454" height="109.88888888888889" as="geometry"/>
+                </mxCell>
+                <mxCell id="Light" style="uml=class;whiteSpace=wrap;html=1;aspect=fixed;backgroundOutline=1;fillColor=#f0f0f0;" parent="1" vertex="1">
+                    <mxGeometry x="1050" y="-1120" width="684.42" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="Light_name" value="&lt;b&gt;&lt;font size=&#39;5&#39;&gt;Light&lt;/font&gt;&lt;/b&gt;" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontSize=14;" parent="Light" vertex="1">
+                    <mxGeometry width="684.4200000000002" height="93.33333333333333" as="geometry"/>
+                </mxCell>
+                <mxCell id="Light_attrs" value="&lt;b&gt;Attribute:&lt;/b&gt;&#xa;- x = 420&#xa;- y = 0&#xa;- height = 500&#xa;- width = 300" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="Light" vertex="1">
+                    <mxGeometry y="93.33333333333333" width="653.31" height="124.44444444444446" as="geometry"/>
+                </mxCell>
+                <mxCell id="Light_sep1" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;strokeColor=black;" parent="Light" vertex="1">
+                    <mxGeometry y="217.77777777777777" width="684.4200000000002" height="3.1111111111111116" as="geometry"/>
+                </mxCell>
+                <mxCell id="Light_methods" value="&lt;b&gt;Methoden:&lt;/b&gt;&#xa;+ constructor()&#xa;+ animate()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="Light" vertex="1">
+                    <mxGeometry y="220.8888888888889" width="653.31" height="71.55555555555557" as="geometry"/>
+                </mxCell>
+                <mxCell id="StatusBar" style="uml=class;whiteSpace=wrap;html=1;aspect=fixed;backgroundOutline=1;fillColor=#eeeeee;" parent="1" vertex="1">
+                    <mxGeometry x="-1430" y="280" width="600" height="300" as="geometry"/>
+                </mxCell>
+                <mxCell id="StatusBar_name" value="&lt;b&gt;&lt;font size=&#39;5&#39;&gt;StatusBar&lt;/font&gt;&lt;/b&gt;" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontSize=14;" parent="StatusBar" vertex="1">
+                    <mxGeometry width="600" height="81.81818181818181" as="geometry"/>
+                </mxCell>
+                <mxCell id="StatusBar_attrs" value="&lt;b&gt;Attribute:&lt;/b&gt;&#xa;- percentage" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="StatusBar" vertex="1">
+                    <mxGeometry y="81.81818181818181" width="572.7272727272726" height="54.54545454545454" as="geometry"/>
+                </mxCell>
+                <mxCell id="StatusBar_sep1" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;strokeColor=black;" parent="StatusBar" vertex="1">
+                    <mxGeometry y="136.36363636363635" width="600" height="2.727272727272727" as="geometry"/>
+                </mxCell>
+                <mxCell id="StatusBar_methods" value="&lt;b&gt;Methoden:&lt;/b&gt;&#xa;+ constructor()&#xa;+ setPercentage()&#xa;+ resolveImageIndex()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="StatusBar" vertex="1">
+                    <mxGeometry y="139.0909090909091" width="572.7272727272726" height="171.8181818181818" as="geometry"/>
+                </mxCell>
+                <mxCell id="StatusBarLife" style="uml=class;whiteSpace=wrap;html=1;aspect=fixed;backgroundOutline=1;fillColor=#ccffcc;" parent="1" vertex="1">
+                    <mxGeometry x="2940" y="-60" width="391.11" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="StatusBarLife_name" value="&lt;b&gt;&lt;font size=&#39;5&#39;&gt;StatusBarLife&lt;/font&gt;&lt;/b&gt;" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontSize=14;" parent="StatusBarLife" vertex="1">
+                    <mxGeometry width="391.11" height="53.33333333333333" as="geometry"/>
+                </mxCell>
+                <mxCell id="StatusBarLife_attrs" value="&lt;b&gt;Attribute:&lt;/b&gt;&#xa;- IMAGES[]" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="StatusBarLife" vertex="1">
+                    <mxGeometry y="53.33333333333333" width="373.3322727272727" height="35.55555555555556" as="geometry"/>
+                </mxCell>
+                <mxCell id="StatusBarLife_sep1" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;strokeColor=black;" parent="StatusBarLife" vertex="1">
+                    <mxGeometry y="88.88888888888889" width="391.11" height="1.7777777777777777" as="geometry"/>
+                </mxCell>
+                <mxCell id="StatusBarLife_methods" value="&lt;b&gt;Methoden:&lt;/b&gt;&#xa;+ constructor()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="StatusBarLife" vertex="1">
+                    <mxGeometry y="90.66666666666666" width="373.3322727272727" height="76.44444444444444" as="geometry"/>
+                </mxCell>
+                <mxCell id="StatusBarCoin" style="uml=class;whiteSpace=wrap;html=1;aspect=fixed;backgroundOutline=1;fillColor=#ffffcc;" parent="1" vertex="1">
+                    <mxGeometry x="2710" y="180" width="391.11" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="StatusBarCoin_name" value="&lt;b&gt;&lt;font size=&#39;5&#39;&gt;StatusBarCoin&lt;/font&gt;&lt;/b&gt;" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontSize=14;" parent="StatusBarCoin" vertex="1">
+                    <mxGeometry width="391.11" height="53.33333333333333" as="geometry"/>
+                </mxCell>
+                <mxCell id="StatusBarCoin_attrs" value="&lt;b&gt;Attribute:&lt;/b&gt;&#xa;- IMAGES[]" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="StatusBarCoin" vertex="1">
+                    <mxGeometry y="53.33333333333333" width="373.3322727272727" height="35.55555555555556" as="geometry"/>
+                </mxCell>
+                <mxCell id="StatusBarCoin_sep1" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;strokeColor=black;" parent="StatusBarCoin" vertex="1">
+                    <mxGeometry y="88.88888888888889" width="391.11" height="1.7777777777777777" as="geometry"/>
+                </mxCell>
+                <mxCell id="StatusBarCoin_methods" value="&lt;b&gt;Methoden:&lt;/b&gt;&#xa;+ constructor()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="StatusBarCoin" vertex="1">
+                    <mxGeometry y="90.66666666666666" width="373.3322727272727" height="76.44444444444444" as="geometry"/>
+                </mxCell>
+                <mxCell id="StatusBarPosion" style="uml=class;whiteSpace=wrap;html=1;aspect=fixed;backgroundOutline=1;fillColor=#ffccff;" parent="1" vertex="1">
+                    <mxGeometry x="2540" y="460" width="391.11" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="StatusBarPosion_name" value="&lt;b&gt;&lt;font size=&#39;5&#39;&gt;StatusBarPosion&lt;/font&gt;&lt;/b&gt;" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontSize=14;" parent="StatusBarPosion" vertex="1">
+                    <mxGeometry width="391.11" height="53.333333333333336" as="geometry"/>
+                </mxCell>
+                <mxCell id="StatusBarPosion_attrs" value="&lt;b&gt;Attribute:&lt;/b&gt;&#xa;- IMAGES[]" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="StatusBarPosion" vertex="1">
+                    <mxGeometry y="53.333333333333336" width="373.33227272727277" height="35.55555555555556" as="geometry"/>
+                </mxCell>
+                <mxCell id="StatusBarPosion_sep1" value="" style="line;strokeWidth=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;strokeColor=black;" parent="StatusBarPosion" vertex="1">
+                    <mxGeometry y="88.88888888888889" width="391.11" height="1.777777777777778" as="geometry"/>
+                </mxCell>
+                <mxCell id="StatusBarPosion_methods" value="&lt;b&gt;Methoden:&lt;/b&gt;&#xa;+ constructor()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="StatusBarPosion" vertex="1">
+                    <mxGeometry y="90.66666666666666" width="373.33227272727277" height="76.44444444444444" as="geometry"/>
+                </mxCell>
+                <mxCell id="Level" style="uml=class;whiteSpace=wrap;html=1;aspect=fixed;backgroundOutline=1;fillColor=#f0f0f0;" parent="1" vertex="1">
+                    <mxGeometry x="110" y="-1500" width="440" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="Level_name" value="&lt;b&gt;&lt;font size=&#39;5&#39;&gt;Level&lt;/font&gt;&lt;/b&gt;" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontSize=14;" parent="Level" vertex="1">
+                    <mxGeometry width="440" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="Level_attrs" value="&lt;b&gt;Attribute:&lt;/b&gt;&#xa;- enemies[]&#xa;- lights[]&#xa;- backgroundObjects[]&#xa;- level_end_x = 4200" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="Level" vertex="1">
+                    <mxGeometry y="60" width="420" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="Level_sep1" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;strokeColor=black;" parent="Level" vertex="1">
+                    <mxGeometry y="160" width="440" height="2" as="geometry"/>
+                </mxCell>
+                <mxCell id="Level_methods" value="&lt;b&gt;Methoden:&lt;/b&gt;&#xa;+ constructor(enemies, lights, backgroundObjects)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="Level" vertex="1">
+                    <mxGeometry y="162" width="420" height="66" as="geometry"/>
+                </mxCell>
+                <mxCell id="World" style="uml=class;whiteSpace=wrap;html=1;aspect=fixed;backgroundOutline=1;fillColor=#e6f7ff;" parent="1" vertex="1">
+                    <mxGeometry x="490" y="-3170" width="616" height="560" as="geometry"/>
+                </mxCell>
+                <mxCell id="World_name" value="&lt;b&gt;&lt;font size=&#39;5&#39;&gt;World&lt;/font&gt;&lt;/b&gt;" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontSize=14;" parent="World" vertex="1">
+                    <mxGeometry width="616" height="84" as="geometry"/>
+                </mxCell>
+                <mxCell id="World_attrs" value="&lt;b&gt;Attribute:&lt;/b&gt;&#xa;- character&#xa;- level&#xa;- canvas&#xa;- keyboard&#xa;- ctx&#xa;- camera_x&#xa;- statusBarLife&#xa;- statusBarCoin&#xa;- statusBarPosion&#xa;- throwableObjects[]" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="World" vertex="1">
+                    <mxGeometry y="84" width="588" height="252" as="geometry"/>
+                </mxCell>
+                <mxCell id="World_sep1" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;strokeColor=black;" parent="World" vertex="1">
+                    <mxGeometry y="336" width="616" height="2.8" as="geometry"/>
+                </mxCell>
+                <mxCell id="World_methods" value="&lt;b&gt;Methoden:&lt;/b&gt;&#xa;+ constructor(canvas, keyboard)&#xa;+ setWorld()&#xa;+ run()&#xa;+ checkThrowObjects()&#xa;+ checkCollisions()&#xa;+ draw()&#xa;+ addObjectsToMap()&#xa;+ addToMap()&#xa;+ flipImage()&#xa;+ flipImageBack()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="World" vertex="1">
+                    <mxGeometry y="338.8" width="588" height="232.4" as="geometry"/>
+                </mxCell>
+                <mxCell id="DrawableObject_to_MovableObject" style="edgeStyle=none;curved=1;endArrow=classic;endFill=1;rounded=0;startSize=12;endSize=12;html=1;exitX=0;exitY=1;exitDx=0;exitDy=0;" parent="1" source="MovableObject_attrs" target="DrawableObject" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="MovableObject_to_Character" style="edgeStyle=none;curved=1;endArrow=classic;endFill=1;rounded=0;startSize=12;endSize=12;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="Character" target="MovableObject" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="MovableObject_to_Endboss" style="edgeStyle=none;curved=1;endArrow=classic;endFill=1;rounded=0;startSize=12;endSize=12;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="Endboss" target="MovableObject" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="MovableObject_to_JellyFish" style="edgeStyle=none;curved=1;endArrow=classic;endFill=1;rounded=0;startSize=12;endSize=12;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="JellyFish" target="MovableObject" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFish_to_Green" style="edgeStyle=none;curved=1;endArrow=classic;endFill=1;rounded=0;startSize=12;endSize=12;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="JellyFishGreen_name" target="JellyFish_methods" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFish_to_Pink" style="edgeStyle=none;curved=1;endArrow=classic;endFill=1;rounded=0;startSize=12;endSize=12;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.456;entryY=0.985;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="JellyFishPink_name" target="JellyFish_methods" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFish_to_Purple" style="edgeStyle=none;curved=1;endArrow=classic;endFill=1;rounded=0;startSize=12;endSize=12;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="JellyFishPurple_name" target="JellyFish_methods" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="JellyFish_to_Yellow" style="edgeStyle=none;curved=1;endArrow=classic;endFill=1;rounded=0;startSize=12;endSize=12;html=1;exitX=0.406;exitY=-0.043;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitPerimeter=0;" parent="1" source="JellyFishYellow_name" target="JellyFish_methods" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="MovableObject_to_ThrowableObject" style="edgeStyle=none;curved=1;endArrow=classic;endFill=1;rounded=0;startSize=12;endSize=12;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="ThrowableObject" target="MovableObject" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="MovableObject_to_BackgroundObject" style="edgeStyle=none;curved=1;endArrow=classic;endFill=1;rounded=0;startSize=12;endSize=12;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="BackgroundObject" target="MovableObject" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="MovableObject_to_Light" style="edgeStyle=none;curved=1;endArrow=classic;endFill=1;rounded=0;startSize=12;endSize=12;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="Light" target="MovableObject" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="DrawableObject_to_StatusBar" style="edgeStyle=none;curved=1;endArrow=classic;endFill=1;rounded=0;startSize=12;endSize=12;html=1;entryX=0.562;entryY=0.974;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" target="DrawableObject_methods" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-1140" y="290" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="StatusBar_to_StatusBarLife" style="edgeStyle=none;curved=1;endArrow=classic;endFill=1;rounded=0;startSize=12;endSize=12;html=1;exitX=0;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="StatusBarLife_methods" target="StatusBar_sep1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="StatusBar_to_StatusBarCoin" style="edgeStyle=none;curved=1;endArrow=classic;endFill=1;rounded=0;startSize=12;endSize=12;html=1;exitX=0;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="StatusBarCoin_methods" target="StatusBar_sep1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="StatusBar_to_StatusBarPosion" style="edgeStyle=none;curved=1;endArrow=classic;endFill=1;rounded=0;startSize=12;endSize=12;html=1;exitX=0;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="StatusBarPosion_methods" target="StatusBar_sep1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="World_to_Character" style="edgeStyle=none;curved=1;endArrow=diamond;endFill=1;rounded=0;startSize=12;endSize=12;html=1;exitX=0.2;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="Keyboard" target="Character" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="World_to_Level" style="edgeStyle=none;curved=1;endArrow=diamond;endFill=1;rounded=0;startSize=12;endSize=12;html=1;exitX=0.3;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="World" target="Level" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="World_to_StatusBarLife" style="edgeStyle=none;curved=1;endArrow=diamond;endFill=1;rounded=0;startSize=12;endSize=12;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="World" target="StatusBarLife" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="World_to_StatusBarCoin" style="edgeStyle=none;curved=1;endArrow=diamond;endFill=1;rounded=0;startSize=12;endSize=12;html=1;exitX=0.6;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="World" target="StatusBarCoin" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="World_to_StatusBarPosion" style="edgeStyle=none;curved=1;endArrow=diamond;endFill=1;rounded=0;startSize=12;endSize=12;html=1;exitX=0.7;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="World" target="StatusBarPosion" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="World_to_ThrowableObject" style="edgeStyle=none;curved=1;endArrow=diamond;endFill=1;rounded=0;startSize=12;endSize=12;html=1;exitX=0.8;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="World" target="ThrowableObject" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="Level_to_JellyFish" style="edgeStyle=none;curved=1;endArrow=diamond;endFill=1;rounded=0;startSize=12;endSize=12;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="Level" target="JellyFish" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="Level_to_Endboss" style="edgeStyle=none;curved=1;endArrow=diamond;endFill=1;rounded=0;startSize=12;endSize=12;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="Level_methods" target="Endboss" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="Level_to_Light" style="edgeStyle=none;curved=1;endArrow=diamond;endFill=1;rounded=0;startSize=12;endSize=12;html=1;exitX=0.7;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="Level" target="Light" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="Level_to_BackgroundObject" style="edgeStyle=none;curved=1;endArrow=diamond;endFill=1;rounded=0;startSize=12;endSize=12;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="Level_methods" target="BackgroundObject" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="LegendTitle" value="&lt;b&gt;&lt;font size=&#39;4&#39;&gt;Legende:&lt;/font&gt;&lt;/b&gt;" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#ffffcc;" parent="1" vertex="1">
+                    <mxGeometry x="600" y="1080" width="300" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="LegendInheritance" value="&lt;font color=&#39;#000000&#39;&gt;▲ = Vererbung (extends)&lt;/font&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="600" y="1120" width="200" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="LegendComposition" value="&lt;font color=&#39;#000000&#39;&gt;◆ = Enthält (Komposition)&lt;/font&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="600" y="1150" width="200" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="" style="edgeStyle=none;curved=1;endArrow=diamond;endFill=1;rounded=0;startSize=12;endSize=12;html=1;exitX=0.2;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="World" target="Keyboard">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1113" y="-470" as="sourcePoint"/>
+                        <mxPoint x="760" y="-260" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="Keyboard" style="uml=class;whiteSpace=wrap;html=1;aspect=fixed;backgroundOutline=1;fillColor=#f0f0f0;" parent="1" vertex="1">
+                    <mxGeometry x="-1150" y="-1390" width="391.11" height="270" as="geometry"/>
+                </mxCell>
+                <mxCell id="Keyboard_name" value="&lt;b&gt;&lt;font size=&#39;5&#39;&gt;Keyboard&lt;/font&gt;&lt;/b&gt;" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontSize=14;" parent="Keyboard" vertex="1">
+                    <mxGeometry width="391.11" height="53.33333333333333" as="geometry"/>
+                </mxCell>
+                <mxCell id="Keyboard_attrs" value="&lt;b&gt;Attribute:&lt;/b&gt;&#xa;- LEFT&#xa;- RIGHT&#xa;- UP&#xa;- DOWN&#xa;- SPACE" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="Keyboard" vertex="1">
+                    <mxGeometry y="53.33" width="373.33" height="106.67" as="geometry"/>
+                </mxCell>
+                <mxCell id="Keyboard_sep1" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;strokeColor=black;" parent="Keyboard" vertex="1">
+                    <mxGeometry y="124.44" width="391.11" height="55.56" as="geometry"/>
+                </mxCell>
+                <mxCell id="Keyboard_methods" value="&lt;b&gt;Methoden:&lt;/b&gt;&#xa;(keine)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;" parent="Keyboard" vertex="1">
+                    <mxGeometry y="150" width="373.33" height="120" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
