@@ -7,8 +7,13 @@ class JellyFishPurple extends JellyFish {
         super();
         this.loadImage(this.IMAGES_FLOATING[0]);
         this.loadImages(this.IMAGES_FLOATING);
+        this.loadImages(this.IMAGES_DEAD);
         this.x = x + Math.random() * 500;
         this.y = 0 + Math.random() * 400;
+        this.offsetHeight = 10;
+        this.offsetWidth = 10;
+        this.offsetX = 5;
+        this.offsetY = 5;
         this.animate();
     }
 
