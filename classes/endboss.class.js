@@ -22,6 +22,7 @@ class Endboss extends MovableObject {
         this.offsetY = 150;
         this.offsetWidth = 40;
         this.offsetHeight = 220;
+        this.hasStartedDeadAnimation = false;
     }
 
     animate() {
@@ -29,6 +30,10 @@ class Endboss extends MovableObject {
 
         setInterval(() => {
             if(this.isDead()) {
+                if(!this.hasStartedDeadAnimation) {
+                    this.currentImage = 0;
+                    this.hasStartedDeadAnimation = true;
+                }
                 this.playAnimation(this.IMAGES_DEAD);
                 if(this.currentImage >= this.IMAGES_DEAD.length) {
                      this.shouldRemove = true; 
@@ -40,7 +45,7 @@ class Endboss extends MovableObject {
             else {
                 this.playAnimation(this.IMAGES_FLOATING);
             }
-        }, 150);
+        }, 200);
     }
 }
 

@@ -14,6 +14,7 @@ class JellyFishGreen extends JellyFish {
         this.offsetWidth = 10;
         this.offsetX = 5;
         this.offsetY = 5;
+        this.hasStartedDeadAnimation = false;
         this.animate();
 
     }
@@ -23,6 +24,10 @@ class JellyFishGreen extends JellyFish {
 
         setInterval(() => {
             if(this.isDead()) {
+                if(!this.hasStartedDeadAnimation) {
+                    this.currentImage = 0;
+                    this.hasStartedDeadAnimation = true;
+                }
                 this.playAnimation(this.IMAGES_DEAD);
                 if(this.currentImage >= this.IMAGES_DEAD.length) {
                      this.shouldRemove = true; 
