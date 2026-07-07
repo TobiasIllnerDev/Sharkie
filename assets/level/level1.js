@@ -12,7 +12,6 @@ const level1 = new Level(
         new JellyFishPink(3000),
         new JellyFishPink(3300),
         new JellyFishPink(3600),
-        new Endboss(),
     ],
     [
         new Light()

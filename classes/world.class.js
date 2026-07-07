@@ -16,10 +16,13 @@ class World {
         this.keyboard = keyboard;
         this.coinCount = 0;
         this.bottleCount = 0;
+        this.isSpecialAttackPending = false;
+        this.endboss = null;
+        this.spawnTriggerDistance = 500;
+        this.statusBarBoss = new StatusBarBoss();
         this.draw();
         this.setWorld();
         this.character.animate();
-        this.isSpecialAttackPending = false;
         this.run();
     }
 
@@ -31,6 +34,7 @@ class World {
         setInterval(() => {
            this.checkCollisions();
            this.checkThrowObjects();
+           this.checkBossSpawn(); 
         }, 200)
     }
 
@@ -73,11 +77,11 @@ class World {
         });
         this.level.enemies = this.level.enemies.filter(enemy => !enemy.shouldRemove);
     }
+
     checkCollisions() {
         this.level.enemies.forEach((enemy) => {
             if(this.character.isColliding(enemy)) {
                 this.character.hit(enemy.damage);
-                console.log(this.character.energy)
                 this.statusBarLife.setPercentage(this.character.energy);
             }
         });
@@ -115,6 +119,18 @@ class World {
         });
     }
 
+    checkBossSpawn() {
+    const distanceToEnd = this.level.level_end_x - this.character.x;
+    if (!this.endboss && distanceToEnd < this.spawnTriggerDistance) {
+        this.endboss = new Endboss();
+        this.endboss.startSpawn();
+        this.level.enemies.push(this.endboss);  
+    }
+    if (this.endboss && this.endboss.isSpawned) {
+        this.statusBarBoss.setPercentage(this.endboss.energy);
+    }
+}
+
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.translate(this.camera_x, 0);
@@ -123,6 +139,7 @@ class World {
         this.addToMap(this.statusBarLife);
         this.addToMap(this.statusBarCoin);
         this.addToMap(this.statusBarPosion);
+        this.addToMap(this.statusBarBoss);
         this.ctx.translate(this.camera_x, 0);
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.collectibles);
