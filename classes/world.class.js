@@ -139,7 +139,9 @@ class World {
         this.addToMap(this.statusBarLife);
         this.addToMap(this.statusBarCoin);
         this.addToMap(this.statusBarPosion);
-        this.addToMap(this.statusBarBoss);
+        if (this.endboss && this.endboss.isSpawned) {
+            this.addToMap(this.statusBarBoss);
+        }
         this.ctx.translate(this.camera_x, 0);
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.collectibles);
