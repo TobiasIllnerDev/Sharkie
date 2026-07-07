@@ -28,6 +28,12 @@ class DrawableObject {
         })
     }
 
+    draw(ctx) {
+        if (this.img && this.img.complete && this.img.naturalWidth > 0) {
+            ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+        }
+    }
+
     drawFrame(ctx) {
     if(this instanceof JellyFish || this instanceof Endboss) {
         ctx.beginPath();

@@ -66,17 +66,23 @@ class World {
             });
         });
         this.level.collectibles.forEach((collectible, index) => {
-            if (this.character.isColliding(collectible) && !collectible.collected) {
+            if (!collectible.collected && this.character.isColliding(collectible)) {
                 collectible.collect();
 
                 if (collectible instanceof Coin) {
                     this.coinCount++;
-                    this.statusBarCoin.setPercentage(this.coinCount);
-                } else if (collectible instanceof Bottle) {
+                    // 20 Coins = 100%
+                    let percentage = (this.coinCount / 20) * 100;
+                    this.statusBarCoin.setPercentage(percentage);
+                }
+                else if (collectible instanceof Bottle) {
                     this.bottleCount++;
-                    // Spezialangriff freischalten
+                    // 20 Bottles = 100%
+                    let percentage = (this.bottleCount / 20) * 100;
+                    this.statusBarPosion.setPercentage(percentage);
                 }
 
+                // Aus Level entfernen
                 this.level.collectibles.splice(index, 1);
             }
         });

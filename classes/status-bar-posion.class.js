@@ -1,5 +1,5 @@
 class StatusBarPosion extends StatusBar {
-    IMAGES = Array.from({length: 6}, (_, i) => `../assets/img/Marcadores/green/Posion/${1}_Posion.png`);
+    IMAGES = Array.from({length: 6}, (_, i) => `../assets/img/Marcadores/green/Posion/${i+1}_Posion.png`);
 
     constructor() {
         super();

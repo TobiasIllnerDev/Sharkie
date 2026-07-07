@@ -4,15 +4,34 @@ class CollectibleObject extends DrawableObject {
     offsetY = 0;
     offsetWidth = 0;
     offsetHeight = 0;
+    currentImage = 0;
 
-    constructor(path,x,y,width,height) {
-        super().loadImage(path);
+    constructor(paths,x,y,width,height) {
+        super()
+        this.images = paths;
+        this.loadImages(paths);
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        this.animate();
+
     }
 
+    animate() {
+        setInterval(() => {
+            this.playAnimation(this.images);
+        }, 200);
+    }
+
+    playAnimation(images) {
+        if (!images || images.length === 0) return; 
+        let i = this.currentImage % images.length;
+        let path = images[i];
+        this.img = this.imageCache[path];
+        this.currentImage++;
+    }
+    
     collect() {
         this.collected = true;
     }
