@@ -64,11 +64,11 @@ class Character extends MovableObject {
                 this.otherDiretion = true;
                 this.lastMove = new Date().getTime();
             }
-            if(this.world.keyboard.UP) {
+            if(this.world.keyboard.UP && this.y > -90) {
                 this.y -= this.speed;
                 this.lastMove = new Date().getTime();
             }
-            if(this.world.keyboard.DOWN) {
+            if(this.world.keyboard.DOWN && this.y  < 320) {
                 this.y += this.speed;
                 this.lastMove = new Date().getTime();
             }
