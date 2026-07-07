@@ -19,6 +19,7 @@ class World {
         this.draw();
         this.setWorld();
         this.character.animate();
+        this.isSpecialAttackPending = false;
         this.run();
     }
 
@@ -33,14 +34,38 @@ class World {
         }, 200)
     }
 
-    checkThrowObjects() {
+   checkThrowObjects() {
         if(this.keyboard.SPACE && !this.character.isAttacking) {
             this.character.startAttack();
+            this.isSpecialAttackPending = false;
         }
+        
+        
+        if(this.keyboard.E && !this.character.isAttacking && this.bottleCount > 0) {
+            this.character.startAttack();
+            this.isSpecialAttackPending = true;  
+        }
+
         if(this.character.attackAnimationFinished) {
-            let bubble = new ThrowableObject(this.character.x + 100, this.character.y + 100, this.character.otherDiretion);
-            this.throwableObjects.push(bubble);
-            this.character.resetAttack();
+            
+            if(this.keyboard.SPACE) {
+                let bubble = new ThrowableObject(this.character.x + 100, this.character.y + 100, this.character.otherDiretion);
+                this.throwableObjects.push(bubble);
+                this.character.resetAttack();
+            }
+            
+            else if(this.isSpecialAttackPending && this.bottleCount > 0) {
+                let specialBubble = new SpecialBubble(this.character.x + 100, this.character.y + 100, this.character.otherDiretion, this);
+                this.throwableObjects.push(specialBubble);
+
+                
+                this.bottleCount--;
+                let percentage = (this.bottleCount / 20) * 100;
+                this.statusBarPosion.setPercentage(percentage);
+
+                this.character.resetAttack();
+                this.isSpecialAttackPending = false;  
+            }
         }
         this.throwableObjects = this.throwableObjects.filter((bubble) => {
             const distance = Math.abs(bubble.x - bubble.startX);
@@ -48,7 +73,6 @@ class World {
         });
         this.level.enemies = this.level.enemies.filter(enemy => !enemy.shouldRemove);
     }
-
     checkCollisions() {
         this.level.enemies.forEach((enemy) => {
             if(this.character.isColliding(enemy)) {
@@ -60,8 +84,11 @@ class World {
         this.throwableObjects.forEach((bubble, bubbleIndex) => {
             this.level.enemies.forEach((enemy) => {
                 if(bubble.isColliding(enemy)) {
-                    enemy.hit(this.character.attackPower); 
-                    this.throwableObjects.splice(bubbleIndex, 1); 
+                    // Normale Blase: normaler Schaden
+                    // Spezial-Blase: hat eigene damage-Eigenschaft
+                    let damage = bubble.damage || this.character.attackPower;
+                    enemy.hit(damage);
+                    this.throwableObjects.splice(bubbleIndex, 1);
                 }
             });
         });
