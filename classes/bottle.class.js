@@ -1,5 +1,5 @@
 class Bottle extends CollectibleObject {
     constructor(x, y) {
-        super('../assets/img/.../bottle.png', x, y, 40, 60);
+        super('../assets/img/Marcadores/Posión/Animada/1.png', x, y, 40, 60);
     }
 }

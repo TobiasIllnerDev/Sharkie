@@ -14,6 +14,8 @@ class World {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
+        this.coinCout = 0;
+        this.bottleCount = 0;
         this.draw();
         this.setWorld();
         this.character.animate();
@@ -63,6 +65,21 @@ class World {
                 }
             });
         });
+        this.level.collectibles.forEach((collectible, index) => {
+            if (this.character.isColliding(collectible) && !collectible.collected) {
+                collectible.collect();
+
+                if (collectible instanceof Coin) {
+                    this.coinCount++;
+                    this.statusBarCoin.setPercentage(this.coinCount);
+                } else if (collectible instanceof Bottle) {
+                    this.bottleCount++;
+                    // Spezialangriff freischalten
+                }
+
+                this.level.collectibles.splice(index, 1);
+            }
+        });
     }
 
     draw() {
@@ -75,6 +92,7 @@ class World {
         this.addToMap(this.statusBarPosion);
         this.ctx.translate(this.camera_x, 0);
         this.addToMap(this.character);
+        this.addObjectsToMap(this.level.collectibles);
         this.addObjectsToMap(this.level.lights);
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.throwableObjects);
