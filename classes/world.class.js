@@ -14,7 +14,7 @@ class World {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
-        this.coinCout = 0;
+        this.coinCount = 0;
         this.bottleCount = 0;
         this.draw();
         this.setWorld();
