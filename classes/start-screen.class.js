@@ -5,9 +5,9 @@ class StartScreen {
     spaceKeyImg;
     eKeyImg;
     buttons = [
-        { name: 'start', x: 250, y: 200, width: 220, height: 60, text: 'SPIEL STARTEN' },
-        { name: 'settings', x: 250, y: 280, width: 220, height: 60, text: 'EINSTELLUNGEN' },
-        { name: 'tutorial', x: 250, y: 360, width: 220, height: 60, text: 'ANLEITUNG' }
+        { name: 'start', x: 270, y: 200, width: 180, height: 50, text: 'SPIEL STARTEN' },
+        { name: 'settings', x: 270, y: 265, width: 180, height: 50, text: 'EINSTELLUNGEN' },
+        { name: 'tutorial', x: 270, y: 330, width: 180, height: 50, text: 'ANLEITUNG' }
     ];
     showingTutorial = false;
 
@@ -19,7 +19,6 @@ class StartScreen {
         this.backgroundImg = new Image();
         this.backgroundImg.src = './assets/img/Background/underwater.png';
 
-        // 4 Tasten-Bilder laden
         this.arrowKeysImg = new Image();
         this.arrowKeysImg.src = './assets/img/Botones/Key/arrow keys.png';
 
@@ -33,7 +32,6 @@ class StartScreen {
         this.eKeyImg.src = './assets/img/Botones/Key/E-Key.png';
     }
 
-    // Hilfsfunktion für abgerundete Rechtecke
     roundRect(ctx, x, y, width, height, radius) {
         ctx.beginPath();
         ctx.moveTo(x + radius, y);
@@ -49,7 +47,6 @@ class StartScreen {
     }
 
     draw(ctx) {
-        // 1. Hintergrund
         if (this.backgroundImg.complete && this.backgroundImg.naturalWidth > 0) {
             ctx.drawImage(this.backgroundImg, 0, 0, 720, 480);
         } else {
@@ -57,11 +54,9 @@ class StartScreen {
             ctx.fillRect(0, 0, 720, 480);
         }
 
-        // 2. Overlay
         ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
         ctx.fillRect(0, 0, 720, 480);
 
-        // 3. Buttons (wenn kein Tutorial aktiv)
         if (!this.showingTutorial) {
             this.buttons.forEach(button => {
                 const gradient = ctx.createLinearGradient(button.x, button.y, button.x, button.y + button.height);
@@ -84,68 +79,52 @@ class StartScreen {
                 ctx.shadowBlur = 0;
                 ctx.shadowOffsetY = 0;
 
-                ctx.font = '24px Luckiest Guy';
+                ctx.font = '20px Luckiest Guy';
                 ctx.fillStyle = 'white';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.fillText(button.text, button.x + button.width / 2, button.y + button.height / 2);
             });
         }
-        // 4. Tutorial mit 4 Tasten-Bildern
         else {
-            // Dunkler Hintergrund
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.9)';
+            ctx.fillStyle = 'rgba(0, 0, 30, 0.6)';
             ctx.fillRect(0, 0, 720, 480);
 
-            // Überschrift
             ctx.font = '48px Luckiest Guy';
             ctx.fillStyle = '#1a8fb4';
             ctx.textAlign = 'center';
             ctx.fillText('STEUERUNG', 360, 80);
 
-            // Bewegung (Pfeiltasten & WASD)
             ctx.font = '28px Luckiest Guy';
             ctx.fillStyle = 'white';
-            ctx.fillText('BEWEGUNG', 360, 140);
+            ctx.fillText('Bewegung', 360, 130);
 
-            const keyWidth = 140;
-            const keyHeight = 140;
-            const startX = (720 - 2 * keyWidth - 40) / 2;
+            const scale1 = 0.35;
+            const wasdScale = 0.18;
+            const eScale = 0.10;
 
-            // Pfeiltasten
             if (this.arrowKeysImg.complete) {
-                ctx.drawImage(this.arrowKeysImg, startX, 160, keyWidth, keyHeight);
+                ctx.drawImage(this.arrowKeysImg, 120, 150, this.arrowKeysImg.naturalWidth * scale1, this.arrowKeysImg.naturalHeight * scale1);
             }
-
-            // WASD
             if (this.wasdKeyImg.complete) {
-                ctx.drawImage(this.wasdKeyImg, startX + keyWidth + 40, 160, keyWidth, keyHeight);
+                ctx.drawImage(this.wasdKeyImg, 400, 100, this.wasdKeyImg.naturalWidth * wasdScale, this.wasdKeyImg.naturalHeight * wasdScale);
             }
 
-            // Angriffe
-            ctx.font = '28px Luckiest Guy';
-            ctx.fillText('ANGRiffe', 360, 320);
+            ctx.fillText('Angriff', 360, 270);
 
-            // SPACE (normaler Angriff)
             if (this.spaceKeyImg.complete) {
-                ctx.drawImage(this.spaceKeyImg, startX, 340, keyWidth, keyHeight);
+                ctx.drawImage(this.spaceKeyImg, 120, 290, this.spaceKeyImg.naturalWidth * scale1, this.spaceKeyImg.naturalHeight * scale1);
             }
-
-            // Text unter SPACE
-            ctx.font = '20px Luckiest Guy';
-            ctx.fillText('Normaler Angriff', startX + keyWidth/2, 490);
-
-            // E (Spezialangriff)
             if (this.eKeyImg.complete) {
-                ctx.drawImage(this.eKeyImg, startX + keyWidth + 40, 340, keyWidth, keyHeight);
+                ctx.drawImage(this.eKeyImg, 440, 270, this.eKeyImg.naturalWidth * eScale, this.eKeyImg.naturalHeight * eScale);
             }
 
-            // Text unter E
-            ctx.fillText('Spezial Angriff', startX + keyWidth + 40 + keyWidth/2, 490);
+            ctx.font = '24px Luckiest Guy';
+            ctx.fillText('Normaler Angriff', 120 + (this.spaceKeyImg.naturalWidth * scale1) / 2, 390);
+            ctx.fillText('Spezialangriff', 440 + (this.eKeyImg.naturalWidth * eScale) / 2, 390);
 
-            // Schließen-Button
             ctx.fillStyle = '#ff4444';
-            this.roundRect(ctx, 300, 440, 120, 40, 10);
+            this.roundRect(ctx, 300, 410, 120, 40, 10);
             ctx.fill();
 
             ctx.lineWidth = 2;
@@ -156,21 +135,19 @@ class StartScreen {
             ctx.fillStyle = 'white';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText('SCHLIESSEN', 360, 460);
+            ctx.fillText('SCHLIESSEN', 360, 430);
         }
     }
 
     checkClick(x, y, startGameCallback, settingsCallback) {
         if (this.showingTutorial) {
-            // Schließen-Button im Tutorial
-            if (x >= 300 && x <= 420 && y >= 440 && y <= 480) {
+            if (x >= 300 && x <= 420 && y >= 410 && y <= 450) {
                 this.showingTutorial = false;
                 return;
             }
             return;
         }
 
-        // Normale Buttons
         for (const button of this.buttons) {
             if (x >= button.x && x <= button.x + button.width &&
                 y >= button.y && y <= button.y + button.height) {
