@@ -24,14 +24,8 @@ function toggleFullscreen() {
         document.documentElement.requestFullscreen().catch(err => {
             console.error('Fullscreen-Fehler:', err);
         });
-        // Canvas mit Transform vergrößern
-        canvas.style.transform = 'scale(1.3)';
-        canvas.style.transformOrigin = 'center';
-        canvas.style.transition = 'transform 0.3s ease';
     } else {
         document.exitFullscreen();
-        // Zurück auf Original
-        canvas.style.transform = 'scale(1)';
     }
 }
 

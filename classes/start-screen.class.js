@@ -75,6 +75,21 @@ class StartScreen {
         ctx.fillRect(0, 0, 720, 480);
 
         if (!this.showingTutorial) {
+            const allImagesLoaded = this.startButtonImg.complete && this.settingsButtonImg.complete &&
+                                    this.tutorialButtonImg.complete && this.fullscreenButtonImg.complete &&
+                                    this.arrowKeysImg.complete && this.wasdKeyImg.complete &&
+                                    this.spaceKeyImg.complete && this.eKeyImg.complete;
+
+            if (!allImagesLoaded) {
+                ctx.font = '32px Luckiest Guy';
+                ctx.fillStyle = 'white';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('Lädt...', 360, 240);
+                return; 
+            }
+
+            
             this.buttons.forEach(button => {
                 ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
                 ctx.shadowBlur = 10;
@@ -88,16 +103,6 @@ class StartScreen {
 
                 if (buttonImg && buttonImg.complete) {
                     ctx.drawImage(buttonImg, button.x, button.y, button.width, button.height);
-                } else {
-                    const gradient = ctx.createLinearGradient(button.x, button.y, button.x, button.y + button.height);
-                    gradient.addColorStop(0, '#1a8fb4');
-                    gradient.addColorStop(1, '#0e6b86');
-                    this.roundRect(ctx, button.x, button.y, button.width, button.height, 15);
-                    ctx.fillStyle = gradient;
-                    ctx.fill();
-                    ctx.lineWidth = 3;
-                    ctx.strokeStyle = '#ffffff80';
-                    ctx.stroke();
                 }
 
                 ctx.shadowColor = 'transparent';
