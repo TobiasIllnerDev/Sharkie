@@ -1,6 +1,6 @@
 class World {
     character = new Character();
-    level = level1
+    level = getLevel1();
     canvas;
     keyboard;
     ctx;
