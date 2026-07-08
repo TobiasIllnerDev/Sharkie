@@ -17,6 +17,7 @@ class World {
         this.coinCount = 0;
         this.bottleCount = 0;
         this.isSpecialAttackPending = false;
+        this.isNormalAttackPending = false; 
         this.endboss = null;
         this.spawnTriggerDistance = 500;
         this.statusBarBoss = new StatusBarBoss();
@@ -41,21 +42,22 @@ class World {
    checkThrowObjects() {
         if(this.keyboard.SPACE && !this.character.isAttacking) {
             this.character.startAttack();
-            this.isSpecialAttackPending = false;
+            this.isNormalAttackPending = true;
         }
         
         
         if(this.keyboard.E && !this.character.isAttacking && this.bottleCount > 0) {
             this.character.startAttack();
-            this.isSpecialAttackPending = true;  
+            this.isSpecialAttackPending = true;
         }
 
         if(this.character.attackAnimationFinished) {
             
-            if(this.keyboard.SPACE) {
+            if(this.isNormalAttackPending) {
                 let bubble = new ThrowableObject(this.character.x + 100, this.character.y + 100, this.character.otherDiretion);
                 this.throwableObjects.push(bubble);
                 this.character.resetAttack();
+                this.isNormalAttackPending = false;
             }
             
             else if(this.isSpecialAttackPending && this.bottleCount > 0) {
@@ -88,8 +90,6 @@ class World {
         this.throwableObjects.forEach((bubble, bubbleIndex) => {
             this.level.enemies.forEach((enemy) => {
                 if(bubble.isColliding(enemy)) {
-                    // Normale Blase: normaler Schaden
-                    // Spezial-Blase: hat eigene damage-Eigenschaft
                     let damage = bubble.damage || this.character.attackPower;
                     enemy.hit(damage);
                     this.throwableObjects.splice(bubbleIndex, 1);
@@ -102,18 +102,14 @@ class World {
 
                 if (collectible instanceof Coin) {
                     this.coinCount++;
-                    // 20 Coins = 100%
                     let percentage = (this.coinCount / 20) * 100;
                     this.statusBarCoin.setPercentage(percentage);
                 }
                 else if (collectible instanceof Bottle) {
                     this.bottleCount++;
-                    // 20 Bottles = 100%
                     let percentage = (this.bottleCount / 20) * 100;
                     this.statusBarPosion.setPercentage(percentage);
                 }
-
-                // Aus Level entfernen
                 this.level.collectibles.splice(index, 1);
             }
         });
