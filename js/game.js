@@ -1,11 +1,45 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
+let ctx;
+let currentScreen = 'start';
+let startScreen;
 
 function init(){
-    canvas = document.getElementById('canvas');
+    ctx = canvas.getContext('2d');
     world = new World(canvas, keyboard);
 }
+
+function startGame() {
+    currentScreen = 'playing';
+    init();
+}
+
+function showSettings() {
+    console.log('Einstellungen geöffnet');
+}
+
+function draw() {
+    if(currentScreen === 'start') {
+        startScreen.draw(ctx);
+    } else if (currentScreen === 'playing' && world) {
+        world.draw();
+    }
+
+    requestAnimationFrame(draw);
+}
+
+canvas = document.getElementById('canvas');
+ctx = canvas.getContext('2d');
+
+canvas.addEventListener('click', (e) => {
+    if (currentScreen === 'start') {
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        startScreen.checkClick(x, y, startGame, showSettings);
+    }
+});
 
 window.addEventListener('keydown', (e) => {
     if(e.keyCode == 39 || e.keyCode == 68) {
@@ -57,4 +91,6 @@ window.addEventListener('keyup', (e) => {
     }
 })
 
-init();
+
+startScreen = new StartScreen();
+draw();
