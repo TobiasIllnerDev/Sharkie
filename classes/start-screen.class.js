@@ -4,10 +4,15 @@ class StartScreen {
     wasdKeyImg;
     spaceKeyImg;
     eKeyImg;
+    startButtonImg;
+    settingsButtonImg;
+    tutorialButtonImg;
+    fullscreenButtonImg;
     buttons = [
-        { name: 'start', x: 270, y: 200, width: 180, height: 50, text: 'SPIEL STARTEN' },
-        { name: 'settings', x: 270, y: 265, width: 180, height: 50, text: 'EINSTELLUNGEN' },
-        { name: 'tutorial', x: 270, y: 330, width: 180, height: 50, text: 'ANLEITUNG' }
+        { name: 'start', x: 270, y: 150, width: 180, height: 50 },
+        { name: 'settings', x: 270, y: 215, width: 180, height: 50 },
+        { name: 'tutorial', x: 270, y: 280, width: 180, height: 50 },
+        { name: 'fullscreen', x: 270, y: 345, width: 180, height: 50 }
     ];
     showingTutorial = false;
 
@@ -30,6 +35,18 @@ class StartScreen {
 
         this.eKeyImg = new Image();
         this.eKeyImg.src = './assets/img/Botones/Key/E-Key.png';
+
+        this.startButtonImg = new Image();
+        this.startButtonImg.src = './assets/img/Botones/Start/Start-button.png';
+
+        this.settingsButtonImg = new Image();
+        this.settingsButtonImg.src = './assets/img/Botones/Start/Einstellung-button.png';
+
+        this.tutorialButtonImg = new Image();
+        this.tutorialButtonImg.src = './assets/img/Botones/Start/Anleitung-button.png';
+
+        this.fullscreenButtonImg = new Image();
+        this.fullscreenButtonImg.src = './assets/img/Botones/Start/Fullscreen-button.png';
     }
 
     roundRect(ctx, x, y, width, height, radius) {
@@ -59,31 +76,33 @@ class StartScreen {
 
         if (!this.showingTutorial) {
             this.buttons.forEach(button => {
-                const gradient = ctx.createLinearGradient(button.x, button.y, button.x, button.y + button.height);
-                gradient.addColorStop(0, '#1a8fb4');
-                gradient.addColorStop(1, '#0e6b86');
-
                 ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
                 ctx.shadowBlur = 10;
                 ctx.shadowOffsetY = 5;
 
-                this.roundRect(ctx, button.x, button.y, button.width, button.height, 15);
-                ctx.fillStyle = gradient;
-                ctx.fill();
+                let buttonImg;
+                if (button.name === 'start') buttonImg = this.startButtonImg;
+                else if (button.name === 'settings') buttonImg = this.settingsButtonImg;
+                else if (button.name === 'tutorial') buttonImg = this.tutorialButtonImg;
+                else if (button.name === 'fullscreen') buttonImg = this.fullscreenButtonImg;
 
-                ctx.lineWidth = 3;
-                ctx.strokeStyle = '#ffffff80';
-                ctx.stroke();
+                if (buttonImg && buttonImg.complete) {
+                    ctx.drawImage(buttonImg, button.x, button.y, button.width, button.height);
+                } else {
+                    const gradient = ctx.createLinearGradient(button.x, button.y, button.x, button.y + button.height);
+                    gradient.addColorStop(0, '#1a8fb4');
+                    gradient.addColorStop(1, '#0e6b86');
+                    this.roundRect(ctx, button.x, button.y, button.width, button.height, 15);
+                    ctx.fillStyle = gradient;
+                    ctx.fill();
+                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = '#ffffff80';
+                    ctx.stroke();
+                }
 
                 ctx.shadowColor = 'transparent';
                 ctx.shadowBlur = 0;
                 ctx.shadowOffsetY = 0;
-
-                ctx.font = '20px Luckiest Guy';
-                ctx.fillStyle = 'white';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(button.text, button.x + button.width / 2, button.y + button.height / 2);
             });
         }
         else {
@@ -139,7 +158,7 @@ class StartScreen {
         }
     }
 
-    checkClick(x, y, startGameCallback, settingsCallback) {
+    checkClick(x, y, startGameCallback, settingsCallback, fullscreenCallback) {
         if (this.showingTutorial) {
             if (x >= 300 && x <= 420 && y >= 410 && y <= 450) {
                 this.showingTutorial = false;
@@ -159,6 +178,9 @@ class StartScreen {
                     return;
                 } else if (button.name === 'tutorial') {
                     this.showingTutorial = true;
+                    return;
+                } else if (button.name === 'fullscreen' && fullscreenCallback) {
+                    fullscreenCallback();
                     return;
                 }
             }

@@ -19,6 +19,22 @@ function showSettings() {
     console.log('Einstellungen geöffnet');
 }
 
+function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+            console.error('Fullscreen-Fehler:', err);
+        });
+        // Canvas mit Transform vergrößern
+        canvas.style.transform = 'scale(1.3)';
+        canvas.style.transformOrigin = 'center';
+        canvas.style.transition = 'transform 0.3s ease';
+    } else {
+        document.exitFullscreen();
+        // Zurück auf Original
+        canvas.style.transform = 'scale(1)';
+    }
+}
+
 function draw() {
     if(currentScreen === 'start') {
         startScreen.draw(ctx);
@@ -37,7 +53,7 @@ canvas.addEventListener('click', (e) => {
         const rect = canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-        startScreen.checkClick(x, y, startGame, showSettings);
+        startScreen.checkClick(x, y, startGame, showSettings, toggleFullscreen);
     }
 });
 
