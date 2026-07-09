@@ -57,8 +57,8 @@ class UIControls {
 
     handleClick(x, y) {
         const sliderX = this.x + this.buttonSize + this.padding;
-
         const backX = this.x + this.buttonSize + this.padding + this.sliderWidth + this.padding;
+
         if (x >= backX && x <= backX + this.buttonSize &&
             y >= this.y && y <= this.y + this.buttonSize) {
             return 'back';
@@ -70,9 +70,16 @@ class UIControls {
             return 'mute';
         }
 
-        if (x >= sliderX && x <= sliderX + this.sliderWidth &&
+        const knobX = sliderX + this.sliderWidth * this.soundManager.volume;
+        if (x >= knobX - 8 && x <= knobX + 8 &&
             y >= this.y && y <= this.y + this.buttonSize) {
             this.isDragging = true;
+            this.updateSlider(x, sliderX);
+            return 'slider';
+        }
+
+        if (x >= sliderX && x <= sliderX + this.sliderWidth &&
+            y >= this.y - 5 && y <= this.y + this.buttonSize + 5) {
             this.updateSlider(x, sliderX);
             return 'slider';
         }

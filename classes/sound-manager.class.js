@@ -3,7 +3,6 @@ class SoundManager {
     volume = 0.5;
     sounds = {};
     backgroundSound = null;
-    isDraggingSlider = false;
 
     loadSound(name, path, isBackground = false, isLooping = false) {
         const audio = new Audio(path);
@@ -27,26 +26,22 @@ class SoundManager {
         if (sound && !this.muted) {
             sound.audio.currentTime = 0;
             sound.audio.volume = this.volume;
-            sound.audio.muted = this.muted
+            sound.audio.muted = this.muted;
             sound.audio.play().catch(e => {});
         }
     }
 
     playBackground() {
-        if (this.backgroundSound && !this.muted) {
-            this.backgroundSound.audio.volume = this.volume;
-            this.backgroundSound.audio.play().catch(e => {});
-        }
-    }
-
-    stopBackground() {
         if (this.backgroundSound) {
-            this.backgroundSound.audio.pause();
-            this.backgroundSound.audio.currentTime = 0;
+            this.backgroundSound.audio.volume = this.volume;
+            this.backgroundSound.audio.muted = this.muted;
+            if (!this.muted) {
+                this.backgroundSound.audio.play().catch(e => {});
+            }
         }
     }
 
-   stopAllSounds() {
+    stopAllSounds() {
         if (this.backgroundSound) {
             this.backgroundSound.audio.pause();
             this.backgroundSound.audio.currentTime = 0;

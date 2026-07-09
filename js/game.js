@@ -6,7 +6,8 @@ let currentScreen = 'start';
 let startScreen;
 let soundManager;
 let uiControls;
-let savedVolume = 0.5; 
+let savedVolume = 0.5;
+let level1 = null;
 
 function init(){
     ctx = canvas.getContext('2d');
@@ -24,6 +25,10 @@ function init(){
     soundManager.loadSound('fail', '../assets/sounds/Fail-sound.mp3');
     soundManager.loadSound('win', '../assets/sounds/Win-Sound.mp3');
 
+    const savedVol = localStorage.getItem('sharkieSavedVolume');
+    if (savedVol !== null) {
+        savedVolume = parseFloat(savedVol);
+    }
 
     soundManager.setVolume(savedVolume);
     soundManager.setMuted(false);
@@ -34,6 +39,7 @@ function init(){
 }
 
 function startGame() {
+    level1 = null;
     currentScreen = 'playing';
     init();
 }
@@ -42,19 +48,6 @@ function stopGame() {
     if (soundManager) {
         soundManager.stopBackground();
     }
-}
-
-function resetGame() {
-    if (soundManager) {
-        savedVolume = soundManager.volume;
-        soundManager.stopAllSounds();
-    }
-
-    if (world) {
-        world = null;
-    }
-
-    currentScreen = 'start';
 }
 
 function showSettings() {
@@ -71,6 +64,28 @@ function toggleFullscreen() {
     }
 }
 
+function resetGame() {
+    if (soundManager) {
+        savedVolume = soundManager.volume;
+        localStorage.setItem('sharkieSavedVolume', savedVolume);
+        soundManager.stopAllSounds();
+        soundManager = null; 
+    }
+
+    if (world) {
+        world.cleanup();
+        world = null;
+    }
+
+    level1 = null;
+
+    if (uiControls) {
+        uiControls = null;
+    }
+
+    currentScreen = 'start';
+}
+
 function draw() {
     if(currentScreen === 'start') {
         startScreen.draw(ctx);
@@ -78,7 +93,6 @@ function draw() {
         world.draw();
         uiControls.draw(ctx);
     }
-
     requestAnimationFrame(draw);
 }
 
@@ -102,7 +116,7 @@ canvas.addEventListener('click', (e) => {
     }
 });
 
-canvas.addEventListener('mousemove', (e) => {
+document.addEventListener('mousemove', (e) => {
     if (currentScreen === 'playing' && uiControls && uiControls.isDragging) {
         const rect = canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
@@ -110,58 +124,28 @@ canvas.addEventListener('mousemove', (e) => {
     }
 });
 
-canvas.addEventListener('mouseup', () => {
-    if (currentScreen === 'playing' && uiControls) {
-        uiControls.handleMouseUp();
-    }
-});
-
-canvas.addEventListener('mouseleave', () => {
+document.addEventListener('mouseup', () => {
     if (currentScreen === 'playing' && uiControls) {
         uiControls.handleMouseUp();
     }
 });
 
 window.addEventListener('keydown', (e) => {
-    if(e.keyCode == 39 || e.keyCode == 68) {
-        keyboard.RIGHT = true;
-    }
-    if(e.keyCode == 37 || e.keyCode == 65) {
-        keyboard.LEFT = true;
-    }
-    if(e.keyCode == 40 || e.keyCode == 83) {
-        keyboard.DOWN = true;
-    }
-    if(e.keyCode == 38 || e.keyCode == 87) {
-        keyboard.UP = true;
-    }
-    if(e.keyCode == 32) {
-        keyboard.SPACE  = true;
-    }
-    if(e.keyCode == 69) {
-        keyboard.E = true;
-    }
+    if(e.keyCode == 39 || e.keyCode == 68) keyboard.RIGHT = true;
+    if(e.keyCode == 37 || e.keyCode == 65) keyboard.LEFT = true;
+    if(e.keyCode == 40 || e.keyCode == 83) keyboard.DOWN = true;
+    if(e.keyCode == 38 || e.keyCode == 87) keyboard.UP = true;
+    if(e.keyCode == 32) keyboard.SPACE = true;
+    if(e.keyCode == 69) keyboard.E = true;
 });
 
 window.addEventListener('keyup', (e) => {
-    if(e.keyCode == 39 || e.keyCode == 68) {
-        keyboard.RIGHT = false;
-    }
-    if(e.keyCode == 37 || e.keyCode == 65) {
-        keyboard.LEFT = false;
-    }
-    if(e.keyCode == 40 || e.keyCode == 83) {
-        keyboard.DOWN = false;
-    }
-    if(e.keyCode == 38 || e.keyCode == 87) {
-        keyboard.UP = false;
-    }
-    if(e.keyCode == 32) {
-        keyboard.SPACE  = false;
-    }
-    if(e.keyCode == 69) {
-        keyboard.E = false;
-    }
+    if(e.keyCode == 39 || e.keyCode == 68) keyboard.RIGHT = false;
+    if(e.keyCode == 37 || e.keyCode == 65) keyboard.LEFT = false;
+    if(e.keyCode == 40 || e.keyCode == 83) keyboard.DOWN = false;
+    if(e.keyCode == 38 || e.keyCode == 87) keyboard.UP = false;
+    if(e.keyCode == 32) keyboard.SPACE = false;
+    if(e.keyCode == 69) keyboard.E = false;
 });
 
 startScreen = new StartScreen();

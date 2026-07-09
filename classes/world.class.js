@@ -1,5 +1,5 @@
 class World {
-    character = new Character();
+    character;
     level = getLevel1();
     canvas;
     keyboard;
@@ -10,6 +10,7 @@ class World {
     statusBarCoin = new StatusBarCoin();
     statusBarPosion = new StatusBarPosion();
     throwableObjects = [];
+    collisionInterval = null;
 
     constructor(canvas, keyboard, soundManager) {
         this.ctx = canvas.getContext('2d');
@@ -23,6 +24,7 @@ class World {
         this.endboss = null;
         this.spawnTriggerDistance = 500;
         this.statusBarBoss = new StatusBarBoss();
+        this.character = new Character();
         this.draw();
         this.setWorld();
         this.character.animate();
@@ -33,6 +35,27 @@ class World {
        this.character.world = this;
        this.character.setSoundManager(this.soundManager);
     }
+
+    cleanup() {
+        if (this.collisionInterval) {
+            clearInterval(this.collisionInterval);
+            this.collisionInterval = null;
+        }
+
+        if (this.character && this.character.cleanup) {
+            this.character.cleanup();
+        }
+
+        if (this.level && this.level.enemies) {
+            this.level.enemies.forEach(enemy => {
+                if (enemy.clearMoveInterval) {
+                    enemy.clearMoveInterval();
+                }
+            });
+            this.level.enemies = [];
+        }
+    }
+
 
     run() {
         setInterval(() => {

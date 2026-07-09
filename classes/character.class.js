@@ -35,6 +35,15 @@ class Character extends MovableObject {
         this.soundManager = soundManager;
     }
 
+    cleanup() {
+        this.isCurrentlySnoring = false;
+        if (this.soundManager && this.soundManager.sounds['snoring']) {
+            this.soundManager.sounds['snoring'].audio.pause();
+            this.soundManager.sounds['snoring'].audio.currentTime = 0;
+        }
+    }
+
+
     animate() {
         setInterval(() => {
             if (this.isDead()) {

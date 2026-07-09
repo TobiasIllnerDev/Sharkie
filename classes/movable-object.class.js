@@ -4,27 +4,36 @@ class MovableObject extends DrawableObject{
     energy = 100;
     lastHit = 0;
     lastMove = 0;
+    moveInterval = null;
 
     moveRight() {
-        setInterval(() => {
+        this.clearMoveInterval();
+        this.moveInterval = setInterval(() => {
             let speedX = 10;
             this.x += speedX;
         }, 1000 / 60);
     }
 
     moveLeft() {
-        setInterval(() => {
+        this.clearMoveInterval();
+        this.moveInterval = setInterval(() => {
             this.x -= this.speed;
         }, 1000 / 60);
     }
 
+    clearMoveInterval() {
+        if (this.moveInterval) {
+            clearInterval(this.moveInterval);
+            this.moveInterval = null;
+        }
+    }
+    
     playAnimation(images) {
         let i = this.currentImage % images.length;
-                let path = images[i];
-                this.img = this.imageCache[path];
-                this.currentImage ++;
+        let path = images[i];
+        this.img = this.imageCache[path];
+        this.currentImage++;
     }
-
     
     isColliding(mo) {
         return this.x + this.offsetX + (this.width - this.offsetWidth) > mo.x + mo.offsetX &&
