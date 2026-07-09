@@ -10,6 +10,9 @@ class Character extends MovableObject {
     attackAnimationFinished = false;
     speed = 4;
     attackPower = 90;
+    soundManager;
+    lastSwimSound = 0;
+    isSnoring = false;
 
     constructor() {
         super().loadImage('../assets/img/Sharkie/1.IDLE/1.png')
@@ -27,7 +30,23 @@ class Character extends MovableObject {
         this.offsetHeight = 120;
     }
 
+    setSoundManager(soundManager) {
+        this.soundManager = soundManager;
+    }
+
     animate() {
+
+        setInterval(() => {
+            if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT ||
+                this.world.keyboard.UP || this.world.keyboard.DOWN) {
+                const now = Date.now();
+                if (now - this.lastSwimSound > 300) {
+                    this.soundManager.playSound('character_swim');
+                    this.lastSwimSound = now;
+                }
+            }
+        }, 100);
+        
         setInterval(() => {
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);

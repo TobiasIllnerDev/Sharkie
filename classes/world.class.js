@@ -31,6 +31,7 @@ class World {
 
     setWorld() {
        this.character.world = this;
+       this.character.setSoundManager(this.soundManager);
     }
 
     run() {
@@ -89,6 +90,11 @@ class World {
             if(this.character.isColliding(enemy)) {
                 this.character.hit(enemy.damage);
                 this.statusBarLife.setPercentage(this.character.energy);
+                this.soundManager.playSound('damage')
+                if (this.character.isDead() && !this.gameOver) {
+                    this.soundManager.playSound('fail');
+                    this.gameOver = true;
+                }
             }
         });
         this.throwableObjects.forEach((bubble, bubbleIndex) => {

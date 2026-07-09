@@ -1,14 +1,14 @@
 class SoundManager {
     muted = false;
-    volume = 0.5; 
+    volume = 0.5;
     sounds = {};
     backgroundSound = null;
 
-    
     soundCategories = {
         background: { volume: 0.3, enabled: true },
         effects: { volume: 1.0, enabled: true },
-        collectibles: { volume: 1.0, enabled: true }
+        collectibles: { volume: 1.0, enabled: true },
+        character: { volume: 0.8, enabled: true }
     };
 
     loadSound(name, path, category = 'effects', isBackground = false) {
