@@ -100,7 +100,6 @@ class World {
 
                     if(enemy.isDead()) {
                         this.soundManager.playSound('enemy_die');
-                        this.level.enemies.splice(enemyIndex, 1)
                     }
                 }
             });
