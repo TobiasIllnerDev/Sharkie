@@ -11,8 +11,8 @@ class Character extends MovableObject {
     speed = 4;
     attackPower = 90;
     soundManager;
-    lastSwimSound = 0;
-    isSnoring = false;
+    deadSoundPlayed = false;
+    isCurrentlySnoring = false; 
 
     constructor() {
         super().loadImage('../assets/img/Sharkie/1.IDLE/1.png')
@@ -30,26 +30,19 @@ class Character extends MovableObject {
         this.offsetHeight = 120;
     }
 
+
     setSoundManager(soundManager) {
         this.soundManager = soundManager;
     }
 
     animate() {
-
-        setInterval(() => {
-            if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT ||
-                this.world.keyboard.UP || this.world.keyboard.DOWN) {
-                const now = Date.now();
-                if (now - this.lastSwimSound > 300) {
-                    this.soundManager.playSound('character_swim');
-                    this.lastSwimSound = now;
-                }
-            }
-        }, 100);
-        
         setInterval(() => {
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
+                if (!this.deadSoundPlayed) {
+                    this.soundManager.playSound('dead');
+                    this.deadSoundPlayed = true;
+                }
             }
             else if (this.isHurt()) {
                 this.playAnimation(this.IMAGES_HURT);
@@ -60,36 +53,56 @@ class Character extends MovableObject {
                     this.attackAnimationFinished = true;
                 }
             }
-            else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT || 
+            else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT ||
                     this.world.keyboard.UP || this.world.keyboard.DOWN) {
                 this.playAnimation(this.IMAGES_SWIM);
+                if (this.isCurrentlySnoring) {
+                    if (this.soundManager && this.soundManager.sounds['snoring']) {
+                        this.soundManager.sounds['snoring'].audio.pause();
+                        this.soundManager.sounds['snoring'].audio.currentTime = 0;
+                    }
+                    this.isCurrentlySnoring = false;
+                }
             }
             else if (this.isAFK()) {
                 this.playAnimation(this.IMAGES_SLEEP);
+                if (!this.isCurrentlySnoring) {
+                    this.soundManager.playSound('snoring');
+                    this.isCurrentlySnoring = true;
+                }
             }
             else {
                 this.playAnimation(this.IMAGES_IDLE);
+                
+                if (this.isCurrentlySnoring) {
+                    if (this.soundManager && this.soundManager.sounds['snoring']) {
+                        this.soundManager.sounds['snoring'].audio.pause();
+                        this.soundManager.sounds['snoring'].audio.currentTime = 0;
+                    }
+                    this.isCurrentlySnoring = false;
+                }
             }
         }, 150);
 
+        // Bewegung alle 16.67ms
         setInterval(() => {
             if(this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
                 this.x += this.speed;
                 this.otherDiretion = false;
-                this.lastMove = new Date().getTime();
+                this.dontMove();
             }
             if(this.world.keyboard.LEFT && this.x > -650) {
                 this.x -= this.speed;
                 this.otherDiretion = true;
-                this.lastMove = new Date().getTime();
+                this.dontMove();
             }
             if(this.world.keyboard.UP && this.y > -90) {
                 this.y -= this.speed;
-                this.lastMove = new Date().getTime();
+                this.dontMove();
             }
-            if(this.world.keyboard.DOWN && this.y  < 320) {
+            if(this.world.keyboard.DOWN && this.y < 320) {
                 this.y += this.speed;
-                this.lastMove = new Date().getTime();
+                this.dontMove();
             }
             this.world.camera_x = -this.x + 50;
         }, 1000 / 60);
@@ -98,7 +111,7 @@ class Character extends MovableObject {
     startAttack() {
         this.isAttacking = true;
         this.attackAnimationFinished = false;
-        this.currentImage = 0; 
+        this.currentImage = 0;
     }
 
     resetAttack() {

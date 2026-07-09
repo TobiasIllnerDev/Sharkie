@@ -11,7 +11,7 @@ class SoundManager {
         character: { volume: 0.8, enabled: true }
     };
 
-    loadSound(name, path, category = 'effects', isBackground = false) {
+    loadSound(name, path, category = 'effects', isBackground = false, isLooping = false) {
         const audio = new Audio(path);
         audio.volume = this.soundCategories[category].volume * this.volume;
         audio.muted = this.muted || !this.soundCategories[category].enabled;
@@ -19,6 +19,16 @@ class SoundManager {
         if (isBackground) {
             audio.loop = true;
             this.backgroundSound = { audio, category, name };
+        }
+
+        if (isLooping) {
+            audio.loop = true;
+            audio.addEventListener('ended', () => {
+                if (!audio.paused) {
+                    audio.currentTime = 0;
+                    audio.play().catch(e => {});
+                }
+            });
         }
 
         this.sounds[name] = { audio, category };

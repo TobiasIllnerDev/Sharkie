@@ -19,7 +19,7 @@ function init(){
     soundManager.loadSound('character_swim', '../assets/sounds/Character-swim.mp3', 'character');
     soundManager.loadSound('damage', '../assets/sounds/characterDamage.mp3', 'effects');
     soundManager.loadSound('dead', '../assets/sounds/characterDead.wav', 'character');
-    soundManager.loadSound('snoring', '../assets/sounds/characterSnoring.mp3', 'character');
+    soundManager.loadSound('snoring', '../assets/sounds/characterSnoring.mp3', 'character',false, true);
     soundManager.loadSound('fail', '../assets/sounds/Fail-sound.mp3', 'effects');
     soundManager.loadSound('win', '../assets/sounds/Win-Sound.mp3', 'effects');
 
