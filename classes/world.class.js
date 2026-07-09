@@ -3,6 +3,7 @@ class World {
     level = getLevel1();
     canvas;
     keyboard;
+    soundManager;
     ctx;
     camera_x = 0;
     statusBarLife = new StatusBarLife();
@@ -10,10 +11,11 @@ class World {
     statusBarPosion = new StatusBarPosion();
     throwableObjects = [];
 
-    constructor(canvas, keyboard) {
+    constructor(canvas, keyboard, soundManager) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
+        this.soundManager = soundManager;
         this.coinCount = 0;
         this.bottleCount = 0;
         this.isSpecialAttackPending = false;
@@ -57,6 +59,7 @@ class World {
                 let bubble = new ThrowableObject(this.character.x + 100, this.character.y + 100, this.character.otherDiretion);
                 this.throwableObjects.push(bubble);
                 this.character.resetAttack();
+                this.soundManager.playSound('attack');
                 this.isNormalAttackPending = false;
             }
             
@@ -70,6 +73,7 @@ class World {
                 this.statusBarPosion.setPercentage(percentage);
 
                 this.character.resetAttack();
+                this.soundManager.playSound('attack');
                 this.isSpecialAttackPending = false;  
             }
         }
@@ -93,6 +97,11 @@ class World {
                     let damage = bubble.damage || this.character.attackPower;
                     enemy.hit(damage);
                     this.throwableObjects.splice(bubbleIndex, 1);
+
+                    if(enemy.isDead()) {
+                        this.soundManager.playSound('enemy_die');
+                        this.level.enemies.splice(enemyIndex, 1)
+                    }
                 }
             });
         });
@@ -104,11 +113,13 @@ class World {
                     this.coinCount++;
                     let percentage = (this.coinCount / 20) * 100;
                     this.statusBarCoin.setPercentage(percentage);
+                    this.soundManager.playSound('coin')
                 }
                 else if (collectible instanceof Bottle) {
                     this.bottleCount++;
                     let percentage = (this.bottleCount / 20) * 100;
                     this.statusBarPosion.setPercentage(percentage);
+                    this.soundManager.playSound('bottle')
                 }
                 this.level.collectibles.splice(index, 1);
             }

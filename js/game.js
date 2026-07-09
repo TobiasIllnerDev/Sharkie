@@ -4,16 +4,37 @@ let keyboard = new Keyboard();
 let ctx;
 let currentScreen = 'start';
 let startScreen;
+let soundManager;
 
 function init(){
     ctx = canvas.getContext('2d');
-    world = new World(canvas, keyboard);
+    soundManager = new SoundManager();
+
+    
+    soundManager.loadSound('background', '../assets/sounds/background-musik.mp3', 'background', true);
+    soundManager.loadSound('coin', '../assets/sounds/Coin-Colleted.mp3', 'collectibles');
+    soundManager.loadSound('bottle', '../assets/sounds/bottle-pick-up.mp3', 'collectibles');
+    soundManager.loadSound('enemy_die', '../assets/sounds/enemy-die.mp3', 'effects');
+    soundManager.loadSound('attack', '../assets/sounds/Attack-sound.mp3', 'effects');
+
+    world = new World(canvas, keyboard, soundManager);
+    soundManager.playBackground();
 }
 
 function startGame() {
     currentScreen = 'playing';
     init();
 }
+
+function stopGame() {
+    if (soundManager) {
+        soundManager.stopBackground();
+    }
+}
+
+window.addEventListener('beforeunload', () => {
+    stopGame();
+});
 
 function showSettings() {
     console.log('Einstellungen geöffnet');
