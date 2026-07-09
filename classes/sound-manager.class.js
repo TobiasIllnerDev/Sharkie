@@ -3,49 +3,38 @@ class SoundManager {
     volume = 0.5;
     sounds = {};
     backgroundSound = null;
+    isDraggingSlider = false;
 
-    soundCategories = {
-        background: { volume: 0.3, enabled: true },
-        effects: { volume: 1.0, enabled: true },
-        collectibles: { volume: 1.0, enabled: true },
-        character: { volume: 0.8, enabled: true }
-    };
-
-    loadSound(name, path, category = 'effects', isBackground = false, isLooping = false) {
+    loadSound(name, path, isBackground = false, isLooping = false) {
         const audio = new Audio(path);
-        audio.volume = this.soundCategories[category].volume * this.volume;
-        audio.muted = this.muted || !this.soundCategories[category].enabled;
+        audio.volume = this.volume;
+        audio.muted = this.muted;
 
         if (isBackground) {
             audio.loop = true;
-            this.backgroundSound = { audio, category, name };
+            this.backgroundSound = { audio, name };
         }
 
         if (isLooping) {
             audio.loop = true;
-            audio.addEventListener('ended', () => {
-                if (!audio.paused) {
-                    audio.currentTime = 0;
-                    audio.play().catch(e => {});
-                }
-            });
         }
 
-        this.sounds[name] = { audio, category };
+        this.sounds[name] = { audio };
     }
 
     playSound(name) {
         const sound = this.sounds[name];
-        if (sound && !this.muted && this.soundCategories[sound.category].enabled) {
+        if (sound && !this.muted) {
             sound.audio.currentTime = 0;
-            sound.audio.volume = this.soundCategories[sound.category].volume * this.volume;
+            sound.audio.volume = this.volume;
+            sound.audio.muted = this.muted
             sound.audio.play().catch(e => {});
         }
     }
 
     playBackground() {
-        if (this.backgroundSound && !this.muted && this.soundCategories[this.backgroundSound.category].enabled) {
-            this.backgroundSound.audio.volume = this.soundCategories[this.backgroundSound.category].volume * this.volume;
+        if (this.backgroundSound && !this.muted) {
+            this.backgroundSound.audio.volume = this.volume;
             this.backgroundSound.audio.play().catch(e => {});
         }
     }
@@ -55,6 +44,17 @@ class SoundManager {
             this.backgroundSound.audio.pause();
             this.backgroundSound.audio.currentTime = 0;
         }
+    }
+
+   stopAllSounds() {
+        if (this.backgroundSound) {
+            this.backgroundSound.audio.pause();
+            this.backgroundSound.audio.currentTime = 0;
+        }
+        Object.values(this.sounds).forEach(sound => {
+            sound.audio.pause();
+            sound.audio.currentTime = 0;
+        });
     }
 
     setVolume(volume) {
@@ -69,12 +69,12 @@ class SoundManager {
 
     updateAllVolumes() {
         Object.values(this.sounds).forEach(sound => {
-            sound.audio.volume = this.soundCategories[sound.category].volume * this.volume;
-            sound.audio.muted = this.muted || !this.soundCategories[sound.category].enabled;
+            sound.audio.volume = this.volume;
+            sound.audio.muted = this.muted;
         });
         if (this.backgroundSound) {
-            this.backgroundSound.audio.volume = this.soundCategories[this.backgroundSound.category].volume * this.volume;
-            this.backgroundSound.audio.muted = this.muted || !this.soundCategories[this.backgroundSound.category].enabled;
+            this.backgroundSound.audio.volume = this.volume;
+            this.backgroundSound.audio.muted = this.muted;
         }
     }
 }
