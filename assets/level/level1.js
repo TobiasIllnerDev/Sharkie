@@ -1,11 +1,10 @@
 function getLevel1() {
-    // 🔥 IMMER NEU ERSTELLEN - kein Caching!
     return new Level(
         [
-            new JellyFishPurple(700, 100), new JellyFishPurple(850, 240), new JellyFishPurple(1000, 380),
-            new JellyFishYellow(1450, 350), new JellyFishYellow(1600, 220), new JellyFishYellow(1750, 90),
-            new JellyFishGreen(2200, 100), new JellyFishGreen(2350, 250), new JellyFishGreen(2500, 380),
-            new JellyFishPink(3000, 350), new JellyFishPink(3150, 220), new JellyFishPink(3300, 90),
+            new JellyFishPurple(1350, 350), new JellyFishPurple(2300, 380), new JellyFishPurple(1000, 380),
+            new JellyFishYellow(700, 100), new JellyFishYellow(1600, 220), new JellyFishYellow(1750, 90),
+            new JellyFishGreen(3150, 220), new JellyFishGreen(2350, 250), new JellyFishGreen(850, 240),
+            new JellyFishPink(2800, 350), new JellyFishPink(2200, 100), new JellyFishPink(3300, 90),
         ],
         [
             new Light()
