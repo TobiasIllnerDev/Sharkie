@@ -11,7 +11,7 @@ class Endboss extends MovableObject {
     height = 400;
     width = 400;
     y  = -20
-    damage = 20;
+    damage = 25;
     energy = 100;
     maxEnergy = 100;
     shouldRemove = false;
@@ -30,7 +30,7 @@ class Endboss extends MovableObject {
         this.loadImages(this.IMAGES_SPAWN);
         this.loadImages(this.IMAGES_ATTACK);
         this.x = 4200;
-        this.speed = 0.15;
+        this.speed = 2;
         this.offsetX = 20;
         this.offsetY = 150;
         this.offsetWidth = 40;

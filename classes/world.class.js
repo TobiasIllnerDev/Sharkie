@@ -68,6 +68,7 @@ class World {
 
     run() {
         this.runInterval = setInterval(() => {
+            if (this.gameOver || this.win) return;
             this.checkCollisions();
             this.checkThrowObjects();
             this.checkBossSpawn();
@@ -184,6 +185,11 @@ class World {
             const bossHealthPercentage = (this.endboss.energy / this.endboss.maxEnergy) * 100;
             this.statusBarBoss.setPercentage(bossHealthPercentage);
             this.endboss.tryAttack();
+
+            if (this.endboss.isDead() && !this.win) {
+                this.win = true;
+                this.soundManager.playSound('win');
+            }
         }
     }
 

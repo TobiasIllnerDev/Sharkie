@@ -5,6 +5,7 @@ let keyboard = new Keyboard();
 let ctx;
 let currentScreen = 'start';
 let startScreen;
+let endScreen = new EndScreen();
 let soundManager;
 let uiControls;
 let savedVolume = 0.5;
@@ -164,14 +165,29 @@ function resetGame() {
     }
 }
 
+function restartGame() {
+    resetGame();
+    startGame();
+}
+
 function draw() {
     if (currentScreen === 'start') {
         startScreen.draw(ctx);
     } else if (currentScreen === 'playing' && world) {
         world.draw();
-        if (uiControls) {
-            uiControls.draw(ctx);
+        if (uiControls) uiControls.draw(ctx);
+
+        if (world.gameOver) {
+            currentScreen = 'gameover';
+        } else if (world.win) {
+            currentScreen = 'win';
         }
+    } else if (currentScreen === 'gameover') {
+        world.draw();
+        endScreen.draw(ctx, 'gameover');
+    } else if (currentScreen === 'win') {
+        world.draw();
+        endScreen.draw(ctx, 'win');
     }
     requestAnimationFrame(draw);
 }
@@ -193,6 +209,8 @@ canvas.addEventListener('click', (e) => {
         } else if (result === 'fullscreen') {
             toggleFullscreen();
         }
+    } else if ((currentScreen === 'gameover' || currentScreen === 'win') && endScreen.isButtonClicked(x, y)) {
+        restartGame();
     }
 });
 
