@@ -192,13 +192,12 @@ class StartScreen {
 
                 ctx.font = '22px Luckiest Guy';
                 ctx.fillStyle = 'white';
-                ctx.fillText('Verantwortlich f\u00fcr den Inhalt:', 360, 160);
+                ctx.fillText('Verantwortlich f\u00fcr den Inhalt:', 360, 190);
                 ctx.font = '28px Luckiest Guy';
-                ctx.fillText('Tobias Illner', 360, 195);
+                ctx.fillText('Tobias Illner', 360, 245);
                 ctx.font = '20px Luckiest Guy';
-                ctx.fillText('Hirtenweg 13', 360, 230);
-                ctx.fillText('38536 Meinersen', 360, 258);
-                ctx.fillText('Sharkie - ein 2D-Actionspiel', 360, 292);
+                ctx.fillText('Hirtenweg 13', 360, 280);
+                ctx.fillText('38536 Meinersen', 360, 308);
 
                 this.roundRect(ctx, 240, 348, 240, 44, 12);
                 ctx.fillStyle = '#ff4444';
