@@ -4,6 +4,7 @@ class Endboss extends MovableObject {
     IMAGES_DEAD = Array.from({length: 5}, (_, i) => `../assets/img/Enemy/FinalBoss/Dead/Dead_${i+1}.png`);
     IMAGES_FLOATING =  Array.from({length: 13}, (_, i) =>`../assets/img/Enemy/FinalBoss/2.floating/${i+1}.png`);
     IMAGES_SPAWN = Array.from({length: 10}, (_, i) => `../assets/img/Enemy/FinalBoss/1.Introduce/${i+1}.png`);
+    IMAGES_ATTACK = Array.from({length: 6}, (_, i) => `../assets/img/Enemy/FinalBoss/Attack/${i+1}.png`);
 
     isSpawned = false;
     isSpawning = false;
@@ -11,9 +12,14 @@ class Endboss extends MovableObject {
     width = 400;
     y  = -20
     damage = 20;
-    energy = 500;
+    energy = 100;
+    maxEnergy = 100;
     shouldRemove = false;
     spawnInterval = null;
+    isAttacking = false;
+    lastAttack = 0;
+    attackCooldown = 2000;
+    attackDamageApplied = false;
 
     constructor() {
         super();
@@ -22,6 +28,7 @@ class Endboss extends MovableObject {
         this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_DEAD); 
         this.loadImages(this.IMAGES_SPAWN);
+        this.loadImages(this.IMAGES_ATTACK);
         this.x = 4200;
         this.speed = 0.15;
         this.offsetX = 20;
@@ -63,6 +70,16 @@ class Endboss extends MovableObject {
                          this.shouldRemove = true;
                     }
                 }
+                else if (this.isAttacking) {
+                    this.playAnimation(this.IMAGES_ATTACK);
+                    if (!this.attackDamageApplied && this.currentImage >= 3) {
+                        this.applyAttackDamage();
+                    }
+                    if (this.currentImage >= this.IMAGES_ATTACK.length) {
+                        this.isAttacking = false;
+                        this.moveLeft();
+                    }
+                }
                 else if(this.isHurt()) {
                     this.playAnimation(this.IMAGES_HURT);
                 }
@@ -70,6 +87,40 @@ class Endboss extends MovableObject {
                     this.playAnimation(this.IMAGES_FLOATING);
                 }
             }, 200);
+        }
+    }
+
+    isPlayerInAttackRange() {
+        if (!this.world || !this.world.character) {
+            return false;
+        }
+
+        const bossCenterX = this.x + this.width / 2;
+        const bossCenterY = this.y + this.height / 2;
+        const characterCenterX = this.world.character.x + this.world.character.width / 2;
+        const characterCenterY = this.world.character.y + this.world.character.height / 2;
+        return Math.abs(bossCenterX - characterCenterX) <= 250 &&
+            Math.abs(bossCenterY - characterCenterY) <= 220;
+    }
+
+    tryAttack() {
+        const now = Date.now();
+        if (!this.isSpawned || this.isDead() || this.isAttacking ||
+            now - this.lastAttack < this.attackCooldown || !this.isPlayerInAttackRange()) {
+            return;
+        }
+
+        this.lastAttack = now;
+        this.isAttacking = true;
+        this.attackDamageApplied = false;
+        this.currentImage = 0;
+        this.clearMoveInterval();
+    }
+
+    applyAttackDamage() {
+        this.attackDamageApplied = true;
+        if (this.isPlayerInAttackRange()) {
+            this.world.damageCharacter(this.damage);
         }
     }
 

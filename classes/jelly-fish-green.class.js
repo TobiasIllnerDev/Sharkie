@@ -3,13 +3,13 @@ class JellyFishGreen extends JellyFish {
     IMAGES_FLOATING = Array.from({length: 4}, (_, i) => `../assets/img/Enemy/JellyFish/Súper dangerous/Green ${i+1}.png`);
     IMAGES_DEAD = Array.from({length: 4}, (_, i) => `../assets/img/Enemy/JellyFish/Dead/green/g${i+1}.png`);
 
-    constructor(x = 200) {
+    constructor(x = 200, y = 200) {
         super();
         this.loadImage(this.IMAGES_FLOATING[0]);
         this.loadImages(this.IMAGES_FLOATING);
         this.loadImages(this.IMAGES_DEAD);
-        this.x = x + Math.random() * 500;
-        this.y = 0 + Math.random() * 400;
+        this.x = x;
+        this.y = y;
         this.offsetHeight = 10;
         this.offsetWidth = 10;
         this.offsetX = 5;

@@ -2,18 +2,10 @@ function getLevel1() {
     // 🔥 IMMER NEU ERSTELLEN - kein Caching!
     return new Level(
         [
-            new JellyFishPurple(300),
-            new JellyFishPurple(600),
-            new JellyFishPurple(900),
-            new JellyFishYellow(1200),
-            new JellyFishYellow(1500),
-            new JellyFishYellow(1800),
-            new JellyFishGreen(2100),
-            new JellyFishGreen(2400),
-            new JellyFishGreen(2700),
-            new JellyFishPink(3000),
-            new JellyFishPink(3300),
-            new JellyFishPink(3600),
+            new JellyFishPurple(700, 100), new JellyFishPurple(850, 240), new JellyFishPurple(1000, 380),
+            new JellyFishYellow(1450, 350), new JellyFishYellow(1600, 220), new JellyFishYellow(1750, 90),
+            new JellyFishGreen(2200, 100), new JellyFishGreen(2350, 250), new JellyFishGreen(2500, 380),
+            new JellyFishPink(3000, 350), new JellyFishPink(3150, 220), new JellyFishPink(3300, 90),
         ],
         [
             new Light()
@@ -60,19 +52,15 @@ function getLevel1() {
             new BackgroundObject('../assets/img/Background/Layers/2. Floor/D1.png', 719*6),
         ],
         [
-            new Coin(500, 300), new Coin(600, 250), new Coin(700, 320), new Coin(800, 280),
-            new Coin(900, 350), new Coin(1000, 200), new Coin(1100, 300), new Coin(1200, 250),
-            new Coin(1300, 320), new Coin(1400, 280), new Coin(1500, 350), new Coin(1600, 200),
-            new Coin(1700, 300), new Coin(1800, 250), new Coin(1900, 320), new Coin(2000, 280),
-            new Coin(2100, 350), new Coin(2200, 200), new Coin(2300, 300), new Coin(2400, 250),
+            new Coin(300, 140), new Coin(380, 220), new Coin(460, 280), new Coin(540, 220), new Coin(620, 140),
+            new Coin(1050, 120), new Coin(1130, 170), new Coin(1210, 220), new Coin(1290, 270), new Coin(1370, 320),
+            new Coin(2500, 140), new Coin(2580, 220), new Coin(2660, 280), new Coin(2740, 220), new Coin(2820, 140),
+            new Coin(3650, 280), new Coin(3740, 250), new Coin(3830, 220), new Coin(3920, 190), new Coin(4010, 160),
 
-            new Bottle(2500, 300), new Bottle(2600, 250), new Bottle(2700, 320),
-            new Bottle(2800, 280), new Bottle(2900, 350), new Bottle(3000, 200),
-            new Bottle(3100, 300), new Bottle(3200, 250), new Bottle(3300, 320),
-            new Bottle(3400, 280), new Bottle(3500, 350), new Bottle(3600, 200),
-            new Bottle(3700, 300), new Bottle(3800, 250), new Bottle(3900, 320),
-            new Bottle(4000, 280), new Bottle(4100, 350), new Bottle(4200, 200),
-            new Bottle(4300, 300), new Bottle(4400, 250),
+            new Bottle(400, 330), new Bottle(480, 260), new Bottle(560, 220), new Bottle(640, 260), new Bottle(720, 330),
+            new Bottle(1450, 340), new Bottle(1530, 290), new Bottle(1610, 240), new Bottle(1690, 290), new Bottle(1770, 340),
+            new Bottle(2700, 340), new Bottle(2780, 290), new Bottle(2860, 240), new Bottle(2940, 290), new Bottle(3020, 340),
+            new Bottle(3550, 330), new Bottle(3630, 260), new Bottle(3710, 220), new Bottle(3790, 260), new Bottle(3870, 330),
         ]
     );
 }

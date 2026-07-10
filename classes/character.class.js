@@ -9,7 +9,7 @@ class Character extends MovableObject {
     isAttacking = false;
     attackAnimationFinished = false;
     speed = 4;
-    attackPower = 90;
+    attackPower = 10;
     soundManager;
     deadSoundPlayed = false;
     isCurrentlySnoring = false;

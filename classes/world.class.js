@@ -124,14 +124,8 @@ class World {
 
     checkCollisions() {
         this.level.enemies.forEach((enemy) => {
-            if (this.character.isColliding(enemy)) {
-                this.character.hit(enemy.damage);
-                this.statusBarLife.setPercentage(this.character.energy);
-                this.soundManager.playSound('damage');
-                if (this.character.isDead() && !this.gameOver) {
-                    this.soundManager.playSound('fail');
-                    this.gameOver = true;
-                }
+            if (!(enemy instanceof Endboss) && !this.character.isHurt() && this.character.isColliding(enemy)) {
+                this.damageCharacter(enemy.damage);
             }
         });
         this.throwableObjects.forEach((bubble, bubbleIndex) => {
@@ -168,15 +162,28 @@ class World {
         });
     }
 
+    damageCharacter(damage) {
+        this.character.hit(damage);
+        this.statusBarLife.setPercentage(this.character.energy);
+        this.soundManager.playSound('damage');
+        if (this.character.isDead() && !this.gameOver) {
+            this.soundManager.playSound('fail');
+            this.gameOver = true;
+        }
+    }
+
     checkBossSpawn() {
         const distanceToEnd = this.level.level_end_x - this.character.x;
         if (!this.endboss && distanceToEnd < this.spawnTriggerDistance) {
             this.endboss = new Endboss();
+            this.endboss.world = this;
             this.endboss.startSpawn();
             this.level.enemies.push(this.endboss);
         }
         if (this.endboss && this.endboss.isSpawned) {
-            this.statusBarBoss.setPercentage(this.endboss.energy);
+            const bossHealthPercentage = (this.endboss.energy / this.endboss.maxEnergy) * 100;
+            this.statusBarBoss.setPercentage(bossHealthPercentage);
+            this.endboss.tryAttack();
         }
     }
 
