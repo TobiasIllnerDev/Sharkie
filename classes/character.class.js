@@ -4,7 +4,7 @@ class Character extends MovableObject {
     IMAGES_HURT = Array.from({length: 4}, (_, i) => `../assets/img/Sharkie/5.Hurt/1.Poisoned/${i+1}.png`);
     IMAGES_IDLE = Array.from({length: 18}, (_, i) => `../assets/img/Sharkie/1.IDLE/${i+1}.png`);
     IMAGES_SLEEP = Array.from({length: 14}, (_, i) => `../assets/img/Sharkie/2.Long_IDLE/i${i+1}.png`);
-    IMAGES_ATTACK = Array.from({length: 8}, (_, i) => `../assets/img/Sharkie/4.Attack/Bubbletrap/op1 (with bubble formation)/${i+1}.png`)
+    IMAGES_ATTACK = Array.from({length: 8}, (_, i) => `../assets/img/Sharkie/4.Attack/Bubbletrap/op1 (with bubble formation)/${i+1}.png`);
     world;
     isAttacking = false;
     attackAnimationFinished = false;
@@ -12,10 +12,12 @@ class Character extends MovableObject {
     attackPower = 90;
     soundManager;
     deadSoundPlayed = false;
-    isCurrentlySnoring = false; 
+    isCurrentlySnoring = false;
+    animationIntervalId = null;
+    moveIntervalId = null;
 
     constructor() {
-        super().loadImage('../assets/img/Sharkie/1.IDLE/1.png')
+        super().loadImage('../assets/img/Sharkie/1.IDLE/1.png');
         this.loadImages(this.IMAGES_SWIM);
         this.loadImages(this.IMAGES_DEAD);
         this.loadImages(this.IMAGES_HURT);
@@ -30,39 +32,45 @@ class Character extends MovableObject {
         this.offsetHeight = 120;
     }
 
-
     setSoundManager(soundManager) {
         this.soundManager = soundManager;
     }
 
     cleanup() {
         this.isCurrentlySnoring = false;
+
+        if (this.animationIntervalId) {
+            clearInterval(this.animationIntervalId);
+            this.animationIntervalId = null;
+        }
+
+        if (this.moveIntervalId) {
+            clearInterval(this.moveIntervalId);
+            this.moveIntervalId = null;
+        }
+
         if (this.soundManager && this.soundManager.sounds['snoring']) {
             this.soundManager.sounds['snoring'].audio.pause();
             this.soundManager.sounds['snoring'].audio.currentTime = 0;
         }
     }
 
-
     animate() {
-        setInterval(() => {
+        this.animationIntervalId = setInterval(() => {
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
                 if (!this.deadSoundPlayed) {
                     this.soundManager.playSound('dead');
                     this.deadSoundPlayed = true;
                 }
-            }
-            else if (this.isHurt()) {
+            } else if (this.isHurt()) {
                 this.playAnimation(this.IMAGES_HURT);
-            }
-            else if (this.isAttacking) {
+            } else if (this.isAttacking) {
                 this.playAnimation(this.IMAGES_ATTACK);
                 if (this.currentImage >= this.IMAGES_ATTACK.length) {
                     this.attackAnimationFinished = true;
                 }
-            }
-            else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT ||
+            } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT ||
                     this.world.keyboard.UP || this.world.keyboard.DOWN) {
                 this.playAnimation(this.IMAGES_SWIM);
                 if (this.isCurrentlySnoring) {
@@ -72,17 +80,15 @@ class Character extends MovableObject {
                     }
                     this.isCurrentlySnoring = false;
                 }
-            }
-            else if (this.isAFK()) {
+            } else if (this.isAFK()) {
                 this.playAnimation(this.IMAGES_SLEEP);
                 if (!this.isCurrentlySnoring) {
                     this.soundManager.playSound('snoring');
                     this.isCurrentlySnoring = true;
                 }
-            }
-            else {
+            } else {
                 this.playAnimation(this.IMAGES_IDLE);
-                
+
                 if (this.isCurrentlySnoring) {
                     if (this.soundManager && this.soundManager.sounds['snoring']) {
                         this.soundManager.sounds['snoring'].audio.pause();
@@ -93,23 +99,22 @@ class Character extends MovableObject {
             }
         }, 150);
 
-        // Bewegung alle 16.67ms
-        setInterval(() => {
-            if(this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
+        this.moveIntervalId = setInterval(() => {
+            if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
                 this.x += this.speed;
                 this.otherDiretion = false;
                 this.dontMove();
             }
-            if(this.world.keyboard.LEFT && this.x > -650) {
+            if (this.world.keyboard.LEFT && this.x > -650) {
                 this.x -= this.speed;
                 this.otherDiretion = true;
                 this.dontMove();
             }
-            if(this.world.keyboard.UP && this.y > -90) {
+            if (this.world.keyboard.UP && this.y > -90) {
                 this.y -= this.speed;
                 this.dontMove();
             }
-            if(this.world.keyboard.DOWN && this.y < 320) {
+            if (this.world.keyboard.DOWN && this.y < 320) {
                 this.y += this.speed;
                 this.dontMove();
             }

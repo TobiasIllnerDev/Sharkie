@@ -10,7 +10,7 @@ class World {
     statusBarCoin = new StatusBarCoin();
     statusBarPosion = new StatusBarPosion();
     throwableObjects = [];
-    collisionInterval = null;
+    runInterval = null;
 
     constructor(canvas, keyboard, soundManager) {
         this.ctx = canvas.getContext('2d');
@@ -20,7 +20,7 @@ class World {
         this.coinCount = 0;
         this.bottleCount = 0;
         this.isSpecialAttackPending = false;
-        this.isNormalAttackPending = false; 
+        this.isNormalAttackPending = false;
         this.endboss = null;
         this.spawnTriggerDistance = 500;
         this.statusBarBoss = new StatusBarBoss();
@@ -32,14 +32,14 @@ class World {
     }
 
     setWorld() {
-       this.character.world = this;
-       this.character.setSoundManager(this.soundManager);
+        this.character.world = this;
+        this.character.setSoundManager(this.soundManager);
     }
 
     cleanup() {
-        if (this.collisionInterval) {
-            clearInterval(this.collisionInterval);
-            this.collisionInterval = null;
+        if (this.runInterval) {
+            clearInterval(this.runInterval);
+            this.runInterval = null;
         }
 
         if (this.character && this.character.cleanup) {
@@ -54,51 +54,56 @@ class World {
             });
             this.level.enemies = [];
         }
-    }
 
+        if (this.level && this.level.collectibles) {
+            this.level.collectibles = [];
+        }
+
+        if (this.level && this.level.lights) {
+            this.level.lights = [];
+        }
+
+        this.throwableObjects = [];
+        this.endboss = null;
+    }
 
     run() {
-        setInterval(() => {
-           this.checkCollisions();
-           this.checkThrowObjects();
-           this.checkBossSpawn(); 
-        }, 200)
+        this.runInterval = setInterval(() => {
+            this.checkCollisions();
+            this.checkThrowObjects();
+            this.checkBossSpawn();
+        }, 200);
     }
 
-   checkThrowObjects() {
-        if(this.keyboard.SPACE && !this.character.isAttacking) {
+    checkThrowObjects() {
+        if (this.keyboard.SPACE && !this.character.isAttacking) {
             this.character.startAttack();
             this.isNormalAttackPending = true;
         }
-        
-        
-        if(this.keyboard.E && !this.character.isAttacking && this.bottleCount > 0) {
+
+        if (this.keyboard.E && !this.character.isAttacking && this.bottleCount > 0) {
             this.character.startAttack();
             this.isSpecialAttackPending = true;
         }
 
-        if(this.character.attackAnimationFinished) {
-            
-            if(this.isNormalAttackPending) {
+        if (this.character.attackAnimationFinished) {
+            if (this.isNormalAttackPending) {
                 let bubble = new ThrowableObject(this.character.x + 100, this.character.y + 100, this.character.otherDiretion);
                 this.throwableObjects.push(bubble);
                 this.character.resetAttack();
                 this.soundManager.playSound('attack');
                 this.isNormalAttackPending = false;
-            }
-            
-            else if(this.isSpecialAttackPending && this.bottleCount > 0) {
+            } else if (this.isSpecialAttackPending && this.bottleCount > 0) {
                 let specialBubble = new SpecialBubble(this.character.x + 100, this.character.y + 100, this.character.otherDiretion, this);
                 this.throwableObjects.push(specialBubble);
 
-                
                 this.bottleCount--;
                 let percentage = (this.bottleCount / 20) * 100;
                 this.statusBarPosion.setPercentage(percentage);
 
                 this.character.resetAttack();
                 this.soundManager.playSound('attack');
-                this.isSpecialAttackPending = false;  
+                this.isSpecialAttackPending = false;
             }
         }
         this.throwableObjects = this.throwableObjects.filter((bubble) => {
@@ -110,10 +115,10 @@ class World {
 
     checkCollisions() {
         this.level.enemies.forEach((enemy) => {
-            if(this.character.isColliding(enemy)) {
+            if (this.character.isColliding(enemy)) {
                 this.character.hit(enemy.damage);
                 this.statusBarLife.setPercentage(this.character.energy);
-                this.soundManager.playSound('damage')
+                this.soundManager.playSound('damage');
                 if (this.character.isDead() && !this.gameOver) {
                     this.soundManager.playSound('fail');
                     this.gameOver = true;
@@ -122,12 +127,12 @@ class World {
         });
         this.throwableObjects.forEach((bubble, bubbleIndex) => {
             this.level.enemies.forEach((enemy) => {
-                if(bubble.isColliding(enemy)) {
+                if (bubble.isColliding(enemy)) {
                     let damage = bubble.damage || this.character.attackPower;
                     enemy.hit(damage);
                     this.throwableObjects.splice(bubbleIndex, 1);
 
-                    if(enemy.isDead()) {
+                    if (enemy.isDead()) {
                         this.soundManager.playSound('enemy_die');
                     }
                 }
@@ -141,13 +146,12 @@ class World {
                     this.coinCount++;
                     let percentage = (this.coinCount / 20) * 100;
                     this.statusBarCoin.setPercentage(percentage);
-                    this.soundManager.playSound('coin')
-                }
-                else if (collectible instanceof Bottle) {
+                    this.soundManager.playSound('coin');
+                } else if (collectible instanceof Bottle) {
                     this.bottleCount++;
                     let percentage = (this.bottleCount / 20) * 100;
                     this.statusBarPosion.setPercentage(percentage);
-                    this.soundManager.playSound('bottle')
+                    this.soundManager.playSound('bottle');
                 }
                 this.level.collectibles.splice(index, 1);
             }
@@ -155,21 +159,21 @@ class World {
     }
 
     checkBossSpawn() {
-    const distanceToEnd = this.level.level_end_x - this.character.x;
-    if (!this.endboss && distanceToEnd < this.spawnTriggerDistance) {
-        this.endboss = new Endboss();
-        this.endboss.startSpawn();
-        this.level.enemies.push(this.endboss);  
+        const distanceToEnd = this.level.level_end_x - this.character.x;
+        if (!this.endboss && distanceToEnd < this.spawnTriggerDistance) {
+            this.endboss = new Endboss();
+            this.endboss.startSpawn();
+            this.level.enemies.push(this.endboss);
+        }
+        if (this.endboss && this.endboss.isSpawned) {
+            this.statusBarBoss.setPercentage(this.endboss.energy);
+        }
     }
-    if (this.endboss && this.endboss.isSpawned) {
-        this.statusBarBoss.setPercentage(this.endboss.energy);
-    }
-}
 
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.translate(this.camera_x, 0);
-        this.addObjectsToMap(this.level.backgroundObjects); 
+        this.addObjectsToMap(this.level.backgroundObjects);
         this.ctx.translate(-this.camera_x, 0);
         this.addToMap(this.statusBarLife);
         this.addToMap(this.statusBarCoin);
@@ -186,14 +190,14 @@ class World {
         this.ctx.translate(-this.camera_x, 0);
     }
 
-    addObjectsToMap(objects){
+    addObjectsToMap(objects) {
         objects.forEach((obj) => {
             this.addToMap(obj);
-        })
+        });
     }
 
-   addToMap(mo) {
-        if(mo.otherDiretion) {
+    addToMap(mo) {
+        if (mo.otherDiretion) {
             this.flipImage(mo);
         }
 
@@ -201,12 +205,11 @@ class World {
 
         if (mo instanceof Character) {
             mo.drawFrameCharater(this.ctx);
-        }
-        else if (mo instanceof JellyFish || mo instanceof Endboss) {
+        } else if (mo instanceof JellyFish || mo instanceof Endboss) {
             mo.drawFrame(this.ctx);
         }
 
-        if(mo.otherDiretion) {
+        if (mo.otherDiretion) {
             this.flipImageBack(mo);
         }
     }

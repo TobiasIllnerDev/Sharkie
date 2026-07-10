@@ -1,9 +1,13 @@
 @font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-display: swap;
   font-family: 'Luckiest Guy';
   font-style: normal;
   font-weight: 400;
-  src: url('./assets/fonts/luckiest-guy-v25-latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  src: url('./assets/fonts/luckiest-guy-v25-latin-regular.woff2') format('woff2');
+}
+
+html, body {
+    height: 100%;
 }
 
 body {
@@ -16,9 +20,10 @@ body {
     background-image: url('./assets/img/Background/underwater.png');
     background-position: center;
     background-repeat: no-repeat;
-    background-attachment: fixed; 
+    background-attachment: fixed;
     background-size: 100% 100%;
     font-family: 'Luckiest Guy';
+    overflow: hidden;
 }
 
 h1 {
@@ -31,4 +36,13 @@ h1 {
 canvas {
     border: 3px solid black;
     background-color: black;
+    width: min(90vw, 720px);
+    height: auto;
+    max-height: 90vh;
+}
+
+canvas:fullscreen {
+    width: 100vw;
+    height: 100vh;
+    object-fit: contain;
 }
