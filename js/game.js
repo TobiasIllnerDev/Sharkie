@@ -1,4 +1,5 @@
 let canvas;
+let gameContainer;
 let world;
 let keyboard = new Keyboard();
 let ctx;
@@ -9,6 +10,18 @@ let uiControls;
 let savedVolume = 0.5;
 let level1 = null;
 let isMuted = false;
+
+function restoreSavedVolume() {
+    const storedVolume = localStorage.getItem('sharkieSavedVolume');
+    if (storedVolume === null) {
+        return;
+    }
+
+    const parsedVolume = Number.parseFloat(storedVolume);
+    if (Number.isFinite(parsedVolume)) {
+        savedVolume = Math.min(1, Math.max(0, parsedVolume));
+    }
+}
 
 function init() {
     ctx = canvas.getContext('2d');
@@ -104,8 +117,8 @@ function closeOverlay() {
 }
 
 function toggleFullscreen() {
-    if (!document.fullscreenElement && canvas.requestFullscreen) {
-        canvas.requestFullscreen().catch(err => {
+    if (!document.fullscreenElement && gameContainer.requestFullscreen) {
+        gameContainer.requestFullscreen().catch(err => {
             console.error('Fullscreen-Fehler:', err);
         });
     } else if (document.exitFullscreen) {
@@ -164,6 +177,7 @@ function draw() {
 }
 
 canvas = document.getElementById('canvas');
+gameContainer = document.getElementById('game-container');
 ctx = canvas.getContext('2d');
 
 canvas.addEventListener('click', (e) => {
@@ -196,6 +210,7 @@ document.addEventListener('mousemove', (e) => {
     } else if (currentScreen === 'start' && startScreen && startScreen.isVolumeDragging) {
         const { x } = getCanvasCoordinates(e);
         startScreen.updateVolumeFromX(x);
+        setVolume(startScreen.volume);
     }
 });
 
@@ -228,6 +243,7 @@ window.addEventListener('keyup', (e) => {
     if (keyCode === 69) keyboard.E = false;
 });
 
+restoreSavedVolume();
 startScreen = new StartScreen();
 startScreen.setVolume(savedVolume);
 draw();

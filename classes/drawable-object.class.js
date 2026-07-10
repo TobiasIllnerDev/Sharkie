@@ -36,13 +36,17 @@ class DrawableObject {
 
     drawFrame(ctx) {
     if(this instanceof JellyFish || this instanceof Endboss) {
+        const collisionWidth = this.width - this.offsetWidth;
+        const collisionX = this.otherDiretion
+            ? this.width - this.offsetX - collisionWidth
+            : this.offsetX;
         ctx.beginPath();
         ctx.lineWidth = '3';
         ctx.strokeStyle = 'blue';
         ctx.rect(
-            this.x + this.offsetX,
+            this.x + collisionX,
             this.y + this.offsetY,
-            this.width - this.offsetWidth,
+            collisionWidth,
             this.height - this.offsetHeight
         );
         ctx.stroke();
@@ -51,10 +55,14 @@ class DrawableObject {
 
     drawFrameCharater(ctx) {
     if(this instanceof Character) {
+        const collisionWidth = this.width - this.offsetWidth;
+        const collisionX = this.otherDiretion
+            ? this.width - this.offsetX - collisionWidth
+            : this.offsetX;
         ctx.beginPath();
         ctx.lineWidth = '3';
         ctx.strokeStyle = 'red';
-        ctx.rect(this.x + 40, this.y + 90, this.width -75, this.height -120);
+        ctx.rect(this.x + collisionX, this.y + this.offsetY, collisionWidth, this.height - this.offsetHeight);
         ctx.stroke();
     }
     else if(this instanceof Endboss) {

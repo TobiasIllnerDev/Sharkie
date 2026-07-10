@@ -127,7 +127,7 @@ class World {
         });
         this.throwableObjects.forEach((bubble, bubbleIndex) => {
             this.level.enemies.forEach((enemy) => {
-                if (bubble.isColliding(enemy)) {
+                if (bubble.isColliding(enemy, 6)) {
                     let damage = bubble.damage || this.character.attackPower;
                     enemy.hit(damage);
                     this.throwableObjects.splice(bubbleIndex, 1);

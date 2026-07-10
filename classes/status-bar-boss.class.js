@@ -4,10 +4,10 @@ class StatusBarBoss extends StatusBar {
     constructor() {
         super();
         this.loadImages(this.IMAGES);
-        this.x = 480;
-        this.y = 10;
+        this.x = 530;
+        this.y = 90;
         this.width = 160;
-        this.height = 70;
+        this.height = 50;
         this.setPercentage(100);
     }
 }

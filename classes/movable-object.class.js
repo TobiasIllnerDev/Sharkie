@@ -35,11 +35,11 @@ class MovableObject extends DrawableObject{
         this.currentImage++;
     }
     
-    isColliding(mo) {
-        return this.x + this.offsetX + (this.width - this.offsetWidth) > mo.x + mo.offsetX &&
-            this.y + this.offsetY + (this.height - this.offsetHeight) > mo.y + mo.offsetY &&
-            this.x + this.offsetX < mo.x + mo.offsetX + (mo.width - mo.offsetWidth) &&
-            this.y + this.offsetY < mo.y + mo.offsetY + (mo.height - mo.offsetHeight)
+    isColliding(mo, padding = 0) {
+        return this.x + this.offsetX + (this.width - this.offsetWidth) + padding > mo.x + mo.offsetX - padding &&
+            this.y + this.offsetY + (this.height - this.offsetHeight) + padding > mo.y + mo.offsetY - padding &&
+            this.x + this.offsetX - padding < mo.x + mo.offsetX + (mo.width - mo.offsetWidth) + padding &&
+            this.y + this.offsetY - padding < mo.y + mo.offsetY + (mo.height - mo.offsetHeight) + padding
     }
 
 
