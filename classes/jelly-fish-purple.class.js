@@ -21,7 +21,7 @@ class JellyFishPurple extends JellyFish {
     animate() {
         this.moveLeft();
 
-        setInterval(() => {
+        this.animationInterval = setInterval(() => {
             if(this.isDead()) {
                 if(!this.hasStartedDeadAnimation) {
                     this.currentImage = 0;

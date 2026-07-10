@@ -5,6 +5,7 @@ class MovableObject extends DrawableObject{
     lastHit = 0;
     lastMove = 0;
     moveInterval = null;
+    animationInterval = null;
 
     moveRight() {
         this.clearMoveInterval();
@@ -26,6 +27,18 @@ class MovableObject extends DrawableObject{
             clearInterval(this.moveInterval);
             this.moveInterval = null;
         }
+    }
+
+    clearAnimationInterval() {
+        if (this.animationInterval) {
+            clearInterval(this.animationInterval);
+            this.animationInterval = null;
+        }
+    }
+
+    cleanup() {
+        this.clearMoveInterval();
+        this.clearAnimationInterval();
     }
     
     playAnimation(images) {

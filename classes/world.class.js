@@ -47,22 +47,21 @@ class World {
         }
 
         if (this.level && this.level.enemies) {
-            this.level.enemies.forEach(enemy => {
-                if (enemy.clearMoveInterval) {
-                    enemy.clearMoveInterval();
-                }
-            });
+            this.level.enemies.forEach(enemy => enemy.cleanup?.());
             this.level.enemies = [];
         }
 
         if (this.level && this.level.collectibles) {
+            this.level.collectibles.forEach(collectible => collectible.cleanup?.());
             this.level.collectibles = [];
         }
 
         if (this.level && this.level.lights) {
+            this.level.lights.forEach(light => light.cleanup?.());
             this.level.lights = [];
         }
 
+        this.throwableObjects.forEach(throwableObject => throwableObject.cleanup?.());
         this.throwableObjects = [];
         this.endboss = null;
     }
@@ -108,9 +107,19 @@ class World {
         }
         this.throwableObjects = this.throwableObjects.filter((bubble) => {
             const distance = Math.abs(bubble.x - bubble.startX);
-            return distance < (bubble.maxDistance || 500);
+            const isStillActive = distance < (bubble.maxDistance || 500);
+            if (!isStillActive) {
+                bubble.cleanup?.();
+            }
+            return isStillActive;
         });
-        this.level.enemies = this.level.enemies.filter(enemy => !enemy.shouldRemove);
+        this.level.enemies = this.level.enemies.filter(enemy => {
+            if (enemy.shouldRemove) {
+                enemy.cleanup?.();
+                return false;
+            }
+            return true;
+        });
     }
 
     checkCollisions() {
@@ -153,6 +162,7 @@ class World {
                     this.statusBarPosion.setPercentage(percentage);
                     this.soundManager.playSound('bottle');
                 }
+                collectible.cleanup?.();
                 this.level.collectibles.splice(index, 1);
             }
         });

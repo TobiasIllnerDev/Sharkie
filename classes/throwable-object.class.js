@@ -21,7 +21,8 @@ class ThrowableObject extends MovableObject {
     }
 
     moveLeft() {
-        setInterval(() => {
+        this.clearMoveInterval();
+        this.moveInterval = setInterval(() => {
             let speedX = 10;
             this.x -= speedX;
         }, 1000 / 60);

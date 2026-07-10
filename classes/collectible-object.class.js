@@ -5,6 +5,7 @@ class CollectibleObject extends DrawableObject {
     offsetWidth = 0;
     offsetHeight = 0;
     currentImage = 0;
+    animationInterval = null;
 
     constructor(paths,x,y,width,height) {
         super()
@@ -19,9 +20,16 @@ class CollectibleObject extends DrawableObject {
     }
 
     animate() {
-        setInterval(() => {
+        this.animationInterval = setInterval(() => {
             this.playAnimation(this.images);
         }, 200);
+    }
+
+    cleanup() {
+        if (this.animationInterval) {
+            clearInterval(this.animationInterval);
+            this.animationInterval = null;
+        }
     }
 
     playAnimation(images) {

@@ -13,6 +13,7 @@ class Endboss extends MovableObject {
     damage = 20;
     energy = 500;
     shouldRemove = false;
+    spawnInterval = null;
 
     constructor() {
         super();
@@ -35,12 +36,13 @@ class Endboss extends MovableObject {
         this.isSpawned = false;
         this.currentImage = 0;
 
-        let spawnInterval = setInterval(() => {
+        this.spawnInterval = setInterval(() => {
             this.playAnimation(this.IMAGES_SPAWN);
             if (this.currentImage >= this.IMAGES_SPAWN.length) {
                 this.isSpawning = false;
                 this.isSpawned = true;
-                clearInterval(spawnInterval);
+                clearInterval(this.spawnInterval);
+                this.spawnInterval = null;
                 this.animate(); 
             }
         }, 200);
@@ -50,7 +52,7 @@ class Endboss extends MovableObject {
         if (!this.isSpawning) {
             this.moveLeft();
 
-            setInterval(() => {
+            this.animationInterval = setInterval(() => {
                 if(this.isDead()) {
                     if(!this.hasStartedDeadAnimation) {
                         this.currentImage = 0;
@@ -69,6 +71,14 @@ class Endboss extends MovableObject {
                 }
             }, 200);
         }
+    }
+
+    cleanup() {
+        if (this.spawnInterval) {
+            clearInterval(this.spawnInterval);
+            this.spawnInterval = null;
+        }
+        super.cleanup();
     }
 }
 
