@@ -113,6 +113,14 @@ function toggleFullscreen() {
     }
 }
 
+function getCanvasCoordinates(event) {
+    const rect = canvas.getBoundingClientRect();
+    return {
+        x: (event.clientX - rect.left) * (canvas.width / rect.width),
+        y: (event.clientY - rect.top) * (canvas.height / rect.height)
+    };
+}
+
 function resetGame() {
     if (soundManager) {
         savedVolume = soundManager.volume;
@@ -159,15 +167,10 @@ canvas = document.getElementById('canvas');
 ctx = canvas.getContext('2d');
 
 canvas.addEventListener('click', (e) => {
+    const { x, y } = getCanvasCoordinates(e);
     if (currentScreen === 'start') {
-        const rect = canvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
         startScreen.checkClick(x, y, startGame, showSettings, showImprint, toggleFullscreen, closeOverlay, setVolume);
     } else if (currentScreen === 'playing' && uiControls) {
-        const rect = canvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
         const result = uiControls.handleClick(x, y);
         if (result === 'back') {
             resetGame();
@@ -181,20 +184,17 @@ canvas.addEventListener('click', (e) => {
 
 canvas.addEventListener('mousedown', (e) => {
     if (currentScreen === 'start' && startScreen && startScreen.activeOverlay === 'settings') {
-        const rect = canvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
+        const { x } = getCanvasCoordinates(e);
         startScreen.startVolumeDrag(x);
     }
 });
 
 document.addEventListener('mousemove', (e) => {
     if (currentScreen === 'playing' && uiControls && uiControls.isDragging) {
-        const rect = canvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
+        const { x } = getCanvasCoordinates(e);
         uiControls.handleMouseMove(x);
     } else if (currentScreen === 'start' && startScreen && startScreen.isVolumeDragging) {
-        const rect = canvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
+        const { x } = getCanvasCoordinates(e);
         startScreen.updateVolumeFromX(x);
     }
 });
@@ -226,16 +226,6 @@ window.addEventListener('keyup', (e) => {
     if (keyCode === 38 || keyCode === 87) keyboard.UP = false;
     if (keyCode === 32) keyboard.SPACE = false;
     if (keyCode === 69) keyboard.E = false;
-});
-
-document.addEventListener('fullscreenchange', () => {
-    if (document.fullscreenElement === canvas) {
-        canvas.style.width = '100vw';
-        canvas.style.height = '100vh';
-    } else {
-        canvas.style.width = '';
-        canvas.style.height = '';
-    }
 });
 
 startScreen = new StartScreen();

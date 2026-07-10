@@ -7,13 +7,13 @@ class StartScreen {
     startButtonImg;
     settingsButtonImg;
     tutorialButtonImg;
-    fullscreenButtonImg;
     buttons = [
         { name: 'start', x: 270, y: 150, width: 180, height: 50 },
         { name: 'settings', x: 270, y: 215, width: 180, height: 50 },
         { name: 'tutorial', x: 270, y: 280, width: 180, height: 50 },
-        { name: 'fullscreen', x: 270, y: 345, width: 180, height: 50 }
+        { name: 'imprint', x: 270, y: 345, width: 180, height: 50 }
     ];
+    fullscreenButton = { x: 655, y: 25, width: 40, height: 40 };
     showingTutorial = false;
     activeOverlay = null;
     volume = 0.5;
@@ -50,8 +50,6 @@ class StartScreen {
         this.tutorialButtonImg = new Image();
         this.tutorialButtonImg.src = './assets/img/Botones/Start/Anleitung-button.png';
 
-        this.fullscreenButtonImg = new Image();
-        this.fullscreenButtonImg.src = './assets/img/Botones/Start/Fullscreen-button.png';
     }
 
     setVolume(value) {
@@ -107,6 +105,33 @@ class StartScreen {
         ctx.closePath();
     }
 
+    drawFullscreenButton(ctx) {
+        const button = this.fullscreenButton;
+        ctx.fillStyle = 'rgba(200, 200, 200, 0.3)';
+        ctx.fillRect(button.x, button.y, button.width, button.height);
+        ctx.strokeStyle = '#fff';
+        ctx.strokeRect(button.x, button.y, button.width, button.height);
+        ctx.fillStyle = '#fff';
+        ctx.font = '20px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('⛶', button.x + button.width / 2, button.y + button.height / 2);
+    }
+
+    drawImprintButton(ctx, button) {
+        this.roundRect(ctx, button.x, button.y, button.width, button.height, 12);
+        ctx.fillStyle = '#1a8fb4';
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'white';
+        ctx.stroke();
+        ctx.fillStyle = 'white';
+        ctx.font = '22px Luckiest Guy';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('IMPRESSUM', button.x + button.width / 2, button.y + button.height / 2);
+    }
+
     draw(ctx) {
         if (this.backgroundImg.complete && this.backgroundImg.naturalWidth > 0) {
             ctx.drawImage(this.backgroundImg, 0, 0, 720, 480);
@@ -155,17 +180,12 @@ class StartScreen {
                 ctx.arc(sliderX + sliderWidth * this.volume, sliderY + sliderHeight / 2, 8, 0, Math.PI * 2);
                 ctx.fill();
 
-                this.roundRect(ctx, 240, 290, 240, 44, 12);
-                ctx.fillStyle = '#1a8fb4';
-                ctx.fill();
-
                 this.roundRect(ctx, 240, 348, 240, 44, 12);
                 ctx.fillStyle = '#ff4444';
                 ctx.fill();
 
                 ctx.fillStyle = 'white';
                 ctx.font = '22px Luckiest Guy';
-                ctx.fillText('Impressum', 360, 312);
                 ctx.fillText('Schließen', 360, 370);
             } else {
                 ctx.fillText('IMPRESSUM', 360, 140);
@@ -190,7 +210,7 @@ class StartScreen {
 
         if (!this.showingTutorial) {
             const allImagesLoaded = this.startButtonImg.complete && this.settingsButtonImg.complete &&
-                                    this.tutorialButtonImg.complete && this.fullscreenButtonImg.complete &&
+                                    this.tutorialButtonImg.complete &&
                                     this.arrowKeysImg.complete && this.wasdKeyImg.complete &&
                                     this.spaceKeyImg.complete && this.eKeyImg.complete;
 
@@ -212,16 +232,19 @@ class StartScreen {
                 if (button.name === 'start') buttonImg = this.startButtonImg;
                 else if (button.name === 'settings') buttonImg = this.settingsButtonImg;
                 else if (button.name === 'tutorial') buttonImg = this.tutorialButtonImg;
-                else if (button.name === 'fullscreen') buttonImg = this.fullscreenButtonImg;
 
                 if (buttonImg && buttonImg.complete) {
                     ctx.drawImage(buttonImg, button.x, button.y, button.width, button.height);
+                } else if (button.name === 'imprint') {
+                    this.drawImprintButton(ctx, button);
                 }
 
                 ctx.shadowColor = 'transparent';
                 ctx.shadowBlur = 0;
                 ctx.shadowOffsetY = 0;
             });
+
+            this.drawFullscreenButton(ctx);
         } else {
             ctx.fillStyle = 'rgba(0, 0, 30, 0.6)';
             ctx.fillRect(0, 0, 720, 480);
@@ -289,12 +312,6 @@ class StartScreen {
                     }
                     return;
                 }
-                if (x >= 240 && x <= 480 && y >= 290 && y <= 334) {
-                    if (imprintCallback) {
-                        imprintCallback();
-                    }
-                    return;
-                }
                 if (x >= 240 && x <= 480 && y >= 348 && y <= 392) {
                     if (closeOverlayCallback) {
                         closeOverlayCallback();
@@ -318,6 +335,15 @@ class StartScreen {
             return;
         }
 
+        const fullscreenButton = this.fullscreenButton;
+        if (x >= fullscreenButton.x && x <= fullscreenButton.x + fullscreenButton.width &&
+            y >= fullscreenButton.y && y <= fullscreenButton.y + fullscreenButton.height) {
+            if (fullscreenCallback) {
+                fullscreenCallback();
+            }
+            return;
+        }
+
         for (const button of this.buttons) {
             if (x >= button.x && x <= button.x + button.width &&
                 y >= button.y && y <= button.y + button.height) {
@@ -330,8 +356,8 @@ class StartScreen {
                 } else if (button.name === 'tutorial') {
                     this.showingTutorial = true;
                     return;
-                } else if (button.name === 'fullscreen' && fullscreenCallback) {
-                    fullscreenCallback();
+                } else if (button.name === 'imprint' && imprintCallback) {
+                    imprintCallback();
                     return;
                 }
             }

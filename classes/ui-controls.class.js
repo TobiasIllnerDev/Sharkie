@@ -2,19 +2,20 @@ class UIControls {
     x;
     y;
     buttonSize = 40;
-    padding = 5;
+    padding = 15;
+    edgeOffset = 25;
     soundManager;
 
     constructor(soundManager) {
         this.soundManager = soundManager;
-        this.x = canvas.width - 135;
-        this.y = 10;
+        this.x = canvas.width - this.edgeOffset - (this.buttonSize * 3 + this.padding * 2);
+        this.y = this.edgeOffset;
     }
 
     draw(ctx) {
         ctx.save();
         ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
-        ctx.fillRect(this.x - 5, this.y - 5, 130, this.buttonSize + 10);
+        ctx.fillRect(this.x - 10, this.y - 10, this.buttonSize * 3 + this.padding * 2 + 20, this.buttonSize + 20);
 
         this.drawButton(ctx, this.x, this.y, this.buttonSize, this.buttonSize, this.soundManager.muted ? '🔊' : '🔇');
 
