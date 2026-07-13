@@ -565,9 +565,7 @@ canvas.addEventListener('click', (e) => {
 document.addEventListener('mousemove', (e) => {
     const { x, y } = getCanvasCoordinates(e);
 
-    if (currentScreen === 'playing' && uiControls && uiControls.isDragging) {
-        uiControls.handleMouseMove(x);
-    } else if (currentScreen === 'start' && startScreen && startScreen.isVolumeDragging) {
+    if (currentScreen === 'start' && startScreen && startScreen.isVolumeDragging) {
         startScreen.updateVolumeFromX(x);
         setVolume(startScreen.volume);
     }
@@ -592,15 +590,12 @@ document.addEventListener('mousemove', (e) => {
 
 canvas.addEventListener('mousedown', (e) => {
     if (currentScreen === 'start' && startScreen && startScreen.activeOverlay === 'settings') {
-        const { x } = getCanvasCoordinates(e);
-        startScreen.startVolumeDrag(x);
+        const { x, y } = getCanvasCoordinates(e);
+        startScreen.startVolumeDrag(x, y);
     }
 });
 
 document.addEventListener('mouseup', () => {
-    if (currentScreen === 'playing' && uiControls) {
-        uiControls.handleMouseUp();
-    }
     if (startScreen) {
         startScreen.stopVolumeDrag();
     }

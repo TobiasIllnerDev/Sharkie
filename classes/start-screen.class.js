@@ -57,8 +57,9 @@ class StartScreen {
         this.activeOverlay = null;
     }
 
-    startVolumeDrag(x) {
+    startVolumeDrag(x, y) {
         if (this.activeOverlay !== 'settings') return;
+        if (!this.isSettingsSliderHovered(x, y)) return;
         this.isVolumeDragging = true;
         this.updateVolumeFromX(x);
     }
