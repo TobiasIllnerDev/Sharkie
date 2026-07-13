@@ -1,3 +1,6 @@
+const TOUCH_DIRECTION_KEYS = ['LEFT', 'RIGHT', 'UP', 'DOWN'];
+const activeTouchPointers = new Map();
+
 /**
  * Converts a pointer event to canvas coordinates.
  * @param {PointerEvent|MouseEvent} event - Browser pointer or mouse event.
@@ -27,8 +30,8 @@ function initTouchButton(button) {
     const key = button.dataset.key;
     button.addEventListener('pointerdown', event => pressTouchButton(event, button, key));
     button.addEventListener('pointerup', event => releaseTouchButton(event, button, key));
-    button.addEventListener('pointercancel', () => releaseTouchKey(button, key));
-    button.addEventListener('lostpointercapture', () => releaseTouchKey(button, key));
+    button.addEventListener('pointercancel', releaseTouchPointerFromEvent);
+    button.addEventListener('lostpointercapture', releaseTouchPointerFromEvent);
     button.addEventListener('contextmenu', preventDefaultEvent);
 }
 
@@ -49,7 +52,8 @@ function preventDefaultEvent(event) {
 function pressTouchButton(event, button, key) {
     event.preventDefault();
     button.setPointerCapture(event.pointerId);
-    keyboard[key] = true;
+    activeTouchPointers.set(event.pointerId, { button, key });
+    syncTouchKey(key);
     button.classList.add('is-pressed');
 }
 
@@ -61,7 +65,27 @@ function pressTouchButton(event, button, key) {
  */
 function releaseTouchButton(event, button, key) {
     event.preventDefault();
-    releaseTouchKey(button, key);
+    releaseTouchPointer(event.pointerId);
+}
+
+/**
+ * Releases one touch pointer from a pointer event.
+ * @param {PointerEvent} event - Browser event.
+ */
+function releaseTouchPointerFromEvent(event) {
+    releaseTouchPointer(event.pointerId);
+}
+
+/**
+ * Releases one active touch pointer.
+ * @param {number} pointerId - Pointer identifier.
+ */
+function releaseTouchPointer(pointerId) {
+    const pointer = activeTouchPointers.get(pointerId);
+    if (!pointer) return;
+    activeTouchPointers.delete(pointerId);
+    syncTouchKey(pointer.key);
+    if (!isTouchButtonActive(pointer.button)) pointer.button.classList.remove('is-pressed');
 }
 
 /**
@@ -70,8 +94,37 @@ function releaseTouchButton(event, button, key) {
  * @param {string} key - Keyboard state key.
  */
 function releaseTouchKey(button, key) {
-    keyboard[key] = false;
+    activeTouchPointers.forEach((pointer, pointerId) => {
+        if (pointer.button === button || pointer.key === key) activeTouchPointers.delete(pointerId);
+    });
+    syncTouchKey(key);
     button.classList.remove('is-pressed');
+}
+
+/**
+ * Returns whether a touch button still has an active pointer.
+ * @param {HTMLButtonElement} button - Touch button element.
+ * @returns {boolean} True when the button is still pressed.
+ */
+function isTouchButtonActive(button) {
+    return Array.from(activeTouchPointers.values()).some(pointer => pointer.button === button);
+}
+
+/**
+ * Updates one keyboard flag from the active touch pointers.
+ * @param {string} key - Keyboard state key.
+ */
+function syncTouchKey(key) {
+    keyboard[key] = Array.from(activeTouchPointers.values()).some(pointer => pointer.key === key);
+}
+
+/**
+ * Clears all active touch pointer states.
+ */
+function clearTouchInputState() {
+    activeTouchPointers.clear();
+    TOUCH_DIRECTION_KEYS.forEach(key => keyboard[key] = false);
+    document.querySelectorAll('#touch-controls .is-pressed').forEach(button => button.classList.remove('is-pressed'));
 }
 
 /**
@@ -271,7 +324,7 @@ function handleKeyUp(event) {
 /**
  * Sets the matching keyboard flag for a key code.
  * @param {number} keyCode - Keyboard key code.
- * @param {number} value - New value.
+ * @param {boolean} value - Whether the key is pressed.
  */
 function setKeyboardKey(keyCode, value) {
     if (keyCode === 39 || keyCode === 68) keyboard.RIGHT = value;

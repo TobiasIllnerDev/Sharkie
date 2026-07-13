@@ -80,7 +80,21 @@ class WorldRenderer {
      * @param {DrawableObject[]} objects - Objects to draw.
      */
     addObjectsToMap(objects) {
-        objects.forEach(obj => this.addToMap(obj));
+        objects.forEach(obj => {
+            if (this.isObjectVisible(obj)) this.addToMap(obj);
+        });
+    }
+
+    /**
+     * Checks whether an object is inside or near the visible viewport.
+     * @param {DrawableObject} object - Object to inspect.
+     * @returns {boolean} True when the object should be drawn.
+     */
+    isObjectVisible(object) {
+        const margin = 160;
+        const viewportLeft = -this.world.camera_x - margin;
+        const viewportRight = -this.world.camera_x + this.world.canvas.width + margin;
+        return object.x + object.width >= viewportLeft && object.x <= viewportRight;
     }
 
     /**
