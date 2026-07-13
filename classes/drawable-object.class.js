@@ -11,6 +11,7 @@ class DrawableObject {
     offsetWidth = 0;
     offsetHeight = 0;
 
+     /** load image. */
      loadImage(path) {
         if (window.sharkieImageCache && window.sharkieImageCache[path]) {
             this.img = window.sharkieImageCache[path];
@@ -21,6 +22,7 @@ class DrawableObject {
         this.img.src = path;
     }
 
+    /** load images. */
     loadImages(arr) {
         arr.forEach((path) => {
             if (window.sharkieImageCache && window.sharkieImageCache[path]) {
@@ -33,18 +35,21 @@ class DrawableObject {
         })
     }
 
+    /** draw. */
     draw(ctx) {
         if (this.img && this.img.complete && this.img.naturalWidth > 0) {
             ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
         }
     }
 
+    /** draw frame. */
     drawFrame(ctx) {
         if (this instanceof JellyFish || this instanceof Endboss) {
             this.drawCollisionFrame(ctx, 'blue');
         }
     }
 
+    /** draw frame charater. */
     drawFrameCharater(ctx) {
         if (this instanceof Character) {
             this.drawCollisionFrame(ctx, 'red');
@@ -53,6 +58,7 @@ class DrawableObject {
         }
     }
 
+    /** draw collision frame. */
     drawCollisionFrame(ctx, color) {
         const box = this.getDebugCollisionBox();
         ctx.beginPath();
@@ -62,6 +68,7 @@ class DrawableObject {
         ctx.stroke();
     }
 
+    /** get debug collision box. */
     getDebugCollisionBox() {
         const width = this.width - this.offsetWidth;
         const x = this.otherDiretion ? this.width - this.offsetX - width : this.offsetX;

@@ -16,6 +16,7 @@ class Character extends MovableObject {
     animationIntervalId = null;
     moveIntervalId = null;
 
+    /** Creates this object. */
     constructor() {
         super().loadImage('../assets/img/Sharkie/1.IDLE/1.png');
         this.loadAllImages();
@@ -23,17 +24,20 @@ class Character extends MovableObject {
         this.setOffsets();
     }
 
+    /** load all images. */
     loadAllImages() {
         [this.IMAGES_SWIM, this.IMAGES_DEAD, this.IMAGES_HURT,
             this.IMAGES_IDLE, this.IMAGES_SLEEP, this.IMAGES_ATTACK]
             .forEach(images => this.loadImages(images));
     }
 
+    /** set size. */
     setSize() {
         this.height = 200;
         this.width = 200;
     }
 
+    /** set offsets. */
     setOffsets() {
         this.offsetX = 40;
         this.offsetY = 90;
@@ -41,10 +45,12 @@ class Character extends MovableObject {
         this.offsetHeight = 120;
     }
 
+    /** set sound manager. */
     setSoundManager(soundManager) {
         this.soundManager = soundManager;
     }
 
+    /** stop snoring. */
     stopSnoring() {
         this.isCurrentlySnoring = false;
 
@@ -54,6 +60,7 @@ class Character extends MovableObject {
         }
     }
 
+    /** cleanup. */
     cleanup() {
         this.stopSnoring();
 
@@ -68,19 +75,23 @@ class Character extends MovableObject {
         }
     }
 
+    /** animate. */
     animate() {
         this.startAnimationInterval();
         this.startMoveInterval();
     }
 
+    /** start animation interval. */
     startAnimationInterval() {
         this.animationIntervalId = setInterval(() => this.updateAnimation(), 150);
     }
 
+    /** start move interval. */
     startMoveInterval() {
         this.moveIntervalId = setInterval(() => this.updateMovement(), 1000 / 60);
     }
 
+    /** update animation. */
     updateAnimation() {
         if (this.world.isPaused) return;
         if (this.world.win) return this.playWinIdle();
@@ -92,21 +103,25 @@ class Character extends MovableObject {
         this.playIdleAnimation();
     }
 
+    /** play win idle. */
     playWinIdle() {
         this.stopSnoring();
         this.playAnimation(this.IMAGES_IDLE);
     }
 
+    /** play dead animation. */
     playDeadAnimation() {
         this.playAnimation(this.IMAGES_DEAD);
         if (!this.deadSoundPlayed) this.playDeadSound();
     }
 
+    /** play dead sound. */
     playDeadSound() {
         this.soundManager.playSound('dead');
         this.deadSoundPlayed = true;
     }
 
+    /** play attack animation. */
     playAttackAnimation() {
         this.playAnimation(this.IMAGES_ATTACK);
         if (this.currentImage >= this.IMAGES_ATTACK.length) {
@@ -114,31 +129,37 @@ class Character extends MovableObject {
         }
     }
 
+    /** is moving. */
     isMoving() {
         return this.world.keyboard.RIGHT || this.world.keyboard.LEFT ||
             this.world.keyboard.UP || this.world.keyboard.DOWN;
     }
 
+    /** play swim animation. */
     playSwimAnimation() {
         this.playAnimation(this.IMAGES_SWIM);
         if (this.isCurrentlySnoring) this.stopSnoring();
     }
 
+    /** play sleep animation. */
     playSleepAnimation() {
         this.playAnimation(this.IMAGES_SLEEP);
         if (!this.isCurrentlySnoring) this.startSnoring();
     }
 
+    /** start snoring. */
     startSnoring() {
         this.soundManager.playSound('snoring');
         this.isCurrentlySnoring = true;
     }
 
+    /** play idle animation. */
     playIdleAnimation() {
         this.playAnimation(this.IMAGES_IDLE);
         if (this.isCurrentlySnoring) this.stopSnoring();
     }
 
+    /** update movement. */
     updateMovement() {
         if (this.world.isPaused) return;
         this.moveHorizontally();
@@ -146,44 +167,52 @@ class Character extends MovableObject {
         this.world.camera_x = -this.x + 50;
     }
 
+    /** move horizontally. */
     moveHorizontally() {
         if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) this.swimRight();
         if (this.world.keyboard.LEFT && this.x > -650) this.swimLeft();
     }
 
+    /** move vertically. */
     moveVertically() {
         if (this.world.keyboard.UP && this.y > -90) this.swimUp();
         if (this.world.keyboard.DOWN && this.y < 320) this.swimDown();
     }
 
+    /** swim right. */
     swimRight() {
         this.x += this.speed;
         this.otherDiretion = false;
         this.dontMove();
     }
 
+    /** swim left. */
     swimLeft() {
         this.x -= this.speed;
         this.otherDiretion = true;
         this.dontMove();
     }
 
+    /** swim up. */
     swimUp() {
         this.y -= this.speed;
         this.dontMove();
     }
 
+    /** swim down. */
     swimDown() {
         this.y += this.speed;
         this.dontMove();
     }
 
+    /** start attack. */
     startAttack() {
         this.isAttacking = true;
         this.attackAnimationFinished = false;
         this.currentImage = 0;
     }
 
+    /** reset attack. */
     resetAttack() {
         this.isAttacking = false;
         this.attackAnimationFinished = false;

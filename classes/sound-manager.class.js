@@ -4,6 +4,7 @@ class SoundManager {
     sounds = {};
     backgroundSound = null;
 
+    /** load sound. */
     loadSound(name, path, isBackground = false, isLooping = false) {
         const audio = new Audio(path);
         this.applyAudioSettings(audio);
@@ -14,16 +15,19 @@ class SoundManager {
         this.sounds[name] = { audio };
     }
 
+    /** apply audio settings. */
     applyAudioSettings(audio) {
         audio.volume = this.volume;
         audio.muted = this.muted;
     }
 
+    /** set background sound. */
     setBackgroundSound(audio, name) {
         audio.loop = true;
         this.backgroundSound = { audio, name };
     }
 
+    /** play sound. */
     playSound(name) {
         const sound = this.sounds[name];
         if (sound && !this.muted) {
@@ -34,6 +38,7 @@ class SoundManager {
         }
     }
 
+    /** play background. */
     playBackground() {
         if (this.backgroundSound) {
             this.backgroundSound.audio.volume = this.volume;
@@ -44,6 +49,7 @@ class SoundManager {
         }
     }
 
+    /** stop all sounds. */
     stopAllSounds() {
         if (this.backgroundSound) {
             this.backgroundSound.audio.pause();
@@ -55,16 +61,19 @@ class SoundManager {
         });
     }
 
+    /** set volume. */
     setVolume(volume) {
         this.volume = Math.min(1, Math.max(0, volume));
         this.updateAllVolumes();
     }
 
+    /** set muted. */
     setMuted(muted) {
         this.muted = muted;
         this.updateAllVolumes();
     }
 
+    /** update all volumes. */
     updateAllVolumes() {
         Object.values(this.sounds).forEach(sound => {
             sound.audio.volume = this.volume;

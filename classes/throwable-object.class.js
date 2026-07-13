@@ -1,6 +1,7 @@
 class ThrowableObject extends MovableObject {
     maxDistance = 400;
     startX = 0;
+    /** Creates this object. */
     constructor(x, y, otherDiretion = false, world = null) {
         super().loadImage('../assets/img/Sharkie/4.Attack/Bubbletrap/Bubble.png');
         this.world = world;
@@ -13,6 +14,7 @@ class ThrowableObject extends MovableObject {
         this.trow();
     }
 
+   /** trow. */
    trow() {
         if(this.otherDiretion) {
             this.moveLeft();
@@ -21,6 +23,7 @@ class ThrowableObject extends MovableObject {
         }
     }
 
+    /** move left. */
     moveLeft() {
         this.clearMoveInterval();
         this.moveInterval = setInterval(() => {

@@ -2,14 +2,17 @@ const LEVEL_END_X = 4200;
 const BOSS_SAFE_DISTANCE = 800;
 const RANDOM_AREA_END_X = LEVEL_END_X - BOSS_SAFE_DISTANCE;
 
+/** random number. */
 function randomNumber(min, max) {
     return Math.random() * (max - min) + min;
 }
 
+/** random int. */
 function randomInt(min, max) {
     return Math.floor(randomNumber(min, max + 1));
 }
 
+/** is far enough. */
 function isFarEnough(position, usedPositions, minDistance) {
     return usedPositions.every(usedPosition => {
         const dx = position.x - usedPosition.x;
@@ -18,6 +21,7 @@ function isFarEnough(position, usedPositions, minDistance) {
     });
 }
 
+/** create random position. */
 function createRandomPosition(zone, usedPositions, minDistance) {
     for (let i = 0; i < 80; i++) {
         const position = getRandomZonePosition(zone);
@@ -29,6 +33,7 @@ function createRandomPosition(zone, usedPositions, minDistance) {
     return createFallbackPosition(zone, usedPositions);
 }
 
+/** get random zone position. */
 function getRandomZonePosition(zone) {
     return {
         x: randomInt(zone.minX, zone.maxX),
@@ -36,12 +41,14 @@ function getRandomZonePosition(zone) {
     };
 }
 
+/** create fallback position. */
 function createFallbackPosition(zone, usedPositions) {
     const fallbackPosition = getRandomZonePosition(zone);
     usedPositions.push(fallbackPosition);
     return fallbackPosition;
 }
 
+/** create random objects. */
 function createRandomObjects(zones, createObject, minDistance) {
     const usedPositions = [];
 
@@ -53,11 +60,13 @@ function createRandomObjects(zones, createObject, minDistance) {
     });
 }
 
+/** create random enemies. */
 function createRandomEnemies() {
     const enemyTypes = [JellyFishPurple, JellyFishYellow, JellyFishGreen, JellyFishPink];
     return createRandomObjects(getEnemyZones(), (x, y) => createRandomEnemy(enemyTypes, x, y), 180);
 }
 
+/** get enemy zones. */
 function getEnemyZones() {
     return [
         { minX: 650, maxX: 1150, minY: 80, maxY: 380, count: 3 },
@@ -67,15 +76,18 @@ function getEnemyZones() {
     ];
 }
 
+/** create random enemy. */
 function createRandomEnemy(enemyTypes, x, y) {
     const EnemyType = enemyTypes[randomInt(0, enemyTypes.length - 1)];
     return new EnemyType(x, y);
 }
 
+/** create random coins. */
 function createRandomCoins() {
     return createRandomObjects(getCoinZones(), (x, y) => new Coin(x, y), 95);
 }
 
+/** get coin zones. */
 function getCoinZones() {
     return [
         { minX: 500, maxX: 1300, minY: 110, maxY: 320, count: 3 },
@@ -84,10 +96,12 @@ function getCoinZones() {
     ];
 }
 
+/** create random bottles. */
 function createRandomBottles() {
     return createRandomObjects(getBottleZones(), (x, y) => new Bottle(x, y), 105);
 }
 
+/** get bottle zones. */
 function getBottleZones() {
     return [
         { minX: 650, maxX: 1450, minY: 220, maxY: 350, count: 3 },
@@ -96,18 +110,22 @@ function getBottleZones() {
     ];
 }
 
+/** create background objects. */
 function createBackgroundObjects() {
     return getBackgroundTiles().map(tile => createBackgroundTile(tile));
 }
 
+/** get background tiles. */
 function getBackgroundTiles() {
     return getBackgroundPositions().flatMap(position => getBackgroundLayers(position));
 }
 
+/** get background positions. */
 function getBackgroundPositions() {
     return [-719, 0, 719, 719 * 2, 719 * 3, 719 * 4, 719 * 5, 719 * 6];
 }
 
+/** get background layers. */
 function getBackgroundLayers(x) {
     const suffix = getBackgroundSuffix(x);
     return [
@@ -118,14 +136,17 @@ function getBackgroundLayers(x) {
     ];
 }
 
+/** get background suffix. */
 function getBackgroundSuffix(x) {
     return x === 0 || x % (719 * 2) === 0 ? 'D1' : 'D2';
 }
 
+/** create background tile. */
 function createBackgroundTile(tile) {
     return new BackgroundObject(tile.path, tile.x);
 }
 
+/** get level1. */
 function getLevel1() {
     return new Level(
         createRandomEnemies(),

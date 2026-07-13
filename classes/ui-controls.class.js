@@ -7,12 +7,14 @@ class UIControls {
     soundManager;
     hoveredButton = null;
 
+    /** Creates this object. */
     constructor(soundManager) {
         this.soundManager = soundManager;
         this.x = canvas.width - this.edgeOffset - (this.buttonSize * 3 + this.padding * 2);
         this.y = this.edgeOffset;
     }
 
+    /** draw. */
     draw(ctx) {
         ctx.save();
         ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
@@ -28,6 +30,7 @@ class UIControls {
         ctx.restore();
     }
 
+    /** draw button. */
     drawButton(ctx, x, y, width, height, text) {
         ctx.fillStyle = 'rgba(200, 200, 200, 0.3)';
         ctx.fillRect(x, y, width, height);
@@ -41,12 +44,14 @@ class UIControls {
         ctx.fillText(text, x + width / 2, y + height / 2);
     }
 
+    /** draw sound button. */
     drawSoundButton(ctx, x, y) {
         this.drawButtonBase(ctx, x, y, this.hoveredButton === 'mute');
         this.drawSpeakerIcon(ctx, x, y);
         this.soundManager.muted ? this.drawMutedLine(ctx, x, y) : this.drawSoundWave(ctx, x, y);
     }
 
+    /** draw speaker icon. */
     drawSpeakerIcon(ctx, x, y) {
         ctx.strokeStyle = '#fff';
         ctx.lineWidth = 3;
@@ -59,6 +64,7 @@ class UIControls {
         ctx.stroke();
     }
 
+    /** draw muted line. */
     drawMutedLine(ctx, x, y) {
         ctx.beginPath();
         ctx.moveTo(x + 31, y + 13);
@@ -66,12 +72,14 @@ class UIControls {
         ctx.stroke();
     }
 
+    /** draw sound wave. */
     drawSoundWave(ctx, x, y) {
         ctx.beginPath();
         ctx.arc(x + 27, y + 23, 7, -0.7, 0.7);
         ctx.stroke();
     }
 
+    /** draw fullscreen button. */
     drawFullscreenButton(ctx, x, y) {
         this.drawButtonBase(ctx, x, y, this.hoveredButton === 'fullscreen');
         ctx.strokeStyle = '#fff';
@@ -87,6 +95,7 @@ class UIControls {
         ctx.stroke();
     }
 
+    /** draw pause button. */
     drawPauseButton(ctx, x, y) {
         this.drawButtonBase(ctx, x, y, this.hoveredButton === 'pause');
         ctx.fillStyle = '#fff';
@@ -94,6 +103,7 @@ class UIControls {
         ctx.fillRect(x + 23, y + 11, 5, 18);
     }
 
+    /** draw button base. */
     drawButtonBase(ctx, x, y, isHovered = false) {
         ctx.fillStyle = isHovered ? 'rgba(255, 255, 255, 0.42)' : 'rgba(200, 200, 200, 0.3)';
         ctx.fillRect(x, y, this.buttonSize, this.buttonSize);
@@ -102,20 +112,24 @@ class UIControls {
         ctx.strokeRect(x, y, this.buttonSize, this.buttonSize);
     }
 
+    /** is inside button. */
     isInsideButton(x, y, buttonX, buttonY) {
         return x >= buttonX && x <= buttonX + this.buttonSize &&
                y >= buttonY && y <= buttonY + this.buttonSize;
     }
 
+    /** is button hovered. */
     isButtonHovered(x, y) {
         return Boolean(this.getButtonAt(x, y));
     }
 
+    /** get button at. */
     getButtonAt(x, y) {
         const button = this.getButtons().find(button => this.isInsideButton(x, y, button.x, button.y));
         return button ? button.action : null;
     }
 
+    /** get buttons. */
     getButtons() {
         const fullscreenX = this.x + this.buttonSize + this.padding;
         const pauseX = fullscreenX + this.buttonSize + this.padding;
@@ -126,6 +140,7 @@ class UIControls {
         ];
     }
 
+    /** handle click. */
     handleClick(x, y) {
         const action = this.getButtonAt(x, y);
         if (action === 'mute') this.soundManager.setMuted(!this.soundManager.muted);

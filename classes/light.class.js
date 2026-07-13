@@ -4,12 +4,14 @@ class Light extends MovableObject {
     height = 500
     width = 300
     
+    /** Creates this object. */
     constructor() {
         super().loadImage('../assets/img/Background/Layers/1. Light/1.png');
         
         this.animate();
     }
 
+    /** animate. */
     animate() {
         this.moveLeft()
     }

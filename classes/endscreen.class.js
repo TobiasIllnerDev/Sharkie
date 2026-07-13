@@ -8,6 +8,7 @@ class EndScreen {
     buttonHeight = 70;
     gap = 20;
 
+    /** Creates this object. */
     constructor() {
         this.gameOverImg = new Image();
         this.gameOverImg.src = '../assets/img/Botones/Tittles/Game Over/Recurso 9.png';
@@ -19,6 +20,7 @@ class EndScreen {
         this.buttonImg.src = '../assets/img/Botones/Try again/Recurso 15.png';
     }
 
+    /** draw. */
     draw(ctx, type) {
         ctx.save();
         this.drawOverlay(ctx);
@@ -27,16 +29,19 @@ class EndScreen {
         ctx.restore();
     }
 
+    /** draw overlay. */
     drawOverlay(ctx) {
         ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     }
 
+    /** draw title image. */
     drawTitleImage(ctx, type) {
         const layout = this.getLayout(ctx, type);
         ctx.drawImage(layout.img, layout.imgX, layout.startY, layout.imgWidth, layout.imgHeight);
     }
 
+    /** draw retry button. */
     drawRetryButton(ctx, type) {
         const layout = this.getLayout(ctx, type);
         this.buttonX = (ctx.canvas.width - this.buttonWidth) / 2;
@@ -44,6 +49,7 @@ class EndScreen {
         ctx.drawImage(this.buttonImg, this.buttonX, this.buttonY, this.buttonWidth, this.buttonHeight);
     }
 
+    /** get layout. */
     getLayout(ctx, type) {
         const img = type === 'win' ? this.winImg : this.gameOverImg;
         const imgWidth = type === 'win' ? this.winImgWidth : this.gameOverImgWidth;
@@ -51,12 +57,14 @@ class EndScreen {
         return this.createLayout(ctx, img, imgWidth, imgHeight);
     }
 
+    /** create layout. */
     createLayout(ctx, img, imgWidth, imgHeight) {
         const totalHeight = imgHeight + this.gap + this.buttonHeight;
         const startY = (ctx.canvas.height - totalHeight) / 2;
         return { img, imgWidth, imgHeight, startY, imgX: (ctx.canvas.width - imgWidth) / 2 };
     }
 
+    /** is button clicked. */
     isButtonClicked(x, y) {
         return x >= this.buttonX && x <= this.buttonX + this.buttonWidth &&
                y >= this.buttonY && y <= this.buttonY + this.buttonHeight;

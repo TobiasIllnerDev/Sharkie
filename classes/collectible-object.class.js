@@ -7,6 +7,7 @@ class CollectibleObject extends DrawableObject {
     currentImage = 0;
     animationInterval = null;
 
+    /** Creates this object. */
     constructor(paths,x,y,width,height) {
         super()
         this.images = paths;
@@ -19,12 +20,14 @@ class CollectibleObject extends DrawableObject {
 
     }
 
+    /** animate. */
     animate() {
         this.animationInterval = setInterval(() => {
             this.playAnimation(this.images);
         }, 200);
     }
 
+    /** cleanup. */
     cleanup() {
         if (this.animationInterval) {
             clearInterval(this.animationInterval);
@@ -32,6 +35,7 @@ class CollectibleObject extends DrawableObject {
         }
     }
 
+    /** play animation. */
     playAnimation(images) {
         if (!images || images.length === 0) return; 
         let i = this.currentImage % images.length;
@@ -40,10 +44,12 @@ class CollectibleObject extends DrawableObject {
         this.currentImage++;
     }
     
+    /** collect. */
     collect() {
         this.collected = true;
     }
 
+    /** is colliding. */
     isColliding(mo) {
         return this.x + this.offsetX + (this.width - this.offsetWidth) > mo.x + mo.offsetX &&
             this.y + this.offsetY + (this.height - this.offsetHeight) > mo.y + mo.offsetY &&
