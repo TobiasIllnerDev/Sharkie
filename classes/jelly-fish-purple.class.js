@@ -1,7 +1,7 @@
-class JellyFishPurple extends JellyFish {
+﻿class JellyFishPurple extends JellyFish {
     damage = 10;
-    IMAGES_FLOATING = Array.from({length: 4}, (_, i) => `../assets/img/Enemy/JellyFish/Regular/Purpel${i+1}.png`);
-    IMAGES_DEAD = Array.from({length: 4}, (_, i) => `../assets/img/Enemy/JellyFish/Dead/Lila/L${i+1}.png`);
+    IMAGES_FLOATING = Array.from({length: 4}, (_, i) => `./assets/img/Enemy/JellyFish/Regular/Purpel${i+1}.png`);
+    IMAGES_DEAD = Array.from({length: 4}, (_, i) => `./assets/img/Enemy/JellyFish/Dead/Lila/L${i+1}.png`);
 
     /** Creates this object. */
     constructor(x = 200, y = 200) {

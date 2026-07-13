@@ -1,10 +1,10 @@
-class Character extends MovableObject {
-    IMAGES_SWIM = Array.from({length: 6}, (_, i) => `../assets/img/Sharkie/3.Swim/${i+1}.png`);
-    IMAGES_DEAD = Array.from({length: 12}, (_, i) => `../assets/img/Sharkie/6.dead/1.Poisoned/${i+1}.png`);
-    IMAGES_HURT = Array.from({length: 4}, (_, i) => `../assets/img/Sharkie/5.Hurt/1.Poisoned/${i+1}.png`);
-    IMAGES_IDLE = Array.from({length: 18}, (_, i) => `../assets/img/Sharkie/1.IDLE/${i+1}.png`);
-    IMAGES_SLEEP = Array.from({length: 14}, (_, i) => `../assets/img/Sharkie/2.Long_IDLE/i${i+1}.png`);
-    IMAGES_ATTACK = Array.from({length: 8}, (_, i) => `../assets/img/Sharkie/4.Attack/Bubbletrap/op1 (with bubble formation)/${i+1}.png`);
+﻿class Character extends MovableObject {
+    IMAGES_SWIM = Array.from({length: 6}, (_, i) => `./assets/img/Sharkie/3.Swim/${i+1}.png`);
+    IMAGES_DEAD = Array.from({length: 12}, (_, i) => `./assets/img/Sharkie/6.dead/1.Poisoned/${i+1}.png`);
+    IMAGES_HURT = Array.from({length: 4}, (_, i) => `./assets/img/Sharkie/5.Hurt/1.Poisoned/${i+1}.png`);
+    IMAGES_IDLE = Array.from({length: 18}, (_, i) => `./assets/img/Sharkie/1.IDLE/${i+1}.png`);
+    IMAGES_SLEEP = Array.from({length: 14}, (_, i) => `./assets/img/Sharkie/2.Long_IDLE/i${i+1}.png`);
+    IMAGES_ATTACK = Array.from({length: 8}, (_, i) => `./assets/img/Sharkie/4.Attack/Bubbletrap/op1 (with bubble formation)/${i+1}.png`);
     world;
     isAttacking = false;
     attackAnimationFinished = false;
@@ -18,7 +18,7 @@ class Character extends MovableObject {
 
     /** Creates this object. */
     constructor() {
-        super().loadImage('../assets/img/Sharkie/1.IDLE/1.png');
+        super().loadImage('./assets/img/Sharkie/1.IDLE/1.png');
         this.loadAllImages();
         this.setSize();
         this.setOffsets();

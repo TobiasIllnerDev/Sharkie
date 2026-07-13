@@ -1,9 +1,9 @@
-class ThrowableObject extends MovableObject {
+﻿class ThrowableObject extends MovableObject {
     maxDistance = 400;
     startX = 0;
     /** Creates this object. */
     constructor(x, y, otherDiretion = false, world = null) {
-        super().loadImage('../assets/img/Sharkie/4.Attack/Bubbletrap/Bubble.png');
+        super().loadImage('./assets/img/Sharkie/4.Attack/Bubbletrap/Bubble.png');
         this.world = world;
         this.startX = x;
         this.x = x;

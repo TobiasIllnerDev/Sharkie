@@ -1,4 +1,4 @@
-const LEVEL_END_X = 4200;
+﻿const LEVEL_END_X = 4200;
 const BOSS_SAFE_DISTANCE = 800;
 const RANDOM_AREA_END_X = LEVEL_END_X - BOSS_SAFE_DISTANCE;
 
@@ -129,10 +129,10 @@ function getBackgroundPositions() {
 function getBackgroundLayers(x) {
     const suffix = getBackgroundSuffix(x);
     return [
-        { path: `../assets/img/Background/Layers/5. Water/${suffix}.png`, x },
-        { path: `../assets/img/Background/Layers/3.Fondo 1/L${suffix.slice(1)}.png`, x },
-        { path: `../assets/img/Background/Layers/4.Fondo 2/L${suffix.slice(1)}.png`, x },
-        { path: `../assets/img/Background/Layers/2. Floor/${suffix}.png`, x }
+        { path: `./assets/img/Background/Layers/5. Water/${suffix}.png`, x },
+        { path: `./assets/img/Background/Layers/3.Fondo 1/L${suffix.slice(1)}.png`, x },
+        { path: `./assets/img/Background/Layers/4.Fondo 2/L${suffix.slice(1)}.png`, x },
+        { path: `./assets/img/Background/Layers/2. Floor/${suffix}.png`, x }
     ];
 }
 

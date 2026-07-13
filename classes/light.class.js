@@ -1,4 +1,4 @@
-class Light extends MovableObject {
+﻿class Light extends MovableObject {
     x = 420 
     y = 0
     height = 500
@@ -6,7 +6,7 @@ class Light extends MovableObject {
     
     /** Creates this object. */
     constructor() {
-        super().loadImage('../assets/img/Background/Layers/1. Light/1.png');
+        super().loadImage('./assets/img/Background/Layers/1. Light/1.png');
         
         this.animate();
     }

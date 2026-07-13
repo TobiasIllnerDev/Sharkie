@@ -1,4 +1,4 @@
-class EndScreen {
+﻿class EndScreen {
     gameOverImgWidth = 350;
     gameOverImgHeight = 200;
 
@@ -11,13 +11,13 @@ class EndScreen {
     /** Creates this object. */
     constructor() {
         this.gameOverImg = new Image();
-        this.gameOverImg.src = '../assets/img/Botones/Tittles/Game Over/Recurso 9.png';
+        this.gameOverImg.src = './assets/img/Botones/Tittles/Game Over/Recurso 9.png';
 
         this.winImg = new Image();
-        this.winImg.src = '../assets/img/Botones/Tittles/You win/Mesa de trabajo 1.png';
+        this.winImg.src = './assets/img/Botones/Tittles/You win/Mesa de trabajo 1.png';
 
         this.buttonImg = new Image();
-        this.buttonImg.src = '../assets/img/Botones/Try again/Recurso 15.png';
+        this.buttonImg.src = './assets/img/Botones/Try again/Recurso 15.png';
     }
 
     /** draw. */
