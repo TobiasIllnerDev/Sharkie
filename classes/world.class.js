@@ -12,6 +12,8 @@ class World {
     throwableObjects = [];
     runInterval = null;
     isPaused = false;
+    maxCoins = 10;
+    maxBottles = 10;
 
     constructor(canvas, keyboard, soundManager) {
         this.ctx = canvas.getContext('2d');
@@ -112,7 +114,7 @@ class World {
                 this.throwableObjects.push(specialBubble);
 
                 this.bottleCount--;
-                let percentage = (this.bottleCount / 20) * 100;
+                let percentage = (this.bottleCount / this.maxBottles) * 100;
                 this.statusBarPosion.setPercentage(percentage);
 
                 this.character.resetAttack();
@@ -162,12 +164,12 @@ class World {
 
                 if (collectible instanceof Coin) {
                     this.coinCount++;
-                    let percentage = (this.coinCount / 20) * 100;
+                    let percentage = (this.coinCount / this.maxCoins) * 100;
                     this.statusBarCoin.setPercentage(percentage);
                     this.soundManager.playSound('coin');
                 } else if (collectible instanceof Bottle) {
                     this.bottleCount++;
-                    let percentage = (this.bottleCount / 20) * 100;
+                    let percentage = (this.bottleCount / this.maxBottles) * 100;
                     this.statusBarPosion.setPercentage(percentage);
                     this.soundManager.playSound('bottle');
                 }
