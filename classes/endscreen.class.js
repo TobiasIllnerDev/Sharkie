@@ -1,6 +1,9 @@
 class EndScreen {
-    imgWidth = 500;
-    imgHeight = 300;
+    gameOverImgWidth = 350;
+    gameOverImgHeight = 200;
+
+    winImgWidth = 500;
+    winImgHeight = 300;
     buttonWidth = 200;
     buttonHeight = 70;
     gap = 20;
@@ -22,16 +25,19 @@ class EndScreen {
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
         const img = type === 'win' ? this.winImg : this.gameOverImg;
+        const imgWidth = type === 'win' ? this.winImgWidth : this.gameOverImgWidth;
+        const imgHeight = type === 'win' ? this.winImgHeight : this.gameOverImgHeight;
 
-        const totalHeight = this.imgHeight + this.gap + this.buttonHeight;
+        const totalHeight = imgHeight + this.gap + this.buttonHeight;
         const startY = (ctx.canvas.height - totalHeight) / 2;
 
-        const imgX = (ctx.canvas.width - this.imgWidth) / 2;
+        const imgX = (ctx.canvas.width - imgWidth) / 2;
         const imgY = startY;
-        ctx.drawImage(img, imgX, imgY, this.imgWidth, this.imgHeight);
+
+        ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
 
         this.buttonX = (ctx.canvas.width - this.buttonWidth) / 2;
-        this.buttonY = startY + this.imgHeight + this.gap;
+        this.buttonY = startY + imgHeight + this.gap;
         ctx.drawImage(this.buttonImg, this.buttonX, this.buttonY, this.buttonWidth, this.buttonHeight);
 
         ctx.restore();
