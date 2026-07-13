@@ -12,6 +12,11 @@ class DrawableObject {
     offsetHeight = 0;
 
      loadImage(path) {
+        if (window.sharkieImageCache && window.sharkieImageCache[path]) {
+            this.img = window.sharkieImageCache[path];
+            return;
+        }
+
         this.img = new Image();
         this.img.src = path;
     }
@@ -22,9 +27,13 @@ class DrawableObject {
 
     loadImages(arr) {
         arr.forEach((path) => {
-            let img = new Image();
-            img.src = path;
-            this.imageCache[path] = img;
+            if (window.sharkieImageCache && window.sharkieImageCache[path]) {
+                this.imageCache[path] = window.sharkieImageCache[path];
+            } else {
+                let img = new Image();
+                img.src = path;
+                this.imageCache[path] = img;
+            }
         })
     }
 
