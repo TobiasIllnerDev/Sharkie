@@ -36,8 +36,17 @@ class Character extends MovableObject {
         this.soundManager = soundManager;
     }
 
-    cleanup() {
+    stopSnoring() {
         this.isCurrentlySnoring = false;
+
+        if (this.soundManager && this.soundManager.sounds['snoring']) {
+            this.soundManager.sounds['snoring'].audio.pause();
+            this.soundManager.sounds['snoring'].audio.currentTime = 0;
+        }
+    }
+
+    cleanup() {
+        this.stopSnoring();
 
         if (this.animationIntervalId) {
             clearInterval(this.animationIntervalId);
@@ -48,16 +57,16 @@ class Character extends MovableObject {
             clearInterval(this.moveIntervalId);
             this.moveIntervalId = null;
         }
-
-        if (this.soundManager && this.soundManager.sounds['snoring']) {
-            this.soundManager.sounds['snoring'].audio.pause();
-            this.soundManager.sounds['snoring'].audio.currentTime = 0;
-        }
     }
 
     animate() {
         this.animationIntervalId = setInterval(() => {
             if (this.world.isPaused) {
+                return;
+            }
+            if (this.world.win) {
+                this.stopSnoring();
+                this.playAnimation(this.IMAGES_IDLE);
                 return;
             }
 
@@ -78,11 +87,7 @@ class Character extends MovableObject {
                     this.world.keyboard.UP || this.world.keyboard.DOWN) {
                 this.playAnimation(this.IMAGES_SWIM);
                 if (this.isCurrentlySnoring) {
-                    if (this.soundManager && this.soundManager.sounds['snoring']) {
-                        this.soundManager.sounds['snoring'].audio.pause();
-                        this.soundManager.sounds['snoring'].audio.currentTime = 0;
-                    }
-                    this.isCurrentlySnoring = false;
+                    this.stopSnoring();
                 }
             } else if (this.isAFK()) {
                 this.playAnimation(this.IMAGES_SLEEP);
@@ -94,11 +99,7 @@ class Character extends MovableObject {
                 this.playAnimation(this.IMAGES_IDLE);
 
                 if (this.isCurrentlySnoring) {
-                    if (this.soundManager && this.soundManager.sounds['snoring']) {
-                        this.soundManager.sounds['snoring'].audio.pause();
-                        this.soundManager.sounds['snoring'].audio.currentTime = 0;
-                    }
-                    this.isCurrentlySnoring = false;
+                    this.stopSnoring();
                 }
             }
         }, 150);

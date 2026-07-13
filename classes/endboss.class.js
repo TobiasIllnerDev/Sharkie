@@ -1,7 +1,7 @@
 class Endboss extends MovableObject {
 
     IMAGES_HURT = Array.from({length: 4}, (_, i) => `../assets/img/Enemy/FinalBoss/Hurt/${i+1}.png`);
-    IMAGES_DEAD = Array.from({length: 5}, (_, i) => `../assets/img/Enemy/FinalBoss/Dead/Dead_${i+1}.png`);
+    IMAGES_DEAD = Array.from({length: 6}, (_, i) => `../assets/img/Enemy/FinalBoss/Dead/Dead_${i+1}.png`);
     IMAGES_FLOATING =  Array.from({length: 13}, (_, i) =>`../assets/img/Enemy/FinalBoss/2.floating/${i+1}.png`);
     IMAGES_SPAWN = Array.from({length: 10}, (_, i) => `../assets/img/Enemy/FinalBoss/1.Introduce/${i+1}.png`);
     IMAGES_ATTACK = Array.from({length: 6}, (_, i) => `../assets/img/Enemy/FinalBoss/Attack/${i+1}.png`);
@@ -79,6 +79,7 @@ class Endboss extends MovableObject {
                     this.playAnimation(this.IMAGES_DEAD);
                     if(this.currentImage >= this.IMAGES_DEAD.length) {
                          this.shouldRemove = true;
+                         this.clearAnimationInterval();
                     }
                 }
                 else if (this.isAttacking) {

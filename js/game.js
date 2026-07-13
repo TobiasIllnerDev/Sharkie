@@ -14,6 +14,7 @@ let isMuted = false;
 let loadedAssets = 0;
 let totalAssets = 0;
 let loadingFinished = false;
+let hoveredPauseAction = null;
 window.sharkieImageCache = window.sharkieImageCache || {};
 
 function range(length, callback) {
@@ -248,6 +249,20 @@ function closeOverlay() {
     }
 }
 
+function roundRect(ctx, x, y, width, height, radius) {
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+}
+
 function toggleFullscreen() {
     if (!document.fullscreenElement && gameContainer.requestFullscreen) {
         gameContainer.requestFullscreen().catch(err => {
@@ -259,14 +274,21 @@ function toggleFullscreen() {
 }
 
 const pauseMenuButtons = [
-    { action: 'resume', text: 'WEITER', x: 240, y: 170, width: 240, height: 50 },
-    { action: 'restart', text: 'NEUSTART', x: 240, y: 240, width: 240, height: 50 },
-    { action: 'menu', text: 'MENU', x: 240, y: 310, width: 240, height: 50 }
+    { action: 'resume', text: 'WEITER', x: 240, y: 185, width: 240, height: 48 },
+    { action: 'restart', text: 'NEUSTART', x: 240, y: 250, width: 240, height: 48 },
+    { action: 'menu', text: 'MENU', x: 240, y: 315, width: 240, height: 48 }
 ];
+
+function setBackgroundVolumeFactor(factor) {
+    if (soundManager && soundManager.backgroundSound) {
+        soundManager.backgroundSound.audio.volume = soundManager.volume * factor;
+    }
+}
 
 function pauseGame() {
     if (currentScreen === 'playing' && world) {
         world.pause();
+        setBackgroundVolumeFactor(0.7);
         currentScreen = 'paused';
     }
 }
@@ -274,7 +296,9 @@ function pauseGame() {
 function resumeGame() {
     if (currentScreen === 'paused' && world) {
         world.resume();
+        setBackgroundVolumeFactor(1);
         currentScreen = 'playing';
+        hoveredPauseAction = null;
     }
 }
 
@@ -294,29 +318,41 @@ function handlePauseMenuClick(x, y) {
     if (action === 'resume') {
         resumeGame();
     } else if (action === 'restart') {
+        setBackgroundVolumeFactor(1);
         restartGame();
     } else if (action === 'menu') {
+        setBackgroundVolumeFactor(1);
         resetGame();
     }
 }
 
 function drawPauseOverlay(ctx) {
     ctx.save();
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.68)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    roundRect(ctx, 170, 78, 380, 320, 24);
+    ctx.fillStyle = '#0f3f56';
+    ctx.fill();
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 2;
+    ctx.stroke();
 
     ctx.fillStyle = '#1a8fb4';
     ctx.font = '48px Luckiest Guy';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('PAUSE', 360, 105);
+    ctx.fillText('PAUSE', 360, 135);
 
     pauseMenuButtons.forEach(button => {
-        ctx.fillStyle = 'rgba(26, 143, 180, 0.85)';
-        ctx.fillRect(button.x, button.y, button.width, button.height);
+        const isHovered = hoveredPauseAction === button.action;
+
+        roundRect(ctx, button.x, button.y, button.width, button.height, 14);
+        ctx.fillStyle = isHovered ? '#25a9d3' : '#1a8fb4';
+        ctx.fill();
         ctx.strokeStyle = 'white';
         ctx.lineWidth = 2;
-        ctx.strokeRect(button.x, button.y, button.width, button.height);
+        ctx.stroke();
 
         ctx.fillStyle = 'white';
         ctx.font = '24px Luckiest Guy';
@@ -373,7 +409,21 @@ function updateTouchControlsVisibility() {
     gameContainer.classList.toggle('show-touch-controls', currentScreen === 'playing');
 }
 
+function finishRound(screen) {
+    resetKeyboard();
+    document.querySelectorAll('#touch-controls .is-pressed').forEach(button => {
+        button.classList.remove('is-pressed');
+    });
+    if (screen === 'win' && world && world.character) {
+        world.character.stopSnoring();
+    }
+    currentScreen = screen;
+}
+
 function resetGame() {
+    setBackgroundVolumeFactor(1);
+    hoveredPauseAction = null;
+
     if (soundManager) {
         savedVolume = soundManager.volume;
         localStorage.setItem('sharkieSavedVolume', savedVolume);
@@ -420,9 +470,9 @@ function draw() {
         if (uiControls) uiControls.draw(ctx);
 
         if (world.gameOver) {
-            currentScreen = 'gameover';
+            finishRound('gameover');
         } else if (world.win) {
-            currentScreen = 'win';
+            finishRound('win');
         }
     } else if (currentScreen === 'gameover') {
         world.draw();
@@ -479,7 +529,8 @@ document.addEventListener('mousemove', (e) => {
     } else if (currentScreen === 'playing' && uiControls) {
         isPointer = uiControls.isButtonHovered(x, y);
     } else if (currentScreen === 'paused') {
-        isPointer = Boolean(getPauseMenuAction(x, y));
+        hoveredPauseAction = getPauseMenuAction(x, y);
+        isPointer = Boolean(hoveredPauseAction);
     } else if ((currentScreen === 'gameover' || currentScreen === 'win') && endScreen) {
         isPointer = endScreen.isButtonClicked(x, y);
     }
@@ -514,7 +565,7 @@ window.addEventListener('keydown', (e) => {
         return;
     }
 
-    if (currentScreen === 'paused') {
+    if (currentScreen !== 'playing') {
         return;
     }
 

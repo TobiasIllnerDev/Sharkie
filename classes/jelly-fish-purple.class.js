@@ -1,5 +1,5 @@
 class JellyFishPurple extends JellyFish {
-    damage = 10;
+    damage = 100;
     IMAGES_FLOATING = Array.from({length: 4}, (_, i) => `../assets/img/Enemy/JellyFish/Regular/Purpel${i+1}.png`);
     IMAGES_DEAD = Array.from({length: 4}, (_, i) => `../assets/img/Enemy/JellyFish/Dead/Lila/L${i+1}.png`);
 

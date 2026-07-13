@@ -207,7 +207,22 @@ class World {
         }
     }
 
+    removeDefeatedEnemies() {
+        this.level.enemies = this.level.enemies.filter(enemy => {
+            if (!enemy.shouldRemove) {
+                return true;
+            }
+
+            enemy.cleanup?.();
+            if (enemy === this.endboss) {
+                this.endboss = null;
+            }
+            return false;
+        });
+    }
+
     draw() {
+        this.removeDefeatedEnemies();
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.translate(this.camera_x, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
