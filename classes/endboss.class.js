@@ -20,6 +20,10 @@ class Endboss extends MovableObject {
     lastAttack = 0;
     attackCooldown = 2000;
     attackDamageApplied = false;
+    chaseInterval = null;
+    chaseSpeed = 2;
+    minY = -80;
+    maxY = 180;
 
     constructor() {
         super();
@@ -50,15 +54,14 @@ class Endboss extends MovableObject {
                 this.isSpawned = true;
                 clearInterval(this.spawnInterval);
                 this.spawnInterval = null;
-                this.animate(); 
+                this.animate();
+                this.startChasing();
             }
         }, 200);
     }
 
     animate() {
         if (!this.isSpawning) {
-            this.moveLeft();
-
             this.animationInterval = setInterval(() => {
                 if(this.isDead()) {
                     if(!this.hasStartedDeadAnimation) {
@@ -77,7 +80,6 @@ class Endboss extends MovableObject {
                     }
                     if (this.currentImage >= this.IMAGES_ATTACK.length) {
                         this.isAttacking = false;
-                        this.moveLeft();
                     }
                 }
                 else if(this.isHurt()) {
@@ -88,6 +90,53 @@ class Endboss extends MovableObject {
                 }
             }, 200);
         }
+    }
+
+    startChasing() {
+        if (this.chaseInterval) {
+            return;
+        }
+
+        this.chaseInterval = setInterval(() => {
+            this.chaseCharacter();
+        }, 1000 / 60);
+    }
+
+    stopChasing() {
+        if (this.chaseInterval) {
+            clearInterval(this.chaseInterval);
+            this.chaseInterval = null;
+        }
+    }
+
+    chaseCharacter() {
+        if (!this.world || !this.world.character || this.isDead() ||
+            this.world.character.isDead() || this.world.gameOver || this.world.win) {
+            this.stopChasing();
+            return;
+        }
+
+        const bossCenterX = this.x + this.width / 2;
+        const bossCenterY = this.y + this.height / 2;
+        const characterCenterX = this.world.character.x + this.world.character.width / 2;
+        const characterCenterY = this.world.character.y + this.world.character.height / 2;
+        const dx = characterCenterX - bossCenterX;
+        const dy = characterCenterY - bossCenterY;
+
+        this.otherDiretion = dx > 0;
+
+        if (this.isAttacking) {
+            return;
+        }
+
+        const distance = Math.hypot(dx, dy);
+        if (distance === 0) {
+            return;
+        }
+
+        this.x += (dx / distance) * this.chaseSpeed;
+        this.y += (dy / distance) * this.chaseSpeed;
+        this.y = Math.min(this.maxY, Math.max(this.minY, this.y));
     }
 
     isPlayerInAttackRange() {
@@ -114,7 +163,6 @@ class Endboss extends MovableObject {
         this.isAttacking = true;
         this.attackDamageApplied = false;
         this.currentImage = 0;
-        this.clearMoveInterval();
     }
 
     applyAttackDamage() {
@@ -129,6 +177,7 @@ class Endboss extends MovableObject {
             clearInterval(this.spawnInterval);
             this.spawnInterval = null;
         }
+        this.stopChasing();
         super.cleanup();
     }
 }

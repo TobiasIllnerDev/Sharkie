@@ -47,12 +47,49 @@ class MovableObject extends DrawableObject{
         this.img = this.imageCache[path];
         this.currentImage++;
     }
-    
+
+    getCollisionBox() {
+        const collisionWidth = this.width - this.offsetWidth;
+        const collisionHeight = this.height - this.offsetHeight;
+        const collisionX = this.otherDiretion
+            ? this.width - this.offsetX - collisionWidth
+            : this.offsetX;
+
+        return {
+            left: this.x + collisionX,
+            top: this.y + this.offsetY,
+            right: this.x + collisionX + collisionWidth,
+            bottom: this.y + this.offsetY + collisionHeight
+        };
+    }
+
+    getObjectCollisionBox(object) {
+        if (object.getCollisionBox) {
+            return object.getCollisionBox();
+        }
+
+        const collisionWidth = object.width - object.offsetWidth;
+        const collisionHeight = object.height - object.offsetHeight;
+        const collisionX = object.otherDiretion
+            ? object.width - object.offsetX - collisionWidth
+            : object.offsetX;
+
+        return {
+            left: object.x + collisionX,
+            top: object.y + object.offsetY,
+            right: object.x + collisionX + collisionWidth,
+            bottom: object.y + object.offsetY + collisionHeight
+        };
+    }
+
     isColliding(mo, padding = 0) {
-        return this.x + this.offsetX + (this.width - this.offsetWidth) + padding > mo.x + mo.offsetX - padding &&
-            this.y + this.offsetY + (this.height - this.offsetHeight) + padding > mo.y + mo.offsetY - padding &&
-            this.x + this.offsetX - padding < mo.x + mo.offsetX + (mo.width - mo.offsetWidth) + padding &&
-            this.y + this.offsetY - padding < mo.y + mo.offsetY + (mo.height - mo.offsetHeight) + padding
+        const ownBox = this.getCollisionBox();
+        const otherBox = this.getObjectCollisionBox(mo);
+
+        return ownBox.right + padding > otherBox.left - padding &&
+            ownBox.bottom + padding > otherBox.top - padding &&
+            ownBox.left - padding < otherBox.right + padding &&
+            ownBox.top - padding < otherBox.bottom + padding;
     }
 
 
