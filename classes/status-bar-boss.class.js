@@ -1,5 +1,12 @@
 ﻿class StatusBarBoss extends StatusBar {
-    IMAGES = Array.from({length: 6}, (_, i) => `./assets/img/Marcadores/green/Life/${i+1}_Lifebar.png`);
+    IMAGES = [
+        './assets/img/Marcadores/green/Life/1_Lifebar.png',
+        './assets/img/Marcadores/green/Life/2_Lifebar.png',
+        './assets/img/Marcadores/green/Life/3_lifebar.png',
+        './assets/img/Marcadores/green/Life/4_lifebar.png',
+        './assets/img/Marcadores/green/Life/5_lifebar.png',
+        './assets/img/Marcadores/green/Life/6_lifebar.png'
+    ];
 
     /** Creates this object. */
     constructor() {
