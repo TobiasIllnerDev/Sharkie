@@ -65,42 +65,42 @@ canvas {
 .touch-dpad,
 .touch-actions {
     position: absolute;
-    bottom: clamp(8px, 2.8vw, 18px);
+    bottom: clamp(6px, 2vw, 12px);
     pointer-events: auto;
 }
 
 .touch-dpad {
-    left: clamp(8px, 2.8vw, 18px);
+    left: clamp(6px, 2vw, 12px);
     display: grid;
-    grid-template-columns: repeat(3, clamp(32px, 6.5vw, 46px));
-    grid-template-rows: repeat(3, clamp(32px, 6.5vw, 46px));
-    gap: 4px;
+    grid-template-columns: repeat(3, clamp(28px, 5.2vw, 38px));
+    grid-template-rows: repeat(3, clamp(28px, 5.2vw, 38px));
+    gap: 3px;
 }
 
 .touch-actions {
-    right: clamp(8px, 2.8vw, 18px);
+    right: clamp(6px, 2vw, 12px);
     display: flex;
     align-items: flex-end;
-    gap: clamp(7px, 1.8vw, 12px);
+    gap: clamp(5px, 1.2vw, 8px);
 }
 
 .touch-button {
-    width: clamp(32px, 6.5vw, 46px);
-    height: clamp(32px, 6.5vw, 46px);
-    border: 1.5px solid rgba(255, 255, 255, 0.75);
+    width: clamp(28px, 5.2vw, 38px);
+    height: clamp(28px, 5.2vw, 38px);
+    border: 1px solid rgba(255, 255, 255, 0.65);
     border-radius: 50%;
-    background: rgba(10, 46, 56, 0.38);
+    background: rgba(10, 46, 56, 0.28);
     color: white;
-    font-size: clamp(0.85rem, 2.2vw, 1.2rem);
+    font-size: clamp(0.75rem, 1.9vw, 1rem);
     line-height: 1;
     text-shadow: 2px 2px 4px #002b3a;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.28);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.22);
     user-select: none;
     touch-action: none;
 }
 
 .touch-button.is-pressed {
-    background: rgba(26, 143, 180, 0.68);
+    background: rgba(26, 143, 180, 0.58);
     transform: scale(0.94);
 }
 

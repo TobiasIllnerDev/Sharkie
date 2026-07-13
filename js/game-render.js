@@ -4,6 +4,18 @@ const pauseMenuButtons = [
     { action: 'menu', text: 'MENU', x: 240, y: 315, width: 240, height: 48 }
 ];
 
+/** Checks if a position is inside a pause menu button. */
+function isPauseMenuButtonHovered(x, y, button) {
+    return x >= button.x && x <= button.x + button.width &&
+        y >= button.y && y <= button.y + button.height;
+}
+
+/** Returns the action for a hovered pause menu button. */
+function getPauseMenuAction(x, y) {
+    const button = pauseMenuButtons.find(menuButton => isPauseMenuButtonHovered(x, y, menuButton));
+    return button ? button.action : null;
+}
+
 /** Draws the current frame. */
 function draw() {
     updateTouchControlsVisibility();
