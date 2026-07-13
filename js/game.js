@@ -214,21 +214,33 @@ canvas.addEventListener('click', (e) => {
     }
 });
 
+document.addEventListener('mousemove', (e) => {
+    const { x, y } = getCanvasCoordinates(e);
+
+    if (currentScreen === 'playing' && uiControls && uiControls.isDragging) {
+        uiControls.handleMouseMove(x);
+    } else if (currentScreen === 'start' && startScreen && startScreen.isVolumeDragging) {
+        startScreen.updateVolumeFromX(x);
+        setVolume(startScreen.volume);
+    }
+
+    let isPointer = false;
+
+    if (currentScreen === 'start' && startScreen) {
+        isPointer = startScreen.isInteractiveElementHovered(x, y);
+    } else if (currentScreen === 'playing' && uiControls) {
+        isPointer = uiControls.isButtonHovered(x, y);
+    } else if ((currentScreen === 'gameover' || currentScreen === 'win') && endScreen) {
+        isPointer = endScreen.isButtonClicked(x, y);
+    }
+
+    canvas.style.cursor = isPointer ? 'pointer' : 'default';
+}, { passive: true });
+
 canvas.addEventListener('mousedown', (e) => {
     if (currentScreen === 'start' && startScreen && startScreen.activeOverlay === 'settings') {
         const { x } = getCanvasCoordinates(e);
         startScreen.startVolumeDrag(x);
-    }
-});
-
-document.addEventListener('mousemove', (e) => {
-    if (currentScreen === 'playing' && uiControls && uiControls.isDragging) {
-        const { x } = getCanvasCoordinates(e);
-        uiControls.handleMouseMove(x);
-    } else if (currentScreen === 'start' && startScreen && startScreen.isVolumeDragging) {
-        const { x } = getCanvasCoordinates(e);
-        startScreen.updateVolumeFromX(x);
-        setVolume(startScreen.volume);
     }
 });
 

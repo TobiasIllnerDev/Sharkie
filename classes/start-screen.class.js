@@ -91,6 +91,39 @@ class StartScreen {
         this.isVolumeDragging = false;
     }
 
+    isInsideRect(x, y, rect) {
+        return x >= rect.x && x <= rect.x + rect.width &&
+               y >= rect.y && y <= rect.y + rect.height;
+    }
+
+    isSettingsSliderHovered(x, y) {
+        const sliderX = 200;
+        const sliderY = 225;
+        const sliderWidth = 320;
+        const sliderHeight = 12;
+
+        return x >= sliderX && x <= sliderX + sliderWidth &&
+               y >= sliderY - 20 && y <= sliderY + sliderHeight + 20;
+    }
+
+    isCloseButtonHovered(x, y) {
+        return this.isInsideRect(x, y, { x: 240, y: 348, width: 240, height: 44 });
+    }
+
+    isInteractiveElementHovered(x, y) {
+        if (this.activeOverlay) {
+            return this.isCloseButtonHovered(x, y) ||
+                   (this.activeOverlay === 'settings' && this.isSettingsSliderHovered(x, y));
+        }
+
+        if (this.showingTutorial) {
+            return this.isInsideRect(x, y, { x: 300, y: 410, width: 120, height: 40 });
+        }
+
+        return this.isInsideRect(x, y, this.fullscreenButton) ||
+               this.buttons.some(button => this.isInsideRect(x, y, button));
+    }
+
     roundRect(ctx, x, y, width, height, radius) {
         ctx.beginPath();
         ctx.moveTo(x + radius, y);

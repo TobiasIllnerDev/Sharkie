@@ -40,20 +40,34 @@ class UIControls {
         ctx.fillText(text, x + width / 2, y + height / 2);
     }
 
+    isInsideButton(x, y, buttonX, buttonY) {
+        return x >= buttonX && x <= buttonX + this.buttonSize &&
+               y >= buttonY && y <= buttonY + this.buttonSize;
+    }
+
+    isButtonHovered(x, y) {
+        const backX = this.x + this.buttonSize + this.padding;
+        const fullscreenX = backX + this.buttonSize + this.padding;
+
+        return this.isInsideButton(x, y, this.x, this.y) ||
+               this.isInsideButton(x, y, backX, this.y) ||
+               this.isInsideButton(x, y, fullscreenX, this.y);
+    }
+
     handleClick(x, y) {
         const backX = this.x + this.buttonSize + this.padding;
         const fullscreenX = backX + this.buttonSize + this.padding;
 
-        if (x >= this.x && x <= this.x + this.buttonSize && y >= this.y && y <= this.y + this.buttonSize) {
+        if (this.isInsideButton(x, y, this.x, this.y)) {
             this.soundManager.setMuted(!this.soundManager.muted);
             return 'mute';
         }
 
-        if (x >= backX && x <= backX + this.buttonSize && y >= this.y && y <= this.y + this.buttonSize) {
+        if (this.isInsideButton(x, y, backX, this.y)) {
             return 'back';
         }
 
-        if (x >= fullscreenX && x <= fullscreenX + this.buttonSize && y >= this.y && y <= this.y + this.buttonSize) {
+        if (this.isInsideButton(x, y, fullscreenX, this.y)) {
             return 'fullscreen';
         }
 
