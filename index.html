@@ -12,6 +12,24 @@
 
     <div id="game-container">
       <canvas width="720" height="480" id="canvas"> </canvas>
+
+      <div id="touch-controls" aria-label="Mobile Steuerung">
+        <div class="touch-dpad">
+          <button class="touch-button touch-up" type="button" data-key="UP" aria-label="Nach oben">▲</button>
+          <button class="touch-button touch-left" type="button" data-key="LEFT" aria-label="Nach links">◀</button>
+          <button class="touch-button touch-down" type="button" data-key="DOWN" aria-label="Nach unten">▼</button>
+          <button class="touch-button touch-right" type="button" data-key="RIGHT" aria-label="Nach rechts">▶</button>
+        </div>
+
+        <div class="touch-actions">
+          <button class="touch-button touch-attack" type="button" data-key="SPACE" aria-label="Angriff">A</button>
+          <button class="touch-button touch-special" type="button" data-key="E" aria-label="Spezialangriff">E</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="orientation-message">
+      <p>Bitte drehe dein Gerät ins Querformat.</p>
     </div>
 
     <script src="./classes/drawable-object.class.js"></script>

@@ -135,6 +135,45 @@ function getCanvasCoordinates(event) {
     };
 }
 
+function initTouchControls() {
+    const touchButtons = document.querySelectorAll('#touch-controls [data-key]');
+
+    touchButtons.forEach(button => {
+        const key = button.dataset.key;
+
+        button.addEventListener('pointerdown', (event) => {
+            event.preventDefault();
+            button.setPointerCapture(event.pointerId);
+            keyboard[key] = true;
+            button.classList.add('is-pressed');
+        });
+
+        button.addEventListener('pointerup', (event) => {
+            event.preventDefault();
+            keyboard[key] = false;
+            button.classList.remove('is-pressed');
+        });
+
+        button.addEventListener('pointercancel', () => {
+            keyboard[key] = false;
+            button.classList.remove('is-pressed');
+        });
+
+        button.addEventListener('lostpointercapture', () => {
+            keyboard[key] = false;
+            button.classList.remove('is-pressed');
+        });
+
+        button.addEventListener('contextmenu', (event) => {
+            event.preventDefault();
+        });
+    });
+}
+
+function updateTouchControlsVisibility() {
+    gameContainer.classList.toggle('show-touch-controls', currentScreen === 'playing');
+}
+
 function resetGame() {
     if (soundManager) {
         savedVolume = soundManager.volume;
@@ -171,6 +210,8 @@ function restartGame() {
 }
 
 function draw() {
+    updateTouchControlsVisibility();
+
     if (currentScreen === 'start') {
         startScreen.draw(ctx);
     } else if (currentScreen === 'playing' && world) {
@@ -273,7 +314,10 @@ window.addEventListener('keyup', (e) => {
     if (keyCode === 69) keyboard.E = false;
 });
 
+window.addEventListener('blur', resetKeyboard);
+
 restoreSavedVolume();
 startScreen = new StartScreen();
 startScreen.setVolume(savedVolume);
+initTouchControls();
 draw();

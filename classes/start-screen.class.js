@@ -165,6 +165,117 @@ class StartScreen {
         ctx.fillText('IMPRESSUM', button.x + button.width / 2, button.y + button.height / 2);
     }
 
+    isTouchDevice() {
+        return window.matchMedia('(pointer: coarse), (hover: none)').matches;
+    }
+
+    drawTutorial(ctx) {
+        ctx.fillStyle = 'rgba(0, 0, 30, 0.6)';
+        ctx.fillRect(0, 0, 720, 480);
+
+        ctx.font = '48px Luckiest Guy';
+        ctx.fillStyle = '#1a8fb4';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('STEUERUNG', 360, 80);
+
+        if (this.isTouchDevice()) {
+            this.drawMobileTutorial(ctx);
+        } else {
+            this.drawKeyboardTutorial(ctx);
+        }
+
+        this.drawTutorialCloseButton(ctx);
+    }
+
+    drawKeyboardTutorial(ctx) {
+        ctx.font = '28px Luckiest Guy';
+        ctx.fillStyle = 'white';
+        ctx.fillText('Bewegung', 360, 130);
+
+        const scale1 = 0.35;
+        const wasdScale = 0.18;
+        const eScale = 0.10;
+
+        if (this.arrowKeysImg.complete) {
+            ctx.drawImage(this.arrowKeysImg, 120, 150, this.arrowKeysImg.naturalWidth * scale1, this.arrowKeysImg.naturalHeight * scale1);
+        }
+        if (this.wasdKeyImg.complete) {
+            ctx.drawImage(this.wasdKeyImg, 400, 100, this.wasdKeyImg.naturalWidth * wasdScale, this.wasdKeyImg.naturalHeight * wasdScale);
+        }
+
+        ctx.fillText('Angriff', 360, 270);
+
+        if (this.spaceKeyImg.complete) {
+            ctx.drawImage(this.spaceKeyImg, 120, 290, this.spaceKeyImg.naturalWidth * scale1, this.spaceKeyImg.naturalHeight * scale1);
+        }
+        if (this.eKeyImg.complete) {
+            ctx.drawImage(this.eKeyImg, 440, 270, this.eKeyImg.naturalWidth * eScale, this.eKeyImg.naturalHeight * eScale);
+        }
+
+        ctx.font = '24px Luckiest Guy';
+        ctx.fillText('Normaler Angriff', 120 + (this.spaceKeyImg.naturalWidth * scale1) / 2, 390);
+        ctx.fillText('Spezialangriff', 440 + (this.eKeyImg.naturalWidth * eScale) / 2, 390);
+    }
+
+    drawMobileTutorial(ctx) {
+        ctx.font = '28px Luckiest Guy';
+        ctx.fillStyle = 'white';
+        ctx.fillText('Touch Steuerung', 360, 135);
+
+        this.drawTouchDpadPreview(ctx, 210, 205);
+        this.drawTouchActionPreview(ctx, 505, 205, 68, 'A');
+        this.drawTouchActionPreview(ctx, 595, 220, 54, 'E');
+
+        ctx.font = '22px Luckiest Guy';
+        ctx.fillText('Bewegung', 210, 340);
+        ctx.fillText('Angriff', 505, 340);
+        ctx.fillText('Spezial', 595, 340);
+    }
+
+    drawTouchDpadPreview(ctx, centerX, centerY) {
+        const size = 48;
+        this.drawTouchPreviewButton(ctx, centerX, centerY - size, size, '▲');
+        this.drawTouchPreviewButton(ctx, centerX - size, centerY, size, '◀');
+        this.drawTouchPreviewButton(ctx, centerX, centerY + size, size, '▼');
+        this.drawTouchPreviewButton(ctx, centerX + size, centerY, size, '▶');
+    }
+
+    drawTouchActionPreview(ctx, centerX, centerY, size, label) {
+        this.drawTouchPreviewButton(ctx, centerX, centerY, size, label);
+    }
+
+    drawTouchPreviewButton(ctx, centerX, centerY, size, label) {
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, size / 2, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(10, 46, 56, 0.8)';
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'white';
+        ctx.stroke();
+        ctx.fillStyle = 'white';
+        ctx.font = `${Math.round(size * 0.42)}px Luckiest Guy`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(label, centerX, centerY + 1);
+    }
+
+    drawTutorialCloseButton(ctx) {
+        ctx.fillStyle = '#ff4444';
+        this.roundRect(ctx, 300, 410, 120, 40, 10);
+        ctx.fill();
+
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'white';
+        ctx.stroke();
+
+        ctx.font = '20px Luckiest Guy';
+        ctx.fillStyle = 'white';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('SCHLIESSEN', 360, 430);
+    }
+
     draw(ctx) {
         if (this.backgroundImg.complete && this.backgroundImg.naturalWidth > 0) {
             ctx.drawImage(this.backgroundImg, 0, 0, 720, 480);
@@ -282,55 +393,7 @@ class StartScreen {
 
             this.drawFullscreenButton(ctx);
         } else {
-            ctx.fillStyle = 'rgba(0, 0, 30, 0.6)';
-            ctx.fillRect(0, 0, 720, 480);
-
-            ctx.font = '48px Luckiest Guy';
-            ctx.fillStyle = '#1a8fb4';
-            ctx.textAlign = 'center';
-            ctx.fillText('STEUERUNG', 360, 80);
-
-            ctx.font = '28px Luckiest Guy';
-            ctx.fillStyle = 'white';
-            ctx.fillText('Bewegung', 360, 130);
-
-            const scale1 = 0.35;
-            const wasdScale = 0.18;
-            const eScale = 0.10;
-
-            if (this.arrowKeysImg.complete) {
-                ctx.drawImage(this.arrowKeysImg, 120, 150, this.arrowKeysImg.naturalWidth * scale1, this.arrowKeysImg.naturalHeight * scale1);
-            }
-            if (this.wasdKeyImg.complete) {
-                ctx.drawImage(this.wasdKeyImg, 400, 100, this.wasdKeyImg.naturalWidth * wasdScale, this.wasdKeyImg.naturalHeight * wasdScale);
-            }
-
-            ctx.fillText('Angriff', 360, 270);
-
-            if (this.spaceKeyImg.complete) {
-                ctx.drawImage(this.spaceKeyImg, 120, 290, this.spaceKeyImg.naturalWidth * scale1, this.spaceKeyImg.naturalHeight * scale1);
-            }
-            if (this.eKeyImg.complete) {
-                ctx.drawImage(this.eKeyImg, 440, 270, this.eKeyImg.naturalWidth * eScale, this.eKeyImg.naturalHeight * eScale);
-            }
-
-            ctx.font = '24px Luckiest Guy';
-            ctx.fillText('Normaler Angriff', 120 + (this.spaceKeyImg.naturalWidth * scale1) / 2, 390);
-            ctx.fillText('Spezialangriff', 440 + (this.eKeyImg.naturalWidth * eScale) / 2, 390);
-
-            ctx.fillStyle = '#ff4444';
-            this.roundRect(ctx, 300, 410, 120, 40, 10);
-            ctx.fill();
-
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = 'white';
-            ctx.stroke();
-
-            ctx.font = '20px Luckiest Guy';
-            ctx.fillStyle = 'white';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('SCHLIESSEN', 360, 430);
+            this.drawTutorial(ctx);
         }
     }
 
