@@ -1,4 +1,6 @@
-/** Initializes one new game world. */
+/**
+ * Initializes one new game world.
+ */
 function init() {
     ctx = canvas.getContext('2d');
     soundManager = new SoundManager();
@@ -9,28 +11,36 @@ function init() {
     soundManager.playBackground();
 }
 
-/** Creates the world and ingame UI controls. */
+/**
+ * Creates the world and ingame UI controls.
+ */
 function createGameWorld() {
     resetKeyboard();
     world = new World(canvas, keyboard, soundManager);
     uiControls = new UIControls(soundManager);
 }
 
-/** Resets start screen state after game initialization. */
+/**
+ * Resets start screen state after game initialization.
+ */
 function prepareStartScreenAfterInit() {
     if (!startScreen) return;
     startScreen.closeOverlay();
     startScreen.setVolume(savedVolume);
 }
 
-/** Starts a fresh play session. */
+/**
+ * Starts a fresh play session.
+ */
 function startGame() {
     level1 = null;
     currentScreen = 'playing';
     init();
 }
 
-/** Resets all keyboard flags. */
+/**
+ * Resets all keyboard flags.
+ */
 function resetKeyboard() {
     keyboard.LEFT = false;
     keyboard.RIGHT = false;
@@ -40,34 +50,47 @@ function resetKeyboard() {
     keyboard.E = false;
 }
 
-/** Opens the settings overlay. */
+/**
+ * Opens the settings overlay.
+ */
 function showSettings() {
     if (startScreen) startScreen.openSettings();
 }
 
-/** Opens the imprint overlay. */
+/**
+ * Opens the imprint overlay.
+ */
 function showImprint() {
     if (startScreen) startScreen.openImprint();
 }
 
-/** Closes the active start screen overlay. */
+/**
+ * Closes the active start screen overlay.
+ */
 function closeOverlay() {
     if (startScreen) startScreen.closeOverlay();
 }
 
-/** Toggles browser fullscreen mode. */
+/**
+ * Toggles browser fullscreen mode.
+ */
 function toggleFullscreen() {
     if (!document.fullscreenElement && gameContainer.requestFullscreen) {
         gameContainer.requestFullscreen().catch(logFullscreenError);
     } else if (document.exitFullscreen) document.exitFullscreen();
 }
 
-/** Logs fullscreen errors without stopping the game. */
+/**
+ * Logs fullscreen errors without stopping the game.
+ * @param {Error} error - Fullscreen error.
+ */
 function logFullscreenError(error) {
     console.error('Fullscreen-Fehler:', error);
 }
 
-/** Pauses the running game. */
+/**
+ * Pauses the running game.
+ */
 function pauseGame() {
     if (currentScreen !== 'playing' || !world) return;
     world.pause();
@@ -75,7 +98,9 @@ function pauseGame() {
     currentScreen = 'paused';
 }
 
-/** Resumes the paused game. */
+/**
+ * Resumes the paused game.
+ */
 function resumeGame() {
     if (currentScreen !== 'paused' || !world) return;
     world.resume();
@@ -84,7 +109,11 @@ function resumeGame() {
     hoveredPauseAction = null;
 }
 
-/** Handles a click on the pause menu. */
+/**
+ * Handles a click on the pause menu.
+ * @param {number} x - Horizontal canvas or world position.
+ * @param {number} y - Vertical canvas or world position.
+ */
 function handlePauseMenuClick(x, y) {
     const action = getPauseMenuAction(x, y);
     if (action === 'resume') resumeGame();
@@ -92,19 +121,26 @@ function handlePauseMenuClick(x, y) {
     else if (action === 'menu') returnToMenuFromPause();
 }
 
-/** Restarts the game from the pause menu. */
+/**
+ * Restarts the game from the pause menu.
+ */
 function restartFromPause() {
     setBackgroundVolumeFactor(1);
     restartGame();
 }
 
-/** Returns to the start menu from pause. */
+/**
+ * Returns to the start menu from pause.
+ */
 function returnToMenuFromPause() {
     setBackgroundVolumeFactor(1);
     resetGame();
 }
 
-/** Marks the current round as finished. */
+/**
+ * Marks the current round as finished.
+ * @param {string} screen - Screen name to activate.
+ */
 function finishRound(screen) {
     resetKeyboard();
     releasePressedTouchButtons();
@@ -112,17 +148,24 @@ function finishRound(screen) {
     currentScreen = screen;
 }
 
-/** Removes pressed styling from touch buttons. */
+/**
+ * Removes pressed styling from touch buttons.
+ */
 function releasePressedTouchButtons() {
     document.querySelectorAll('#touch-controls .is-pressed').forEach(releasePressedTouchButton);
 }
 
-/** Removes pressed styling from one touch button. */
+/**
+ * Removes pressed styling from one touch button.
+ * @param {Object} button - Button data or element.
+ */
 function releasePressedTouchButton(button) {
     button.classList.remove('is-pressed');
 }
 
-/** Resets the game back to the start screen. */
+/**
+ * Resets the game back to the start screen.
+ */
 function resetGame() {
     setBackgroundVolumeFactor(1);
     hoveredPauseAction = null;
@@ -131,7 +174,9 @@ function resetGame() {
     resetGameStateToStart();
 }
 
-/** Cleans the current world instance. */
+/**
+ * Cleans the current world instance.
+ */
 function cleanupWorld() {
     if (world) {
         world.cleanup();
@@ -139,7 +184,9 @@ function cleanupWorld() {
     }
 }
 
-/** Clears runtime state for a menu reset. */
+/**
+ * Clears runtime state for a menu reset.
+ */
 function resetGameStateToStart() {
     level1 = null;
     uiControls = null;
@@ -148,19 +195,25 @@ function resetGameStateToStart() {
     resetStartScreen();
 }
 
-/** Creates or resets the start screen. */
+/**
+ * Creates or resets the start screen.
+ */
 function resetStartScreen() {
     if (!startScreen) startScreen = new StartScreen();
     else resetExistingStartScreen();
 }
 
-/** Resets an existing start screen. */
+/**
+ * Resets an existing start screen.
+ */
 function resetExistingStartScreen() {
     startScreen.closeOverlay();
     startScreen.setVolume(savedVolume);
 }
 
-/** Restarts the game from scratch. */
+/**
+ * Restarts the game from scratch.
+ */
 function restartGame() {
     resetGame();
     startGame();

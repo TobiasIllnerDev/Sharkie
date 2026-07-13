@@ -1,4 +1,6 @@
-﻿/** Loads all sounds used by the game. */
+/**
+ * Loads all sounds used by the game.
+ */
 function loadGameSounds() {
     soundManager.loadSound('background', './assets/sounds/background-musik.mp3', true);
     soundManager.loadSound('coin', './assets/sounds/Coin-Colleted.mp3');
@@ -9,7 +11,9 @@ function loadGameSounds() {
     loadExtraGameSounds();
 }
 
-/** Loads additional character and result sounds. */
+/**
+ * Loads additional character and result sounds.
+ */
 function loadExtraGameSounds() {
     soundManager.loadSound('damage', './assets/sounds/characterDamage.mp3');
     soundManager.loadSound('dead', './assets/sounds/characterDead.wav');
@@ -18,7 +22,9 @@ function loadExtraGameSounds() {
     soundManager.loadSound('win', './assets/sounds/Win-Sound.mp3');
 }
 
-/** Applies saved volume and mute state to the sound manager. */
+/**
+ * Applies saved volume and mute state to the sound manager.
+ */
 function applySavedSoundSettings() {
     const savedVol = localStorage.getItem('sharkieSavedVolume');
     if (savedVol !== null) savedVolume = parseFloat(savedVol);
@@ -26,7 +32,10 @@ function applySavedSoundSettings() {
     soundManager.setMuted(isMuted);
 }
 
-/** Stores and applies a new global volume. */
+/**
+ * Stores and applies a new global volume.
+ * @param {number} value - New value.
+ */
 function setVolume(value) {
     savedVolume = Math.min(1, Math.max(0, value));
     localStorage.setItem('sharkieSavedVolume', savedVolume);
@@ -34,20 +43,27 @@ function setVolume(value) {
     if (soundManager) soundManager.setVolume(savedVolume);
 }
 
-/** Toggles global mute state. */
+/**
+ * Toggles global mute state.
+ */
 function toggleMute() {
     isMuted = !isMuted;
     if (soundManager) soundManager.setMuted(isMuted);
 }
 
-/** Reduces or restores the background music volume. */
+/**
+ * Reduces or restores the background music volume.
+ * @param {number} factor - Volume multiplier.
+ */
 function setBackgroundVolumeFactor(factor) {
     if (soundManager && soundManager.backgroundSound) {
         soundManager.backgroundSound.audio.volume = soundManager.volume * factor;
     }
 }
 
-/** Stops and removes the current sound manager. */
+/**
+ * Stops and removes the current sound manager.
+ */
 function cleanupSoundManager() {
     if (!soundManager) return;
     savedVolume = soundManager.volume;

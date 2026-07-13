@@ -1,21 +1,32 @@
+/**
+ * Base class for drawable percentage status bars.
+ */
 class StatusBar extends DrawableObject {
     percentage = 100;
 
-    /** Creates this object. */
+    /**
+     * Creates a new instance.
+     */
     constructor() {
         super();
         this.width = 160;
         this.height = 50;
     }
 
-    /** set percentage. */
+    /**
+     * Set percentage.
+     * @param {number} percentage - Percentage value from 0 to 100.
+     */
     setPercentage(percentage) {
         this.percentage = percentage;
         let path = this.IMAGES[this.resolveImageIndex()];
         this.img = this.imageCache[path];
     }
 
-    /** resolve image index. */
+    /**
+     * Resolve image index.
+     * @returns {number} Image index for the current percentage.
+     */
     resolveImageIndex() {
         if (this.percentage >= 100) return 5;
         else if (this.percentage >= 80) return 4;

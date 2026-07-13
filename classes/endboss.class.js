@@ -1,4 +1,7 @@
-﻿class Endboss extends MovableObject {
+/**
+ * Represents the final boss enemy.
+ */
+class Endboss extends MovableObject {
 
     IMAGES_HURT = Array.from({length: 4}, (_, i) => `./assets/img/Enemy/FinalBoss/Hurt/${i+1}.png`);
     IMAGES_DEAD = Array.from({length: 6}, (_, i) => `./assets/img/Enemy/FinalBoss/Dead/Dead_${i+1}.png`);
@@ -25,7 +28,9 @@
     minY = -80;
     maxY = 180;
 
-    /** Creates this object. */
+    /**
+     * Creates a new instance.
+     */
     constructor() {
         super();
         this.loadBossImages();
@@ -33,7 +38,9 @@
         this.setBossOffsets();
     }
 
-    /** load boss images. */
+    /**
+     * Load boss images.
+     */
     loadBossImages() {
         this.loadImage(this.IMAGES_FLOATING[0]);
         this.loadImages(this.IMAGES_FLOATING);
@@ -43,14 +50,18 @@
         this.loadImages(this.IMAGES_ATTACK);
     }
 
-    /** set boss stats. */
+    /**
+     * Set boss stats.
+     */
     setBossStats() {
         this.x = 4200;
         this.speed = 2;
         this.hasStartedDeadAnimation = false;
     }
 
-    /** set boss offsets. */
+    /**
+     * Set boss offsets.
+     */
     setBossOffsets() {
         this.offsetX = 20;
         this.offsetY = 150;
@@ -58,7 +69,9 @@
         this.offsetHeight = 220;
     }
 
-    /** start spawn. */
+    /**
+     * Start spawn.
+     */
     startSpawn() {
         this.isSpawning = true;
         this.isSpawned = false;
@@ -66,14 +79,18 @@
         this.spawnInterval = setInterval(() => this.updateSpawnAnimation(), 200);
     }
 
-    /** update spawn animation. */
+    /**
+     * Update spawn animation.
+     */
     updateSpawnAnimation() {
         if (this.world && this.world.isPaused) return;
         this.playAnimation(this.IMAGES_SPAWN);
         if (this.currentImage >= this.IMAGES_SPAWN.length) this.finishSpawn();
     }
 
-    /** finish spawn. */
+    /**
+     * Finish spawn.
+     */
     finishSpawn() {
         this.isSpawning = false;
         this.isSpawned = true;
@@ -82,19 +99,25 @@
         this.startChasing();
     }
 
-    /** clear spawn interval. */
+    /**
+     * Clear spawn interval.
+     */
     clearSpawnInterval() {
         clearInterval(this.spawnInterval);
         this.spawnInterval = null;
     }
 
-    /** animate. */
+    /**
+     * Animate.
+     */
     animate() {
         if (this.isSpawning) return;
         this.animationInterval = setInterval(() => this.updateAnimation(), 200);
     }
 
-    /** update animation. */
+    /**
+     * Update animation.
+     */
     updateAnimation() {
         if (this.world && this.world.isPaused) return;
         if (this.isDead()) return this.playDeadAnimation();
@@ -103,33 +126,43 @@
         this.playAnimation(this.IMAGES_FLOATING);
     }
 
-    /** play dead animation. */
+    /**
+     * Play dead animation.
+     */
     playDeadAnimation() {
         if (!this.hasStartedDeadAnimation) this.startDeadAnimation();
         this.playAnimation(this.IMAGES_DEAD);
         if (this.currentImage >= this.IMAGES_DEAD.length) this.finishDeadAnimation();
     }
 
-    /** start dead animation. */
+    /**
+     * Start dead animation.
+     */
     startDeadAnimation() {
         this.currentImage = 0;
         this.hasStartedDeadAnimation = true;
     }
 
-    /** finish dead animation. */
+    /**
+     * Finish dead animation.
+     */
     finishDeadAnimation() {
         this.shouldRemove = true;
         this.clearAnimationInterval();
     }
 
-    /** play attack animation. */
+    /**
+     * Play attack animation.
+     */
     playAttackAnimation() {
         this.playAnimation(this.IMAGES_ATTACK);
         if (!this.attackDamageApplied && this.currentImage >= 3) this.applyAttackDamage();
         if (this.currentImage >= this.IMAGES_ATTACK.length) this.isAttacking = false;
     }
 
-    /** start chasing. */
+    /**
+     * Start chasing.
+     */
     startChasing() {
         if (this.chaseInterval) {
             return;
@@ -140,7 +173,9 @@
         }, 1000 / 60);
     }
 
-    /** stop chasing. */
+    /**
+     * Stop chasing.
+     */
     stopChasing() {
         if (this.chaseInterval) {
             clearInterval(this.chaseInterval);
@@ -148,7 +183,9 @@
         }
     }
 
-    /** chase character. */
+    /**
+     * Chase character.
+     */
     chaseCharacter() {
         if (this.shouldStopChasing()) return this.stopChasing();
         if (this.world.isPaused) return;
@@ -158,13 +195,19 @@
         this.moveTowardsCharacter(direction);
     }
 
-    /** should stop chasing. */
+    /**
+     * Should stop chasing.
+     * @returns {boolean} True when the condition is met.
+     */
     shouldStopChasing() {
         return !this.world || !this.world.character || this.isDead() ||
             this.world.character.isDead() || this.world.gameOver || this.world.win;
     }
 
-    /** get direction to character. */
+    /**
+     * Get direction to character.
+     * @returns {Object} Calculated layout or data object.
+     */
     getDirectionToCharacter() {
         const boss = this.getCenter(this);
         const character = this.getCenter(this.world.character);
@@ -173,19 +216,29 @@
         return { dx, dy, distance: Math.hypot(dx, dy) };
     }
 
-    /** get center. */
+    /**
+     * Get center.
+     * @param {DrawableObject} object - Object to inspect.
+     * @returns {Object} Calculated layout or data object.
+     */
     getCenter(object) {
         return { x: object.x + object.width / 2, y: object.y + object.height / 2 };
     }
 
-    /** move towards character. */
+    /**
+     * Move towards character.
+     * @param {{dx: number, dy: number, distance: number}} direction - Direction vector to the character.
+     */
     moveTowardsCharacter(direction) {
         this.x += (direction.dx / direction.distance) * this.chaseSpeed;
         this.y += (direction.dy / direction.distance) * this.chaseSpeed;
         this.y = Math.min(this.maxY, Math.max(this.minY, this.y));
     }
 
-    /** is player in attack range. */
+    /**
+     * Is player in attack range.
+     * @returns {boolean} True when the condition is met.
+     */
     isPlayerInAttackRange() {
         if (!this.world || !this.world.character) {
             return false;
@@ -199,7 +252,9 @@
             Math.abs(bossCenterY - characterCenterY) <= 220;
     }
 
-    /** try attack. */
+    /**
+     * Try attack.
+     */
     tryAttack() {
         const now = Date.now();
         if (!this.isSpawned || this.isDead() || this.isAttacking ||
@@ -213,7 +268,9 @@
         this.currentImage = 0;
     }
 
-    /** apply attack damage. */
+    /**
+     * Apply attack damage.
+     */
     applyAttackDamage() {
         this.attackDamageApplied = true;
         if (this.isPlayerInAttackRange()) {
@@ -221,7 +278,9 @@
         }
     }
 
-    /** cleanup. */
+    /**
+     * Cleans up timers and resources.
+     */
     cleanup() {
         if (this.spawnInterval) {
             clearInterval(this.spawnInterval);

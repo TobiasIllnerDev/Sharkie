@@ -1,4 +1,9 @@
-﻿/** Creates a numbered array with a mapper callback. */
+/**
+ * Creates a numbered array with a mapper callback.
+ * @param {number} length - Number of entries to create.
+ * @param {Function} callback - Mapper that receives the one-based index.
+ * @returns {Array} Generated array.
+ */
 function range(length, callback) {
     return Array.from({ length }, (_, i) => callback(i + 1));
 }
@@ -54,7 +59,9 @@ const INITIAL_IMAGE_ASSETS = [
     ...range(4, i => `./assets/img/Marcadores/1. Coins/${i}.png`)
 ];
 
-/** Restores the persisted volume from local storage. */
+/**
+ * Restores the persisted volume from local storage.
+ */
 function restoreSavedVolume() {
     const storedVolume = localStorage.getItem('sharkieSavedVolume');
     if (storedVolume === null) return;
@@ -62,7 +69,11 @@ function restoreSavedVolume() {
     if (Number.isFinite(parsedVolume)) savedVolume = Math.min(1, Math.max(0, parsedVolume));
 }
 
-/** Preloads one image and never blocks loading on errors. */
+/**
+ * Preloads one image and never blocks loading on errors.
+ * @param {string} path - Image or asset path.
+ * @returns {Promise<void>} Promise that resolves after the load attempt.
+ */
 function preloadImage(path) {
     return new Promise(resolve => {
         if (window.sharkieImageCache[path]) return resolveLoadedAsset(resolve);
@@ -73,19 +84,29 @@ function preloadImage(path) {
     });
 }
 
-/** Stores a loaded image in the shared image cache. */
+/**
+ * Stores a loaded image in the shared image cache.
+ * @param {string} path - Image or asset path.
+ * @param {HTMLImageElement} img - Image to draw.
+ * @param {Function} resolve - Promise resolver.
+ */
 function cacheLoadedImage(path, img, resolve) {
     window.sharkieImageCache[path] = img;
     resolveLoadedAsset(resolve);
 }
 
-/** Counts one asset as loaded and resolves its promise. */
+/**
+ * Counts one asset as loaded and resolves its promise.
+ * @param {Function} resolve - Promise resolver.
+ */
 function resolveLoadedAsset(resolve) {
     loadedAssets++;
     resolve();
 }
 
-/** Starts loading all initial image assets. */
+/**
+ * Starts loading all initial image assets.
+ */
 function loadInitialAssets() {
     const uniqueAssets = [...new Set(INITIAL_IMAGE_ASSETS)];
     totalAssets = uniqueAssets.length;
@@ -93,7 +114,9 @@ function loadInitialAssets() {
     Promise.all(uniqueAssets.map(path => preloadImage(path))).then(finishLoading);
 }
 
-/** Creates screens after preloading is complete. */
+/**
+ * Creates screens after preloading is complete.
+ */
 function finishLoading() {
     loadingFinished = true;
     endScreen = new EndScreen();

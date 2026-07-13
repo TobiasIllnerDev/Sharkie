@@ -1,4 +1,7 @@
-﻿class StatusBarBoss extends StatusBar {
+/**
+ * Displays the boss health percentage.
+ */
+class StatusBarBoss extends StatusBar {
     IMAGES = [
         './assets/img/Marcadores/green/Life/1_Lifebar.png',
         './assets/img/Marcadores/green/Life/2_Lifebar.png',
@@ -8,7 +11,9 @@
         './assets/img/Marcadores/green/Life/6_lifebar.png'
     ];
 
-    /** Creates this object. */
+    /**
+     * Creates a new instance.
+     */
     constructor() {
         super();
         this.loadImages(this.IMAGES);

@@ -1,3 +1,6 @@
+/**
+ * Base class for animated collectible objects.
+ */
 class CollectibleObject extends DrawableObject {
     collected = false;
     offsetX = 0;
@@ -7,7 +10,14 @@ class CollectibleObject extends DrawableObject {
     currentImage = 0;
     animationInterval = null;
 
-    /** Creates this object. */
+    /**
+     * Creates a new instance.
+     * @param {string[]} paths - Image paths used by the object.
+     * @param {number} x - Horizontal canvas or world position.
+     * @param {number} y - Vertical canvas or world position.
+     * @param {number} width - Width in pixels.
+     * @param {number} height - Height in pixels.
+     */
     constructor(paths,x,y,width,height) {
         super()
         this.images = paths;
@@ -20,14 +30,18 @@ class CollectibleObject extends DrawableObject {
 
     }
 
-    /** animate. */
+    /**
+     * Animate.
+     */
     animate() {
         this.animationInterval = setInterval(() => {
             this.playAnimation(this.images);
         }, 200);
     }
 
-    /** cleanup. */
+    /**
+     * Cleans up timers and resources.
+     */
     cleanup() {
         if (this.animationInterval) {
             clearInterval(this.animationInterval);
@@ -35,7 +49,10 @@ class CollectibleObject extends DrawableObject {
         }
     }
 
-    /** play animation. */
+    /**
+     * Plays an animation sequence.
+     * @param {string[]} images - Animation image paths.
+     */
     playAnimation(images) {
         if (!images || images.length === 0) return; 
         let i = this.currentImage % images.length;
@@ -44,12 +61,18 @@ class CollectibleObject extends DrawableObject {
         this.currentImage++;
     }
     
-    /** collect. */
+    /**
+     * Collect.
+     */
     collect() {
         this.collected = true;
     }
 
-    /** is colliding. */
+    /**
+     * Checks whether this object collides with another object.
+     * @param {MovableObject} mo - Other movable object.
+     * @returns {boolean} True when the condition is met.
+     */
     isColliding(mo) {
         return this.x + this.offsetX + (this.width - this.offsetWidth) > mo.x + mo.offsetX &&
             this.y + this.offsetY + (this.height - this.offsetHeight) > mo.y + mo.offsetY &&

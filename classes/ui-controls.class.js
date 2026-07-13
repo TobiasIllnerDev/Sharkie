@@ -1,3 +1,6 @@
+/**
+ * Draws and handles the in-game canvas control buttons.
+ */
 class UIControls {
     x;
     y;
@@ -7,14 +10,20 @@ class UIControls {
     soundManager;
     hoveredButton = null;
 
-    /** Creates this object. */
+    /**
+     * Creates a new instance.
+     * @param {SoundManager} soundManager - Sound manager used by the game.
+     */
     constructor(soundManager) {
         this.soundManager = soundManager;
         this.x = canvas.width - this.edgeOffset - (this.buttonSize * 3 + this.padding * 2);
         this.y = this.edgeOffset;
     }
 
-    /** draw. */
+    /**
+     * Draws the object.
+     * @param {CanvasRenderingContext2D} ctx - Canvas rendering context.
+     */
     draw(ctx) {
         ctx.save();
         ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
@@ -30,7 +39,15 @@ class UIControls {
         ctx.restore();
     }
 
-    /** draw button. */
+    /**
+     * Draw button.
+     * @param {CanvasRenderingContext2D} ctx - Canvas rendering context.
+     * @param {number} x - Horizontal canvas or world position.
+     * @param {number} y - Vertical canvas or world position.
+     * @param {number} width - Width in pixels.
+     * @param {number} height - Height in pixels.
+     * @param {string} text - Button text.
+     */
     drawButton(ctx, x, y, width, height, text) {
         ctx.fillStyle = 'rgba(200, 200, 200, 0.3)';
         ctx.fillRect(x, y, width, height);
@@ -44,14 +61,24 @@ class UIControls {
         ctx.fillText(text, x + width / 2, y + height / 2);
     }
 
-    /** draw sound button. */
+    /**
+     * Draw sound button.
+     * @param {CanvasRenderingContext2D} ctx - Canvas rendering context.
+     * @param {number} x - Horizontal canvas or world position.
+     * @param {number} y - Vertical canvas or world position.
+     */
     drawSoundButton(ctx, x, y) {
         this.drawButtonBase(ctx, x, y, this.hoveredButton === 'mute');
         this.drawSpeakerIcon(ctx, x, y);
         this.soundManager.muted ? this.drawMutedLine(ctx, x, y) : this.drawSoundWave(ctx, x, y);
     }
 
-    /** draw speaker icon. */
+    /**
+     * Draw speaker icon.
+     * @param {CanvasRenderingContext2D} ctx - Canvas rendering context.
+     * @param {number} x - Horizontal canvas or world position.
+     * @param {number} y - Vertical canvas or world position.
+     */
     drawSpeakerIcon(ctx, x, y) {
         ctx.strokeStyle = '#fff';
         ctx.lineWidth = 3;
@@ -64,7 +91,12 @@ class UIControls {
         ctx.stroke();
     }
 
-    /** draw muted line. */
+    /**
+     * Draw muted line.
+     * @param {CanvasRenderingContext2D} ctx - Canvas rendering context.
+     * @param {number} x - Horizontal canvas or world position.
+     * @param {number} y - Vertical canvas or world position.
+     */
     drawMutedLine(ctx, x, y) {
         ctx.beginPath();
         ctx.moveTo(x + 31, y + 13);
@@ -72,14 +104,24 @@ class UIControls {
         ctx.stroke();
     }
 
-    /** draw sound wave. */
+    /**
+     * Draw sound wave.
+     * @param {CanvasRenderingContext2D} ctx - Canvas rendering context.
+     * @param {number} x - Horizontal canvas or world position.
+     * @param {number} y - Vertical canvas or world position.
+     */
     drawSoundWave(ctx, x, y) {
         ctx.beginPath();
         ctx.arc(x + 27, y + 23, 7, -0.7, 0.7);
         ctx.stroke();
     }
 
-    /** draw fullscreen button. */
+    /**
+     * Draw fullscreen button.
+     * @param {CanvasRenderingContext2D} ctx - Canvas rendering context.
+     * @param {number} x - Horizontal canvas or world position.
+     * @param {number} y - Vertical canvas or world position.
+     */
     drawFullscreenButton(ctx, x, y) {
         this.drawButtonBase(ctx, x, y, this.hoveredButton === 'fullscreen');
         ctx.strokeStyle = '#fff';
@@ -95,7 +137,12 @@ class UIControls {
         ctx.stroke();
     }
 
-    /** draw pause button. */
+    /**
+     * Draw pause button.
+     * @param {CanvasRenderingContext2D} ctx - Canvas rendering context.
+     * @param {number} x - Horizontal canvas or world position.
+     * @param {number} y - Vertical canvas or world position.
+     */
     drawPauseButton(ctx, x, y) {
         this.drawButtonBase(ctx, x, y, this.hoveredButton === 'pause');
         ctx.fillStyle = '#fff';
@@ -103,7 +150,13 @@ class UIControls {
         ctx.fillRect(x + 23, y + 11, 5, 18);
     }
 
-    /** draw button base. */
+    /**
+     * Draw button base.
+     * @param {CanvasRenderingContext2D} ctx - Canvas rendering context.
+     * @param {number} x - Horizontal canvas or world position.
+     * @param {number} y - Vertical canvas or world position.
+     * @param {boolean} isHovered - Whether the button is hovered.
+     */
     drawButtonBase(ctx, x, y, isHovered = false) {
         ctx.fillStyle = isHovered ? 'rgba(255, 255, 255, 0.42)' : 'rgba(200, 200, 200, 0.3)';
         ctx.fillRect(x, y, this.buttonSize, this.buttonSize);
@@ -112,24 +165,44 @@ class UIControls {
         ctx.strokeRect(x, y, this.buttonSize, this.buttonSize);
     }
 
-    /** is inside button. */
+    /**
+     * Is inside button.
+     * @param {number} x - Horizontal canvas or world position.
+     * @param {number} y - Vertical canvas or world position.
+     * @param {number} buttonX - Button horizontal position.
+     * @param {number} buttonY - Button vertical position.
+     * @returns {boolean} True when the condition is met.
+     */
     isInsideButton(x, y, buttonX, buttonY) {
         return x >= buttonX && x <= buttonX + this.buttonSize &&
                y >= buttonY && y <= buttonY + this.buttonSize;
     }
 
-    /** is button hovered. */
+    /**
+     * Is button hovered.
+     * @param {number} x - Horizontal canvas or world position.
+     * @param {number} y - Vertical canvas or world position.
+     * @returns {boolean} True when the condition is met.
+     */
     isButtonHovered(x, y) {
         return Boolean(this.getButtonAt(x, y));
     }
 
-    /** get button at. */
+    /**
+     * Get button at.
+     * @param {number} x - Horizontal canvas or world position.
+     * @param {number} y - Vertical canvas or world position.
+     * @returns {Object} Calculated layout or data object.
+     */
     getButtonAt(x, y) {
         const button = this.getButtons().find(button => this.isInsideButton(x, y, button.x, button.y));
         return button ? button.action : null;
     }
 
-    /** get buttons. */
+    /**
+     * Get buttons.
+     * @returns {Object} Calculated layout or data object.
+     */
     getButtons() {
         const fullscreenX = this.x + this.buttonSize + this.padding;
         const pauseX = fullscreenX + this.buttonSize + this.padding;
@@ -140,7 +213,11 @@ class UIControls {
         ];
     }
 
-    /** handle click. */
+    /**
+     * Handle click.
+     * @param {number} x - Horizontal canvas or world position.
+     * @param {number} y - Vertical canvas or world position.
+     */
     handleClick(x, y) {
         const action = this.getButtonAt(x, y);
         if (action === 'mute') this.soundManager.setMuted(!this.soundManager.muted);

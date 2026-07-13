@@ -1,10 +1,18 @@
+/**
+ * Draws all objects belonging to one world.
+ */
 class WorldRenderer {
-    /** Creates a renderer for one world. */
+    /**
+     * Creates a renderer for one world.
+     * @param {World} world - World instance.
+     */
     constructor(world) {
         this.world = world;
     }
 
-    /** Draws the complete world. */
+    /**
+     * Draws the complete world.
+     */
     draw() {
         this.world.removeDefeatedEnemies();
         this.clearCanvas();
@@ -13,20 +21,26 @@ class WorldRenderer {
         this.drawWorldLayer();
     }
 
-    /** Clears the world canvas. */
+    /**
+     * Clears the world canvas.
+     */
     clearCanvas() {
         const { ctx, canvas } = this.world;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
-    /** Draws scrolling background objects. */
+    /**
+     * Draws scrolling background objects.
+     */
     drawBackgroundLayer() {
         this.translateCamera();
         this.addObjectsToMap(this.world.level.backgroundObjects);
         this.resetCamera();
     }
 
-    /** Draws fixed status bars. */
+    /**
+     * Draws fixed status bars.
+     */
     drawStatusBars() {
         this.addToMap(this.world.statusBarLife);
         this.addToMap(this.world.statusBarCoin);
@@ -34,7 +48,9 @@ class WorldRenderer {
         if (this.world.endboss && this.world.endboss.isSpawned) this.addToMap(this.world.statusBarBoss);
     }
 
-    /** Draws moving world objects. */
+    /**
+     * Draws moving world objects.
+     */
     drawWorldLayer() {
         this.translateCamera();
         this.addToMap(this.world.character);
@@ -45,22 +61,32 @@ class WorldRenderer {
         this.resetCamera();
     }
 
-    /** Translates the canvas to the camera position. */
+    /**
+     * Translates the canvas to the camera position.
+     */
     translateCamera() {
         this.world.ctx.translate(this.world.camera_x, 0);
     }
 
-    /** Resets the canvas camera translation. */
+    /**
+     * Resets the canvas camera translation.
+     */
     resetCamera() {
         this.world.ctx.translate(-this.world.camera_x, 0);
     }
 
-    /** Draws a list of drawable objects. */
+    /**
+     * Draws a list of drawable objects.
+     * @param {DrawableObject[]} objects - Objects to draw.
+     */
     addObjectsToMap(objects) {
         objects.forEach(obj => this.addToMap(obj));
     }
 
-    /** Draws one object with optional mirroring. */
+    /**
+     * Draws one object with optional mirroring.
+     * @param {MovableObject} mo - Other movable object.
+     */
     addToMap(mo) {
         if (mo.otherDiretion) this.flipImage(mo);
         mo.draw(this.world.ctx);
@@ -68,14 +94,20 @@ class WorldRenderer {
         if (mo.otherDiretion) this.flipImageBack(mo);
     }
 
-    /** Draws a debug collision frame if enabled. */
+    /**
+     * Draws a debug collision frame if enabled.
+     * @param {MovableObject} mo - Other movable object.
+     */
     drawDebugFrame(mo) {
         if (!window.DEBUG) return;
         if (mo instanceof Character) mo.drawFrameCharater(this.world.ctx);
         else if (mo instanceof JellyFish || mo instanceof Endboss) mo.drawFrame(this.world.ctx);
     }
 
-    /** Mirrors an object before drawing. */
+    /**
+     * Mirrors an object before drawing.
+     * @param {MovableObject} mo - Other movable object.
+     */
     flipImage(mo) {
         this.world.ctx.save();
         this.world.ctx.translate(mo.width, 0);
@@ -83,7 +115,10 @@ class WorldRenderer {
         mo.x = mo.x * -1;
     }
 
-    /** Restores an object after mirrored drawing. */
+    /**
+     * Restores an object after mirrored drawing.
+     * @param {MovableObject} mo - Other movable object.
+     */
     flipImageBack(mo) {
         this.world.ctx.restore();
         mo.x = mo.x * -1;

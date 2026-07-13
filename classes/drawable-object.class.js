@@ -1,3 +1,6 @@
+/**
+ * Base class for objects that can be drawn on the canvas.
+ */
 class DrawableObject {
     img;
     imageCache = [];
@@ -11,7 +14,10 @@ class DrawableObject {
     offsetWidth = 0;
     offsetHeight = 0;
 
-     /** load image. */
+     /**
+      * Loads one image.
+      * @param {string} path - Image or asset path.
+      */
      loadImage(path) {
         if (window.sharkieImageCache && window.sharkieImageCache[path]) {
             this.img = window.sharkieImageCache[path];
@@ -22,7 +28,10 @@ class DrawableObject {
         this.img.src = path;
     }
 
-    /** load images. */
+    /**
+     * Loads multiple images.
+     * @param {string[]} arr - Image paths to load.
+     */
     loadImages(arr) {
         arr.forEach((path) => {
             if (window.sharkieImageCache && window.sharkieImageCache[path]) {
@@ -35,21 +44,30 @@ class DrawableObject {
         })
     }
 
-    /** draw. */
+    /**
+     * Draws the object.
+     * @param {CanvasRenderingContext2D} ctx - Canvas rendering context.
+     */
     draw(ctx) {
         if (this.img && this.img.complete && this.img.naturalWidth > 0) {
             ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
         }
     }
 
-    /** draw frame. */
+    /**
+     * Draws the debug frame.
+     * @param {CanvasRenderingContext2D} ctx - Canvas rendering context.
+     */
     drawFrame(ctx) {
         if (this instanceof JellyFish || this instanceof Endboss) {
             this.drawCollisionFrame(ctx, 'blue');
         }
     }
 
-    /** draw frame charater. */
+    /**
+     * Draws the character debug frame.
+     * @param {CanvasRenderingContext2D} ctx - Canvas rendering context.
+     */
     drawFrameCharater(ctx) {
         if (this instanceof Character) {
             this.drawCollisionFrame(ctx, 'red');
@@ -58,7 +76,11 @@ class DrawableObject {
         }
     }
 
-    /** draw collision frame. */
+    /**
+     * Draws the collision debug frame.
+     * @param {CanvasRenderingContext2D} ctx - Canvas rendering context.
+     * @param {string} color - Stroke color.
+     */
     drawCollisionFrame(ctx, color) {
         const box = this.getDebugCollisionBox();
         ctx.beginPath();
@@ -68,7 +90,10 @@ class DrawableObject {
         ctx.stroke();
     }
 
-    /** get debug collision box. */
+    /**
+     * Returns the debug collision box.
+     * @returns {Object} Calculated layout or data object.
+     */
     getDebugCollisionBox() {
         const width = this.width - this.offsetWidth;
         const x = this.otherDiretion ? this.width - this.offsetX - width : this.offsetX;

@@ -1,10 +1,19 @@
+/**
+ * Loads and controls all game sounds.
+ */
 class SoundManager {
     muted = false;
     volume = 0.5;
     sounds = {};
     backgroundSound = null;
 
-    /** load sound. */
+    /**
+     * Load sound.
+     * @param {string} name - Name used by this function.
+     * @param {string} path - Image or asset path.
+     * @param {boolean} isBackground - Whether the sound is background music.
+     * @param {boolean} isLooping - Whether the sound should loop.
+     */
     loadSound(name, path, isBackground = false, isLooping = false) {
         const audio = new Audio(path);
         this.applyAudioSettings(audio);
@@ -15,19 +24,29 @@ class SoundManager {
         this.sounds[name] = { audio };
     }
 
-    /** apply audio settings. */
+    /**
+     * Apply audio settings.
+     * @param {HTMLAudioElement} audio - Audio element.
+     */
     applyAudioSettings(audio) {
         audio.volume = this.volume;
         audio.muted = this.muted;
     }
 
-    /** set background sound. */
+    /**
+     * Set background sound.
+     * @param {HTMLAudioElement} audio - Audio element.
+     * @param {string} name - Name used by this function.
+     */
     setBackgroundSound(audio, name) {
         audio.loop = true;
         this.backgroundSound = { audio, name };
     }
 
-    /** play sound. */
+    /**
+     * Play sound.
+     * @param {string} name - Name used by this function.
+     */
     playSound(name) {
         const sound = this.sounds[name];
         if (sound && !this.muted) {
@@ -38,7 +57,9 @@ class SoundManager {
         }
     }
 
-    /** play background. */
+    /**
+     * Play background.
+     */
     playBackground() {
         if (this.backgroundSound) {
             this.backgroundSound.audio.volume = this.volume;
@@ -49,7 +70,9 @@ class SoundManager {
         }
     }
 
-    /** stop all sounds. */
+    /**
+     * Stop all sounds.
+     */
     stopAllSounds() {
         if (this.backgroundSound) {
             this.backgroundSound.audio.pause();
@@ -61,19 +84,27 @@ class SoundManager {
         });
     }
 
-    /** set volume. */
+    /**
+     * Set volume.
+     * @param {number} volume - Volume from 0 to 1.
+     */
     setVolume(volume) {
         this.volume = Math.min(1, Math.max(0, volume));
         this.updateAllVolumes();
     }
 
-    /** set muted. */
+    /**
+     * Set muted.
+     * @param {boolean} muted - Whether audio is muted.
+     */
     setMuted(muted) {
         this.muted = muted;
         this.updateAllVolumes();
     }
 
-    /** update all volumes. */
+    /**
+     * Update all volumes.
+     */
     updateAllVolumes() {
         Object.values(this.sounds).forEach(sound => {
             sound.audio.volume = this.volume;

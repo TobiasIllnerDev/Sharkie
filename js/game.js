@@ -19,7 +19,9 @@ let hoveredPauseAction = null;
 window.DEBUG = false;
 window.sharkieImageCache = window.sharkieImageCache || {};
 
-/** Initializes canvas references and starts the game loop. */
+/**
+ * Initializes canvas references and starts the game loop.
+ */
 function bootstrapGame() {
     canvas = document.getElementById('canvas');
     gameContainer = document.getElementById('game-container');

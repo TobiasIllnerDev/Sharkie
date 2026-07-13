@@ -1,17 +1,24 @@
-﻿class Light extends MovableObject {
+/**
+ * Represents a moving light background object.
+ */
+class Light extends MovableObject {
     x = 420 
     y = 0
     height = 500
     width = 300
     
-    /** Creates this object. */
+    /**
+     * Creates a new instance.
+     */
     constructor() {
         super().loadImage('./assets/img/Background/Layers/1. Light/1.png');
         
         this.animate();
     }
 
-    /** animate. */
+    /**
+     * Animate.
+     */
     animate() {
         this.moveLeft()
     }

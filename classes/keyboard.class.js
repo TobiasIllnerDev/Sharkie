@@ -1,3 +1,6 @@
+/**
+ * Stores the current keyboard input state.
+ */
 class Keyboard {
     LEFT = false;
     RIGHT = false;

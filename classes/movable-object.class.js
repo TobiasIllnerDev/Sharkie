@@ -1,3 +1,6 @@
+/**
+ * Base class for drawable objects that move or collide.
+ */
 class MovableObject extends DrawableObject{
     speed = 0.15
     otherDiretion = false;
@@ -7,7 +10,9 @@ class MovableObject extends DrawableObject{
     moveInterval = null;
     animationInterval = null;
 
-    /** move right. */
+    /**
+     * Starts moving to the right.
+     */
     moveRight() {
         this.clearMoveInterval();
         this.moveInterval = setInterval(() => {
@@ -20,7 +25,9 @@ class MovableObject extends DrawableObject{
         }, 1000 / 60);
     }
 
-    /** move left. */
+    /**
+     * Starts moving to the left.
+     */
     moveLeft() {
         this.clearMoveInterval();
         this.moveInterval = setInterval(() => {
@@ -32,7 +39,9 @@ class MovableObject extends DrawableObject{
         }, 1000 / 60);
     }
 
-    /** clear move interval. */
+    /**
+     * Clears the movement interval.
+     */
     clearMoveInterval() {
         if (this.moveInterval) {
             clearInterval(this.moveInterval);
@@ -40,7 +49,9 @@ class MovableObject extends DrawableObject{
         }
     }
 
-    /** clear animation interval. */
+    /**
+     * Clears the animation interval.
+     */
     clearAnimationInterval() {
         if (this.animationInterval) {
             clearInterval(this.animationInterval);
@@ -48,13 +59,18 @@ class MovableObject extends DrawableObject{
         }
     }
 
-    /** cleanup. */
+    /**
+     * Cleans up timers and resources.
+     */
     cleanup() {
         this.clearMoveInterval();
         this.clearAnimationInterval();
     }
     
-    /** play animation. */
+    /**
+     * Plays an animation sequence.
+     * @param {string[]} images - Animation image paths.
+     */
     playAnimation(images) {
         let i = this.currentImage % images.length;
         let path = images[i];
@@ -62,7 +78,10 @@ class MovableObject extends DrawableObject{
         this.currentImage++;
     }
 
-    /** get collision box. */
+    /**
+     * Returns the collision box.
+     * @returns {Object} Calculated layout or data object.
+     */
     getCollisionBox() {
         const collisionWidth = this.width - this.offsetWidth;
         const collisionHeight = this.height - this.offsetHeight;
@@ -78,7 +97,11 @@ class MovableObject extends DrawableObject{
         };
     }
 
-    /** get object collision box. */
+    /**
+     * Returns another object collision box.
+     * @param {DrawableObject} object - Object to inspect.
+     * @returns {Object} Calculated layout or data object.
+     */
     getObjectCollisionBox(object) {
         if (object.getCollisionBox) {
             return object.getCollisionBox();
@@ -87,7 +110,11 @@ class MovableObject extends DrawableObject{
         return this.createCollisionBox(object);
     }
 
-    /** create collision box. */
+    /**
+     * Creates a collision box for an object.
+     * @param {DrawableObject} object - Object to inspect.
+     * @returns {Object} Created collision box.
+     */
     createCollisionBox(object) {
         const collisionWidth = object.width - object.offsetWidth;
         const collisionHeight = object.height - object.offsetHeight;
@@ -100,14 +127,24 @@ class MovableObject extends DrawableObject{
         };
     }
 
-    /** get mirrored offset x. */
+    /**
+     * Returns the horizontal offset for mirrored objects.
+     * @param {DrawableObject} object - Object to inspect.
+     * @param {number} collisionWidth - Collision box width.
+     * @returns {number} Horizontal collision offset.
+     */
     getMirroredOffsetX(object, collisionWidth) {
         return object.otherDiretion
             ? object.width - object.offsetX - collisionWidth
             : object.offsetX;
     }
 
-    /** is colliding. */
+    /**
+     * Checks whether this object collides with another object.
+     * @param {MovableObject} mo - Other movable object.
+     * @param {number} padding - Additional collision padding.
+     * @returns {boolean} True when the condition is met.
+     */
     isColliding(mo, padding = 0) {
         const ownBox = this.getCollisionBox();
         const otherBox = this.getObjectCollisionBox(mo);
@@ -119,8 +156,11 @@ class MovableObject extends DrawableObject{
     }
 
 
-    /** hit. */
-    hit(damage = 10){
+    /**
+     * Applies damage.
+     * @param {number} damage - Damage amount.
+     */
+    hit(damage = 10) {
         this.energy -= damage;
         this.lastHit = new Date().getTime(); 
         if(this.energy < 0 ){
@@ -128,14 +168,19 @@ class MovableObject extends DrawableObject{
         }
     }
 
-    /** dont move. */
+    /**
+     * Marks the object as recently active.
+     */
     dontMove() {
         if(!this.isDead() && !this.isHurt()) {
             this.lastMove = new Date().getTime();
         }
     }
 
-    /** is a f k. */
+    /**
+     * Checks whether the object has been idle for a while.
+     * @returns {boolean} True when the condition is met.
+     */
     isAFK() {
         if(this.lastMove == 0) return false;
         let noMove = new Date().getTime() - this.lastMove;
@@ -143,14 +188,20 @@ class MovableObject extends DrawableObject{
         return noMove > 5;
     }
 
-    /** is hurt. */
+    /**
+     * Checks whether the object is currently hurt.
+     * @returns {boolean} True when the condition is met.
+     */
     isHurt() {
         let timepassed = new Date().getTime() - this.lastHit;
         timepassed = timepassed / 1000;
         return timepassed < 2;
     }
 
-    /** is dead. */
+    /**
+     * Checks whether the object is dead.
+     * @returns {boolean} True when the condition is met.
+     */
     isDead() {
         return this.energy <= 0;
     }
