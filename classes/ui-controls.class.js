@@ -5,6 +5,7 @@ class UIControls {
     padding = 15;
     edgeOffset = 25;
     soundManager;
+    hoveredButton = null;
 
     constructor(soundManager) {
         this.soundManager = soundManager;
@@ -41,7 +42,12 @@ class UIControls {
     }
 
     drawSoundButton(ctx, x, y) {
-        this.drawButtonBase(ctx, x, y);
+        this.drawButtonBase(ctx, x, y, this.hoveredButton === 'mute');
+        this.drawSpeakerIcon(ctx, x, y);
+        this.soundManager.muted ? this.drawMutedLine(ctx, x, y) : this.drawSoundWave(ctx, x, y);
+    }
+
+    drawSpeakerIcon(ctx, x, y) {
         ctx.strokeStyle = '#fff';
         ctx.lineWidth = 3;
         ctx.beginPath();
@@ -51,21 +57,23 @@ class UIControls {
         ctx.lineTo(x + 27, y + 31);
         ctx.lineTo(x + 18, y + 23);
         ctx.stroke();
+    }
 
-        if (this.soundManager.muted) {
-            ctx.beginPath();
-            ctx.moveTo(x + 31, y + 13);
-            ctx.lineTo(x + 13, y + 31);
-            ctx.stroke();
-        } else {
-            ctx.beginPath();
-            ctx.arc(x + 27, y + 23, 7, -0.7, 0.7);
-            ctx.stroke();
-        }
+    drawMutedLine(ctx, x, y) {
+        ctx.beginPath();
+        ctx.moveTo(x + 31, y + 13);
+        ctx.lineTo(x + 13, y + 31);
+        ctx.stroke();
+    }
+
+    drawSoundWave(ctx, x, y) {
+        ctx.beginPath();
+        ctx.arc(x + 27, y + 23, 7, -0.7, 0.7);
+        ctx.stroke();
     }
 
     drawFullscreenButton(ctx, x, y) {
-        this.drawButtonBase(ctx, x, y);
+        this.drawButtonBase(ctx, x, y, this.hoveredButton === 'fullscreen');
         ctx.strokeStyle = '#fff';
         ctx.lineWidth = 3;
         ctx.strokeRect(x + 11, y + 11, 18, 18);
@@ -80,17 +88,17 @@ class UIControls {
     }
 
     drawPauseButton(ctx, x, y) {
-        this.drawButtonBase(ctx, x, y);
+        this.drawButtonBase(ctx, x, y, this.hoveredButton === 'pause');
         ctx.fillStyle = '#fff';
         ctx.fillRect(x + 13, y + 11, 5, 18);
         ctx.fillRect(x + 23, y + 11, 5, 18);
     }
 
-    drawButtonBase(ctx, x, y) {
-        ctx.fillStyle = 'rgba(200, 200, 200, 0.3)';
+    drawButtonBase(ctx, x, y, isHovered = false) {
+        ctx.fillStyle = isHovered ? 'rgba(255, 255, 255, 0.42)' : 'rgba(200, 200, 200, 0.3)';
         ctx.fillRect(x, y, this.buttonSize, this.buttonSize);
         ctx.strokeStyle = '#fff';
-        ctx.lineWidth = 1;
+        ctx.lineWidth = isHovered ? 2 : 1;
         ctx.strokeRect(x, y, this.buttonSize, this.buttonSize);
     }
 
@@ -100,31 +108,27 @@ class UIControls {
     }
 
     isButtonHovered(x, y) {
+        return Boolean(this.getButtonAt(x, y));
+    }
+
+    getButtonAt(x, y) {
+        const button = this.getButtons().find(button => this.isInsideButton(x, y, button.x, button.y));
+        return button ? button.action : null;
+    }
+
+    getButtons() {
         const fullscreenX = this.x + this.buttonSize + this.padding;
         const pauseX = fullscreenX + this.buttonSize + this.padding;
-
-        return this.isInsideButton(x, y, this.x, this.y) ||
-               this.isInsideButton(x, y, fullscreenX, this.y) ||
-               this.isInsideButton(x, y, pauseX, this.y);
+        return [
+            { action: 'mute', x: this.x, y: this.y },
+            { action: 'fullscreen', x: fullscreenX, y: this.y },
+            { action: 'pause', x: pauseX, y: this.y }
+        ];
     }
 
     handleClick(x, y) {
-        const fullscreenX = this.x + this.buttonSize + this.padding;
-        const pauseX = fullscreenX + this.buttonSize + this.padding;
-
-        if (this.isInsideButton(x, y, this.x, this.y)) {
-            this.soundManager.setMuted(!this.soundManager.muted);
-            return 'mute';
-        }
-
-        if (this.isInsideButton(x, y, fullscreenX, this.y)) {
-            return 'fullscreen';
-        }
-
-        if (this.isInsideButton(x, y, pauseX, this.y)) {
-            return 'pause';
-        }
-
-        return null;
+        const action = this.getButtonAt(x, y);
+        if (action === 'mute') this.soundManager.setMuted(!this.soundManager.muted);
+        return action;
     }
 }

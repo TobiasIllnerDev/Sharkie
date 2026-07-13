@@ -27,78 +27,92 @@ class Endboss extends MovableObject {
 
     constructor() {
         super();
+        this.loadBossImages();
+        this.setBossStats();
+        this.setBossOffsets();
+    }
+
+    loadBossImages() {
         this.loadImage(this.IMAGES_FLOATING[0]);
         this.loadImages(this.IMAGES_FLOATING);
         this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_DEAD); 
         this.loadImages(this.IMAGES_SPAWN);
         this.loadImages(this.IMAGES_ATTACK);
+    }
+
+    setBossStats() {
         this.x = 4200;
         this.speed = 2;
+        this.hasStartedDeadAnimation = false;
+    }
+
+    setBossOffsets() {
         this.offsetX = 20;
         this.offsetY = 150;
         this.offsetWidth = 40;
         this.offsetHeight = 220;
-        this.hasStartedDeadAnimation = false;
     }
 
     startSpawn() {
         this.isSpawning = true;
         this.isSpawned = false;
         this.currentImage = 0;
+        this.spawnInterval = setInterval(() => this.updateSpawnAnimation(), 200);
+    }
 
-        this.spawnInterval = setInterval(() => {
-            if (this.world && this.world.isPaused) {
-                return;
-            }
+    updateSpawnAnimation() {
+        if (this.world && this.world.isPaused) return;
+        this.playAnimation(this.IMAGES_SPAWN);
+        if (this.currentImage >= this.IMAGES_SPAWN.length) this.finishSpawn();
+    }
 
-            this.playAnimation(this.IMAGES_SPAWN);
-            if (this.currentImage >= this.IMAGES_SPAWN.length) {
-                this.isSpawning = false;
-                this.isSpawned = true;
-                clearInterval(this.spawnInterval);
-                this.spawnInterval = null;
-                this.animate();
-                this.startChasing();
-            }
-        }, 200);
+    finishSpawn() {
+        this.isSpawning = false;
+        this.isSpawned = true;
+        this.clearSpawnInterval();
+        this.animate();
+        this.startChasing();
+    }
+
+    clearSpawnInterval() {
+        clearInterval(this.spawnInterval);
+        this.spawnInterval = null;
     }
 
     animate() {
-        if (!this.isSpawning) {
-            this.animationInterval = setInterval(() => {
-                if (this.world && this.world.isPaused) {
-                    return;
-                }
+        if (this.isSpawning) return;
+        this.animationInterval = setInterval(() => this.updateAnimation(), 200);
+    }
 
-                if(this.isDead()) {
-                    if(!this.hasStartedDeadAnimation) {
-                        this.currentImage = 0;
-                        this.hasStartedDeadAnimation = true;
-                    }
-                    this.playAnimation(this.IMAGES_DEAD);
-                    if(this.currentImage >= this.IMAGES_DEAD.length) {
-                         this.shouldRemove = true;
-                         this.clearAnimationInterval();
-                    }
-                }
-                else if (this.isAttacking) {
-                    this.playAnimation(this.IMAGES_ATTACK);
-                    if (!this.attackDamageApplied && this.currentImage >= 3) {
-                        this.applyAttackDamage();
-                    }
-                    if (this.currentImage >= this.IMAGES_ATTACK.length) {
-                        this.isAttacking = false;
-                    }
-                }
-                else if(this.isHurt()) {
-                    this.playAnimation(this.IMAGES_HURT);
-                }
-                else {
-                    this.playAnimation(this.IMAGES_FLOATING);
-                }
-            }, 200);
-        }
+    updateAnimation() {
+        if (this.world && this.world.isPaused) return;
+        if (this.isDead()) return this.playDeadAnimation();
+        if (this.isAttacking) return this.playAttackAnimation();
+        if (this.isHurt()) return this.playAnimation(this.IMAGES_HURT);
+        this.playAnimation(this.IMAGES_FLOATING);
+    }
+
+    playDeadAnimation() {
+        if (!this.hasStartedDeadAnimation) this.startDeadAnimation();
+        this.playAnimation(this.IMAGES_DEAD);
+        if (this.currentImage >= this.IMAGES_DEAD.length) this.finishDeadAnimation();
+    }
+
+    startDeadAnimation() {
+        this.currentImage = 0;
+        this.hasStartedDeadAnimation = true;
+    }
+
+    finishDeadAnimation() {
+        this.shouldRemove = true;
+        this.clearAnimationInterval();
+    }
+
+    playAttackAnimation() {
+        this.playAnimation(this.IMAGES_ATTACK);
+        if (!this.attackDamageApplied && this.currentImage >= 3) this.applyAttackDamage();
+        if (this.currentImage >= this.IMAGES_ATTACK.length) this.isAttacking = false;
     }
 
     startChasing() {
@@ -119,36 +133,34 @@ class Endboss extends MovableObject {
     }
 
     chaseCharacter() {
-        if (!this.world || !this.world.character || this.isDead() ||
-            this.world.character.isDead() || this.world.gameOver || this.world.win) {
-            this.stopChasing();
-            return;
-        }
+        if (this.shouldStopChasing()) return this.stopChasing();
+        if (this.world.isPaused) return;
+        const direction = this.getDirectionToCharacter();
+        this.otherDiretion = direction.dx > 0;
+        if (this.isAttacking || direction.distance === 0) return;
+        this.moveTowardsCharacter(direction);
+    }
 
-        if (this.world.isPaused) {
-            return;
-        }
+    shouldStopChasing() {
+        return !this.world || !this.world.character || this.isDead() ||
+            this.world.character.isDead() || this.world.gameOver || this.world.win;
+    }
 
-        const bossCenterX = this.x + this.width / 2;
-        const bossCenterY = this.y + this.height / 2;
-        const characterCenterX = this.world.character.x + this.world.character.width / 2;
-        const characterCenterY = this.world.character.y + this.world.character.height / 2;
-        const dx = characterCenterX - bossCenterX;
-        const dy = characterCenterY - bossCenterY;
+    getDirectionToCharacter() {
+        const boss = this.getCenter(this);
+        const character = this.getCenter(this.world.character);
+        const dx = character.x - boss.x;
+        const dy = character.y - boss.y;
+        return { dx, dy, distance: Math.hypot(dx, dy) };
+    }
 
-        this.otherDiretion = dx > 0;
+    getCenter(object) {
+        return { x: object.x + object.width / 2, y: object.y + object.height / 2 };
+    }
 
-        if (this.isAttacking) {
-            return;
-        }
-
-        const distance = Math.hypot(dx, dy);
-        if (distance === 0) {
-            return;
-        }
-
-        this.x += (dx / distance) * this.chaseSpeed;
-        this.y += (dy / distance) * this.chaseSpeed;
+    moveTowardsCharacter(direction) {
+        this.x += (direction.dx / direction.distance) * this.chaseSpeed;
+        this.y += (direction.dy / direction.distance) * this.chaseSpeed;
         this.y = Math.min(this.maxY, Math.max(this.minY, this.y));
     }
 

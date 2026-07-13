@@ -20,12 +20,24 @@ class World {
         this.canvas = canvas;
         this.keyboard = keyboard;
         this.soundManager = soundManager;
+        this.initCounters();
+        this.initState();
+        this.initBarsAndCharacter();
+    }
+
+    initCounters() {
         this.coinCount = 0;
         this.bottleCount = 0;
+    }
+
+    initState() {
         this.isSpecialAttackPending = false;
         this.isNormalAttackPending = false;
         this.endboss = null;
         this.spawnTriggerDistance = 500;
+    }
+
+    initBarsAndCharacter() {
         this.statusBarBoss = new StatusBarBoss();
         this.character = new Character();
         this.draw();
@@ -53,33 +65,45 @@ class World {
     }
 
     cleanup() {
-        if (this.runInterval) {
-            clearInterval(this.runInterval);
-            this.runInterval = null;
-        }
+        this.clearRunInterval();
+        this.cleanupCharacter();
+        this.cleanupLevelObjects();
+        this.cleanupThrowableObjects();
+        this.endboss = null;
+    }
 
+    clearRunInterval() {
+        if (!this.runInterval) return;
+        clearInterval(this.runInterval);
+        this.runInterval = null;
+    }
+
+    cleanupCharacter() {
         if (this.character && this.character.cleanup) {
             this.character.cleanup();
         }
+    }
 
+    cleanupLevelObjects() {
         if (this.level && this.level.enemies) {
-            this.level.enemies.forEach(enemy => enemy.cleanup?.());
-            this.level.enemies = [];
+            this.cleanupObjectList('enemies');
         }
-
         if (this.level && this.level.collectibles) {
-            this.level.collectibles.forEach(collectible => collectible.cleanup?.());
-            this.level.collectibles = [];
+            this.cleanupObjectList('collectibles');
         }
-
         if (this.level && this.level.lights) {
-            this.level.lights.forEach(light => light.cleanup?.());
-            this.level.lights = [];
+            this.cleanupObjectList('lights');
         }
+    }
 
+    cleanupObjectList(key) {
+        this.level[key].forEach(object => object.cleanup?.());
+        this.level[key] = [];
+    }
+
+    cleanupThrowableObjects() {
         this.throwableObjects.forEach(throwableObject => throwableObject.cleanup?.());
         this.throwableObjects = [];
-        this.endboss = null;
     }
 
     run() {
@@ -92,36 +116,61 @@ class World {
     }
 
     checkThrowObjects() {
-        if (this.keyboard.SPACE && !this.character.isAttacking) {
-            this.character.startAttack();
-            this.isNormalAttackPending = true;
-        }
+        this.handleAttackInput();
+        this.throwPendingAttack();
+        this.removeInactiveBubbles();
+        this.removeDefeatedEnemies();
+    }
 
-        if (this.keyboard.E && !this.character.isAttacking && this.bottleCount > 0) {
-            this.character.startAttack();
-            this.isSpecialAttackPending = true;
-        }
+    handleAttackInput() {
+        if (this.keyboard.SPACE && !this.character.isAttacking) this.startNormalAttack();
+        if (this.keyboard.E && !this.character.isAttacking && this.bottleCount > 0) this.startSpecialAttack();
+    }
 
-        if (this.character.attackAnimationFinished) {
-            if (this.isNormalAttackPending) {
-                let bubble = new ThrowableObject(this.character.x + 100, this.character.y + 100, this.character.otherDiretion, this);
-                this.throwableObjects.push(bubble);
-                this.character.resetAttack();
-                this.soundManager.playSound('attack');
-                this.isNormalAttackPending = false;
-            } else if (this.isSpecialAttackPending && this.bottleCount > 0) {
-                let specialBubble = new SpecialBubble(this.character.x + 100, this.character.y + 100, this.character.otherDiretion, this);
-                this.throwableObjects.push(specialBubble);
+    startNormalAttack() {
+        this.character.startAttack();
+        this.isNormalAttackPending = true;
+    }
 
-                this.bottleCount--;
-                let percentage = (this.bottleCount / this.maxBottles) * 100;
-                this.statusBarPosion.setPercentage(percentage);
+    startSpecialAttack() {
+        this.character.startAttack();
+        this.isSpecialAttackPending = true;
+    }
 
-                this.character.resetAttack();
-                this.soundManager.playSound('attack');
-                this.isSpecialAttackPending = false;
-            }
-        }
+    throwPendingAttack() {
+        if (!this.character.attackAnimationFinished) return;
+        if (this.isNormalAttackPending) return this.throwNormalBubble();
+        if (this.isSpecialAttackPending && this.bottleCount > 0) this.throwSpecialBubble();
+    }
+
+    throwNormalBubble() {
+        this.throwableObjects.push(this.createBubble(ThrowableObject));
+        this.finishAttack();
+        this.isNormalAttackPending = false;
+    }
+
+    throwSpecialBubble() {
+        this.throwableObjects.push(this.createBubble(SpecialBubble));
+        this.consumeBottle();
+        this.finishAttack();
+        this.isSpecialAttackPending = false;
+    }
+
+    createBubble(BubbleClass) {
+        return new BubbleClass(this.character.x + 100, this.character.y + 100, this.character.otherDiretion, this);
+    }
+
+    consumeBottle() {
+        this.bottleCount--;
+        this.statusBarPosion.setPercentage((this.bottleCount / this.maxBottles) * 100);
+    }
+
+    finishAttack() {
+        this.character.resetAttack();
+        this.soundManager.playSound('attack');
+    }
+
+    removeInactiveBubbles() {
         this.throwableObjects = this.throwableObjects.filter((bubble) => {
             const distance = Math.abs(bubble.x - bubble.startX);
             const isStillActive = distance < (bubble.maxDistance || 500);
@@ -130,53 +179,69 @@ class World {
             }
             return isStillActive;
         });
-        this.level.enemies = this.level.enemies.filter(enemy => {
-            if (enemy.shouldRemove) {
-                enemy.cleanup?.();
-                return false;
-            }
-            return true;
-        });
     }
 
     checkCollisions() {
-        this.level.enemies.forEach((enemy) => {
-            if (!(enemy instanceof Endboss) && !this.character.isHurt() && this.character.isColliding(enemy)) {
-                this.damageCharacter(enemy.damage);
-            }
-        });
-        this.throwableObjects.forEach((bubble, bubbleIndex) => {
-            this.level.enemies.forEach((enemy) => {
-                if (bubble.isColliding(enemy, 6)) {
-                    let damage = bubble.damage || this.character.attackPower;
-                    enemy.hit(damage);
-                    this.throwableObjects.splice(bubbleIndex, 1);
+        this.checkEnemyCollisions();
+        this.checkBubbleCollisions();
+        this.checkCollectibleCollisions();
+    }
 
-                    if (enemy.isDead()) {
-                        this.soundManager.playSound('enemy_die');
-                    }
-                }
-            });
+    checkEnemyCollisions() {
+        this.level.enemies.forEach(enemy => {
+            if (this.canEnemyDamageCharacter(enemy)) this.damageCharacter(enemy.damage);
         });
+    }
+
+    canEnemyDamageCharacter(enemy) {
+        return !(enemy instanceof Endboss) && !this.character.isHurt() &&
+            this.character.isColliding(enemy);
+    }
+
+    checkBubbleCollisions() {
+        this.throwableObjects.forEach((bubble, index) => this.checkBubbleHit(bubble, index));
+    }
+
+    checkBubbleHit(bubble, bubbleIndex) {
+        this.level.enemies.forEach(enemy => {
+            if (bubble.isColliding(enemy, 6)) this.hitEnemyWithBubble(bubble, bubbleIndex, enemy);
+        });
+    }
+
+    hitEnemyWithBubble(bubble, bubbleIndex, enemy) {
+        enemy.hit(bubble.damage || this.character.attackPower);
+        this.throwableObjects.splice(bubbleIndex, 1);
+        if (enemy.isDead()) this.soundManager.playSound('enemy_die');
+    }
+
+    checkCollectibleCollisions() {
         this.level.collectibles.forEach((collectible, index) => {
-            if (!collectible.collected && this.character.isColliding(collectible)) {
-                collectible.collect();
-
-                if (collectible instanceof Coin) {
-                    this.coinCount++;
-                    let percentage = (this.coinCount / this.maxCoins) * 100;
-                    this.statusBarCoin.setPercentage(percentage);
-                    this.soundManager.playSound('coin');
-                } else if (collectible instanceof Bottle) {
-                    this.bottleCount++;
-                    let percentage = (this.bottleCount / this.maxBottles) * 100;
-                    this.statusBarPosion.setPercentage(percentage);
-                    this.soundManager.playSound('bottle');
-                }
-                collectible.cleanup?.();
-                this.level.collectibles.splice(index, 1);
-            }
+            if (this.canCollect(collectible)) this.collectItem(collectible, index);
         });
+    }
+
+    canCollect(collectible) {
+        return !collectible.collected && this.character.isColliding(collectible);
+    }
+
+    collectItem(collectible, index) {
+        collectible.collect();
+        if (collectible instanceof Coin) this.collectCoin();
+        else if (collectible instanceof Bottle) this.collectBottle();
+        collectible.cleanup?.();
+        this.level.collectibles.splice(index, 1);
+    }
+
+    collectCoin() {
+        this.coinCount++;
+        this.statusBarCoin.setPercentage((this.coinCount / this.maxCoins) * 100);
+        this.soundManager.playSound('coin');
+    }
+
+    collectBottle() {
+        this.bottleCount++;
+        this.statusBarPosion.setPercentage((this.bottleCount / this.maxBottles) * 100);
+        this.soundManager.playSound('bottle');
     }
 
     damageCharacter(damage) {
@@ -190,6 +255,11 @@ class World {
     }
 
     checkBossSpawn() {
+        this.spawnBossIfNeeded();
+        if (this.endboss && this.endboss.isSpawned) this.updateBossFight();
+    }
+
+    spawnBossIfNeeded() {
         const distanceToEnd = this.level.level_end_x - this.character.x;
         if (!this.endboss && distanceToEnd < this.spawnTriggerDistance) {
             this.endboss = new Endboss();
@@ -197,16 +267,22 @@ class World {
             this.endboss.startSpawn();
             this.level.enemies.push(this.endboss);
         }
-        if (this.endboss && this.endboss.isSpawned) {
-            const bossHealthPercentage = (this.endboss.energy / this.endboss.maxEnergy) * 100;
-            this.statusBarBoss.setPercentage(bossHealthPercentage);
-            this.endboss.tryAttack();
+    }
 
-            if (this.endboss.isDead() && !this.win) {
-                this.win = true;
-                this.soundManager.playSound('win');
-            }
-        }
+    updateBossFight() {
+        this.updateBossBar();
+        this.endboss.tryAttack();
+        if (this.endboss.isDead() && !this.win) this.finishWin();
+    }
+
+    updateBossBar() {
+        const percentage = (this.endboss.energy / this.endboss.maxEnergy) * 100;
+        this.statusBarBoss.setPercentage(percentage);
+    }
+
+    finishWin() {
+        this.win = true;
+        this.soundManager.playSound('win');
     }
 
     removeDefeatedEnemies() {
@@ -226,15 +302,27 @@ class World {
     draw() {
         this.removeDefeatedEnemies();
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.drawBackgroundLayer();
+        this.drawStatusBars();
+        this.drawWorldLayer();
+    }
+
+    drawBackgroundLayer() {
         this.ctx.translate(this.camera_x, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
         this.ctx.translate(-this.camera_x, 0);
+    }
+
+    drawStatusBars() {
         this.addToMap(this.statusBarLife);
         this.addToMap(this.statusBarCoin);
         this.addToMap(this.statusBarPosion);
         if (this.endboss && this.endboss.isSpawned) {
             this.addToMap(this.statusBarBoss);
         }
+    }
+
+    drawWorldLayer() {
         this.ctx.translate(this.camera_x, 0);
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.collectibles);
@@ -251,21 +339,16 @@ class World {
     }
 
     addToMap(mo) {
-        if (mo.otherDiretion) {
-            this.flipImage(mo);
-        }
-
+        if (mo.otherDiretion) this.flipImage(mo);
         mo.draw(this.ctx);
+        this.drawDebugFrame(mo);
+        if (mo.otherDiretion) this.flipImageBack(mo);
+    }
 
-        if (mo instanceof Character) {
-            mo.drawFrameCharater(this.ctx);
-        } else if (mo instanceof JellyFish || mo instanceof Endboss) {
-            mo.drawFrame(this.ctx);
-        }
-
-        if (mo.otherDiretion) {
-            this.flipImageBack(mo);
-        }
+    drawDebugFrame(mo) {
+        if (!window.DEBUG) return;
+        if (mo instanceof Character) mo.drawFrameCharater(this.ctx);
+        else if (mo instanceof JellyFish || mo instanceof Endboss) mo.drawFrame(this.ctx);
     }
 
     flipImage(mo) {

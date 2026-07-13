@@ -15,6 +15,7 @@ let loadedAssets = 0;
 let totalAssets = 0;
 let loadingFinished = false;
 let hoveredPauseAction = null;
+window.DEBUG = false;
 window.sharkieImageCache = window.sharkieImageCache || {};
 
 function range(length, callback) {
@@ -85,23 +86,24 @@ function restoreSavedVolume() {
 function preloadImage(path) {
     return new Promise(resolve => {
         if (window.sharkieImageCache[path]) {
-            loadedAssets++;
-            resolve();
-            return;
+            return resolveLoadedAsset(resolve);
         }
 
         const img = new Image();
-        img.onload = () => {
-            window.sharkieImageCache[path] = img;
-            loadedAssets++;
-            resolve();
-        };
-        img.onerror = () => {
-            loadedAssets++;
-            resolve();
-        };
+        img.onload = () => cacheLoadedImage(path, img, resolve);
+        img.onerror = () => resolveLoadedAsset(resolve);
         img.src = path;
     });
+}
+
+function cacheLoadedImage(path, img, resolve) {
+    window.sharkieImageCache[path] = img;
+    resolveLoadedAsset(resolve);
+}
+
+function resolveLoadedAsset(resolve) {
+    loadedAssets++;
+    resolve();
 }
 
 function loadInitialAssets() {
@@ -124,33 +126,44 @@ function finishLoading() {
 
 function drawLoadingScreen() {
     const progress = totalAssets === 0 ? 0 : loadedAssets / totalAssets;
-    const barWidth = 360;
-    const barHeight = 24;
-    const barX = (canvas.width - barWidth) / 2;
-    const barY = 270;
+    const bar = getLoadingBar();
+    drawLoadingBackground();
+    drawLoadingTitle();
+    drawLoadingBar(bar, progress);
+    drawLoadingProgress(progress);
+}
 
+function getLoadingBar() {
+    return { width: 360, height: 24, x: (canvas.width - 360) / 2, y: 270 };
+}
+
+function drawLoadingBackground() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = '#0a2e38';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
     ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
 
+function drawLoadingTitle() {
     ctx.font = '52px Luckiest Guy';
     ctx.fillStyle = 'white';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('Sharkie', 360, 165);
-
     ctx.font = '28px Luckiest Guy';
     ctx.fillText('Laedt...', 360, 230);
+}
 
+function drawLoadingBar(bar, progress) {
     ctx.strokeStyle = 'white';
     ctx.lineWidth = 3;
-    ctx.strokeRect(barX, barY, barWidth, barHeight);
+    ctx.strokeRect(bar.x, bar.y, bar.width, bar.height);
     ctx.fillStyle = '#1a8fb4';
-    ctx.fillRect(barX, barY, barWidth * progress, barHeight);
+    ctx.fillRect(bar.x, bar.y, bar.width * progress, bar.height);
+}
 
+function drawLoadingProgress(progress) {
     ctx.font = '18px Luckiest Guy';
     ctx.fillStyle = 'white';
     ctx.fillText(`${Math.round(progress * 100)}%`, 360, 320);
@@ -159,37 +172,48 @@ function drawLoadingScreen() {
 function init() {
     ctx = canvas.getContext('2d');
     soundManager = new SoundManager();
+    loadGameSounds();
+    applySavedSoundSettings();
+    createGameWorld();
+    prepareStartScreenAfterInit();
+    soundManager.playBackground();
+}
 
+function loadGameSounds() {
     soundManager.loadSound('background', '../assets/sounds/background-musik.mp3', true);
     soundManager.loadSound('coin', '../assets/sounds/Coin-Colleted.mp3');
     soundManager.loadSound('bottle', '../assets/sounds/bottle-pick-up.mp3');
     soundManager.loadSound('enemy_die', '../assets/sounds/enemy-die.mp3');
     soundManager.loadSound('attack', '../assets/sounds/Attack-sound.mp3');
     soundManager.loadSound('character_swim', '../assets/sounds/Character-swim.mp3');
+    loadExtraGameSounds();
+}
+
+function loadExtraGameSounds() {
     soundManager.loadSound('damage', '../assets/sounds/characterDamage.mp3');
     soundManager.loadSound('dead', '../assets/sounds/characterDead.wav');
     soundManager.loadSound('snoring', '../assets/sounds/characterSnoring.mp3', false, true);
     soundManager.loadSound('fail', '../assets/sounds/Fail-sound.mp3');
     soundManager.loadSound('win', '../assets/sounds/Win-Sound.mp3');
+}
 
+function applySavedSoundSettings() {
     const savedVol = localStorage.getItem('sharkieSavedVolume');
-    if (savedVol !== null) {
-        savedVolume = parseFloat(savedVol);
-    }
-
+    if (savedVol !== null) savedVolume = parseFloat(savedVol);
     soundManager.setVolume(savedVolume);
     soundManager.setMuted(isMuted);
+}
 
+function createGameWorld() {
     resetKeyboard();
     world = new World(canvas, keyboard, soundManager);
     uiControls = new UIControls(soundManager);
+}
 
-    if (startScreen) {
-        startScreen.closeOverlay();
-        startScreen.setVolume(savedVolume);
-    }
-
-    soundManager.playBackground();
+function prepareStartScreenAfterInit() {
+    if (!startScreen) return;
+    startScreen.closeOverlay();
+    startScreen.setVolume(savedVolume);
 }
 
 function startGame() {
@@ -328,38 +352,53 @@ function handlePauseMenuClick(x, y) {
 
 function drawPauseOverlay(ctx) {
     ctx.save();
+    drawPauseBackdrop(ctx);
+    drawPausePanel(ctx);
+    drawPauseTitle(ctx);
+    pauseMenuButtons.forEach(button => drawPauseButton(ctx, button));
+    ctx.restore();
+}
+
+function drawPauseBackdrop(ctx) {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.68)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
 
+function drawPausePanel(ctx) {
     roundRect(ctx, 170, 78, 380, 320, 24);
     ctx.fillStyle = '#0f3f56';
     ctx.fill();
     ctx.strokeStyle = 'white';
     ctx.lineWidth = 2;
     ctx.stroke();
+}
 
+function drawPauseTitle(ctx) {
     ctx.fillStyle = '#1a8fb4';
     ctx.font = '48px Luckiest Guy';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('PAUSE', 360, 135);
+}
 
-    pauseMenuButtons.forEach(button => {
-        const isHovered = hoveredPauseAction === button.action;
+function drawPauseButton(ctx, button) {
+    roundRect(ctx, button.x, button.y, button.width, button.height, 14);
+    ctx.fillStyle = hoveredPauseAction === button.action ? '#25a9d3' : '#1a8fb4';
+    ctx.fill();
+    drawPauseButtonBorder(ctx);
+    drawPauseButtonText(ctx, button);
+}
 
-        roundRect(ctx, button.x, button.y, button.width, button.height, 14);
-        ctx.fillStyle = isHovered ? '#25a9d3' : '#1a8fb4';
-        ctx.fill();
-        ctx.strokeStyle = 'white';
-        ctx.lineWidth = 2;
-        ctx.stroke();
+function drawPauseButtonBorder(ctx) {
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+}
 
-        ctx.fillStyle = 'white';
-        ctx.font = '24px Luckiest Guy';
-        ctx.fillText(button.text, button.x + button.width / 2, button.y + button.height / 2);
-    });
-
-    ctx.restore();
+function drawPauseButtonText(ctx, button) {
+    ctx.fillStyle = 'white';
+    ctx.font = '24px Luckiest Guy';
+    ctx.fillText(button.text, button.x + button.width / 2, button.y + button.height / 2);
 }
 
 function getCanvasCoordinates(event) {
@@ -372,37 +411,33 @@ function getCanvasCoordinates(event) {
 
 function initTouchControls() {
     const touchButtons = document.querySelectorAll('#touch-controls [data-key]');
+    touchButtons.forEach(button => initTouchButton(button));
+}
 
-    touchButtons.forEach(button => {
-        const key = button.dataset.key;
+function initTouchButton(button) {
+    const key = button.dataset.key;
+    button.addEventListener('pointerdown', event => pressTouchButton(event, button, key));
+    button.addEventListener('pointerup', event => releaseTouchButton(event, button, key));
+    button.addEventListener('pointercancel', () => releaseTouchKey(button, key));
+    button.addEventListener('lostpointercapture', () => releaseTouchKey(button, key));
+    button.addEventListener('contextmenu', event => event.preventDefault());
+}
 
-        button.addEventListener('pointerdown', (event) => {
-            event.preventDefault();
-            button.setPointerCapture(event.pointerId);
-            keyboard[key] = true;
-            button.classList.add('is-pressed');
-        });
+function pressTouchButton(event, button, key) {
+    event.preventDefault();
+    button.setPointerCapture(event.pointerId);
+    keyboard[key] = true;
+    button.classList.add('is-pressed');
+}
 
-        button.addEventListener('pointerup', (event) => {
-            event.preventDefault();
-            keyboard[key] = false;
-            button.classList.remove('is-pressed');
-        });
+function releaseTouchButton(event, button, key) {
+    event.preventDefault();
+    releaseTouchKey(button, key);
+}
 
-        button.addEventListener('pointercancel', () => {
-            keyboard[key] = false;
-            button.classList.remove('is-pressed');
-        });
-
-        button.addEventListener('lostpointercapture', () => {
-            keyboard[key] = false;
-            button.classList.remove('is-pressed');
-        });
-
-        button.addEventListener('contextmenu', (event) => {
-            event.preventDefault();
-        });
-    });
+function releaseTouchKey(button, key) {
+    keyboard[key] = false;
+    button.classList.remove('is-pressed');
 }
 
 function updateTouchControlsVisibility() {
@@ -423,28 +458,36 @@ function finishRound(screen) {
 function resetGame() {
     setBackgroundVolumeFactor(1);
     hoveredPauseAction = null;
+    cleanupSoundManager();
+    cleanupWorld();
+    resetGameStateToStart();
+}
 
+function cleanupSoundManager() {
     if (soundManager) {
         savedVolume = soundManager.volume;
         localStorage.setItem('sharkieSavedVolume', savedVolume);
         soundManager.stopAllSounds();
         soundManager = null;
     }
+}
 
+function cleanupWorld() {
     if (world) {
         world.cleanup();
         world = null;
     }
+}
 
+function resetGameStateToStart() {
     level1 = null;
-
-    if (uiControls) {
-        uiControls = null;
-    }
-
+    uiControls = null;
     resetKeyboard();
     currentScreen = 'start';
+    resetStartScreen();
+}
 
+function resetStartScreen() {
     if (!startScreen) {
         startScreen = new StartScreen();
     } else {
@@ -460,32 +503,39 @@ function restartGame() {
 
 function draw() {
     updateTouchControlsVisibility();
-
-    if (currentScreen === 'loading') {
-        drawLoadingScreen();
-    } else if (currentScreen === 'start') {
-        startScreen.draw(ctx);
-    } else if (currentScreen === 'playing' && world) {
-        world.draw();
-        if (uiControls) uiControls.draw(ctx);
-
-        if (world.gameOver) {
-            finishRound('gameover');
-        } else if (world.win) {
-            finishRound('win');
-        }
-    } else if (currentScreen === 'gameover') {
-        world.draw();
-        endScreen.draw(ctx, 'gameover');
-    } else if (currentScreen === 'win') {
-        world.draw();
-        endScreen.draw(ctx, 'win');
-    } else if (currentScreen === 'paused') {
-        world.draw();
-        if (uiControls) uiControls.draw(ctx);
-        drawPauseOverlay(ctx);
-    }
+    drawCurrentScreen();
     requestAnimationFrame(draw);
+}
+
+function drawCurrentScreen() {
+    if (currentScreen === 'loading') return drawLoadingScreen();
+    if (currentScreen === 'start') return startScreen.draw(ctx);
+    if (currentScreen === 'playing' && world) return drawPlayingScreen();
+    if (currentScreen === 'gameover') return drawEndScreen('gameover');
+    if (currentScreen === 'win') return drawEndScreen('win');
+    if (currentScreen === 'paused') drawPausedScreen();
+}
+
+function drawPlayingScreen() {
+    world.draw();
+    if (uiControls) uiControls.draw(ctx);
+    checkRoundFinished();
+}
+
+function checkRoundFinished() {
+    if (world.gameOver) finishRound('gameover');
+    else if (world.win) finishRound('win');
+}
+
+function drawEndScreen(type) {
+    world.draw();
+    endScreen.draw(ctx, type);
+}
+
+function drawPausedScreen() {
+    world.draw();
+    if (uiControls) uiControls.draw(ctx);
+    drawPauseOverlay(ctx);
 }
 
 canvas = document.getElementById('canvas');
@@ -525,9 +575,11 @@ document.addEventListener('mousemove', (e) => {
     let isPointer = false;
 
     if (currentScreen === 'start' && startScreen) {
-        isPointer = startScreen.isInteractiveElementHovered(x, y);
+        startScreen.hoveredElement = startScreen.getInteractiveElementAt(x, y);
+        isPointer = Boolean(startScreen.hoveredElement);
     } else if (currentScreen === 'playing' && uiControls) {
-        isPointer = uiControls.isButtonHovered(x, y);
+        uiControls.hoveredButton = uiControls.getButtonAt(x, y);
+        isPointer = Boolean(uiControls.hoveredButton);
     } else if (currentScreen === 'paused') {
         hoveredPauseAction = getPauseMenuAction(x, y);
         isPointer = Boolean(hoveredPauseAction);

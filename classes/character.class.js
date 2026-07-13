@@ -18,14 +18,23 @@ class Character extends MovableObject {
 
     constructor() {
         super().loadImage('../assets/img/Sharkie/1.IDLE/1.png');
-        this.loadImages(this.IMAGES_SWIM);
-        this.loadImages(this.IMAGES_DEAD);
-        this.loadImages(this.IMAGES_HURT);
-        this.loadImages(this.IMAGES_IDLE);
-        this.loadImages(this.IMAGES_SLEEP);
-        this.loadImages(this.IMAGES_ATTACK);
+        this.loadAllImages();
+        this.setSize();
+        this.setOffsets();
+    }
+
+    loadAllImages() {
+        [this.IMAGES_SWIM, this.IMAGES_DEAD, this.IMAGES_HURT,
+            this.IMAGES_IDLE, this.IMAGES_SLEEP, this.IMAGES_ATTACK]
+            .forEach(images => this.loadImages(images));
+    }
+
+    setSize() {
         this.height = 200;
         this.width = 200;
+    }
+
+    setOffsets() {
         this.offsetX = 40;
         this.offsetY = 90;
         this.offsetWidth = 75;
@@ -60,75 +69,113 @@ class Character extends MovableObject {
     }
 
     animate() {
-        this.animationIntervalId = setInterval(() => {
-            if (this.world.isPaused) {
-                return;
-            }
-            if (this.world.win) {
-                this.stopSnoring();
-                this.playAnimation(this.IMAGES_IDLE);
-                return;
-            }
+        this.startAnimationInterval();
+        this.startMoveInterval();
+    }
 
-            if (this.isDead()) {
-                this.playAnimation(this.IMAGES_DEAD);
-                if (!this.deadSoundPlayed) {
-                    this.soundManager.playSound('dead');
-                    this.deadSoundPlayed = true;
-                }
-            } else if (this.isHurt()) {
-                this.playAnimation(this.IMAGES_HURT);
-            } else if (this.isAttacking) {
-                this.playAnimation(this.IMAGES_ATTACK);
-                if (this.currentImage >= this.IMAGES_ATTACK.length) {
-                    this.attackAnimationFinished = true;
-                }
-            } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT ||
-                    this.world.keyboard.UP || this.world.keyboard.DOWN) {
-                this.playAnimation(this.IMAGES_SWIM);
-                if (this.isCurrentlySnoring) {
-                    this.stopSnoring();
-                }
-            } else if (this.isAFK()) {
-                this.playAnimation(this.IMAGES_SLEEP);
-                if (!this.isCurrentlySnoring) {
-                    this.soundManager.playSound('snoring');
-                    this.isCurrentlySnoring = true;
-                }
-            } else {
-                this.playAnimation(this.IMAGES_IDLE);
+    startAnimationInterval() {
+        this.animationIntervalId = setInterval(() => this.updateAnimation(), 150);
+    }
 
-                if (this.isCurrentlySnoring) {
-                    this.stopSnoring();
-                }
-            }
-        }, 150);
+    startMoveInterval() {
+        this.moveIntervalId = setInterval(() => this.updateMovement(), 1000 / 60);
+    }
 
-        this.moveIntervalId = setInterval(() => {
-            if (this.world.isPaused) {
-                return;
-            }
+    updateAnimation() {
+        if (this.world.isPaused) return;
+        if (this.world.win) return this.playWinIdle();
+        if (this.isDead()) return this.playDeadAnimation();
+        if (this.isHurt()) return this.playAnimation(this.IMAGES_HURT);
+        if (this.isAttacking) return this.playAttackAnimation();
+        if (this.isMoving()) return this.playSwimAnimation();
+        if (this.isAFK()) return this.playSleepAnimation();
+        this.playIdleAnimation();
+    }
 
-            if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
-                this.x += this.speed;
-                this.otherDiretion = false;
-                this.dontMove();
-            }
-            if (this.world.keyboard.LEFT && this.x > -650) {
-                this.x -= this.speed;
-                this.otherDiretion = true;
-                this.dontMove();
-            }
-            if (this.world.keyboard.UP && this.y > -90) {
-                this.y -= this.speed;
-                this.dontMove();
-            }
-            if (this.world.keyboard.DOWN && this.y < 320) {
-                this.y += this.speed;
-                this.dontMove();
-            }
-            this.world.camera_x = -this.x + 50;
-        }, 1000 / 60);
+    playWinIdle() {
+        this.stopSnoring();
+        this.playAnimation(this.IMAGES_IDLE);
+    }
+
+    playDeadAnimation() {
+        this.playAnimation(this.IMAGES_DEAD);
+        if (!this.deadSoundPlayed) this.playDeadSound();
+    }
+
+    playDeadSound() {
+        this.soundManager.playSound('dead');
+        this.deadSoundPlayed = true;
+    }
+
+    playAttackAnimation() {
+        this.playAnimation(this.IMAGES_ATTACK);
+        if (this.currentImage >= this.IMAGES_ATTACK.length) {
+            this.attackAnimationFinished = true;
+        }
+    }
+
+    isMoving() {
+        return this.world.keyboard.RIGHT || this.world.keyboard.LEFT ||
+            this.world.keyboard.UP || this.world.keyboard.DOWN;
+    }
+
+    playSwimAnimation() {
+        this.playAnimation(this.IMAGES_SWIM);
+        if (this.isCurrentlySnoring) this.stopSnoring();
+    }
+
+    playSleepAnimation() {
+        this.playAnimation(this.IMAGES_SLEEP);
+        if (!this.isCurrentlySnoring) this.startSnoring();
+    }
+
+    startSnoring() {
+        this.soundManager.playSound('snoring');
+        this.isCurrentlySnoring = true;
+    }
+
+    playIdleAnimation() {
+        this.playAnimation(this.IMAGES_IDLE);
+        if (this.isCurrentlySnoring) this.stopSnoring();
+    }
+
+    updateMovement() {
+        if (this.world.isPaused) return;
+        this.moveHorizontally();
+        this.moveVertically();
+        this.world.camera_x = -this.x + 50;
+    }
+
+    moveHorizontally() {
+        if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) this.swimRight();
+        if (this.world.keyboard.LEFT && this.x > -650) this.swimLeft();
+    }
+
+    moveVertically() {
+        if (this.world.keyboard.UP && this.y > -90) this.swimUp();
+        if (this.world.keyboard.DOWN && this.y < 320) this.swimDown();
+    }
+
+    swimRight() {
+        this.x += this.speed;
+        this.otherDiretion = false;
+        this.dontMove();
+    }
+
+    swimLeft() {
+        this.x -= this.speed;
+        this.otherDiretion = true;
+        this.dontMove();
+    }
+
+    swimUp() {
+        this.y -= this.speed;
+        this.dontMove();
+    }
+
+    swimDown() {
+        this.y += this.speed;
+        this.dontMove();
     }
 
     startAttack() {

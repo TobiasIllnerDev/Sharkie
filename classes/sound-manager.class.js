@@ -6,19 +6,22 @@ class SoundManager {
 
     loadSound(name, path, isBackground = false, isLooping = false) {
         const audio = new Audio(path);
-        audio.volume = this.volume;
-        audio.muted = this.muted;
+        this.applyAudioSettings(audio);
 
-        if (isBackground) {
-            audio.loop = true;
-            this.backgroundSound = { audio, name };
-        }
-
-        if (isLooping) {
-            audio.loop = true;
-        }
+        if (isBackground) this.setBackgroundSound(audio, name);
+        if (isLooping) audio.loop = true;
 
         this.sounds[name] = { audio };
+    }
+
+    applyAudioSettings(audio) {
+        audio.volume = this.volume;
+        audio.muted = this.muted;
+    }
+
+    setBackgroundSound(audio, name) {
+        audio.loop = true;
+        this.backgroundSound = { audio, name };
     }
 
     playSound(name) {

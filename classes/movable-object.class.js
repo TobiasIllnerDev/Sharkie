@@ -76,18 +76,25 @@ class MovableObject extends DrawableObject{
             return object.getCollisionBox();
         }
 
+        return this.createCollisionBox(object);
+    }
+
+    createCollisionBox(object) {
         const collisionWidth = object.width - object.offsetWidth;
         const collisionHeight = object.height - object.offsetHeight;
-        const collisionX = object.otherDiretion
-            ? object.width - object.offsetX - collisionWidth
-            : object.offsetX;
-
+        const collisionX = this.getMirroredOffsetX(object, collisionWidth);
         return {
             left: object.x + collisionX,
             top: object.y + object.offsetY,
             right: object.x + collisionX + collisionWidth,
             bottom: object.y + object.offsetY + collisionHeight
         };
+    }
+
+    getMirroredOffsetX(object, collisionWidth) {
+        return object.otherDiretion
+            ? object.width - object.offsetX - collisionWidth
+            : object.offsetX;
     }
 
     isColliding(mo, padding = 0) {

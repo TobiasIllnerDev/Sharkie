@@ -21,10 +21,6 @@ class DrawableObject {
         this.img.src = path;
     }
 
-    draw(ctx) {
-        ctx.drawImage(this.img, this.x , this.y, this.width, this.height);
-    }
-
     loadImages(arr) {
         arr.forEach((path) => {
             if (window.sharkieImageCache && window.sharkieImageCache[path]) {
@@ -44,47 +40,36 @@ class DrawableObject {
     }
 
     drawFrame(ctx) {
-    if(this instanceof JellyFish || this instanceof Endboss) {
-        const collisionWidth = this.width - this.offsetWidth;
-        const collisionX = this.otherDiretion
-            ? this.width - this.offsetX - collisionWidth
-            : this.offsetX;
-        ctx.beginPath();
-        ctx.lineWidth = '3';
-        ctx.strokeStyle = 'blue';
-        ctx.rect(
-            this.x + collisionX,
-            this.y + this.offsetY,
-            collisionWidth,
-            this.height - this.offsetHeight
-        );
-        ctx.stroke();
+        if (this instanceof JellyFish || this instanceof Endboss) {
+            this.drawCollisionFrame(ctx, 'blue');
+        }
     }
-}
 
     drawFrameCharater(ctx) {
-    if(this instanceof Character) {
-        const collisionWidth = this.width - this.offsetWidth;
-        const collisionX = this.otherDiretion
-            ? this.width - this.offsetX - collisionWidth
-            : this.offsetX;
+        if (this instanceof Character) {
+            this.drawCollisionFrame(ctx, 'red');
+        } else if (this instanceof Endboss) {
+            this.drawCollisionFrame(ctx, 'purple');
+        }
+    }
+
+    drawCollisionFrame(ctx, color) {
+        const box = this.getDebugCollisionBox();
         ctx.beginPath();
         ctx.lineWidth = '3';
-        ctx.strokeStyle = 'red';
-        ctx.rect(this.x + collisionX, this.y + this.offsetY, collisionWidth, this.height - this.offsetHeight);
+        ctx.strokeStyle = color;
+        ctx.rect(box.x, box.y, box.width, box.height);
         ctx.stroke();
     }
-    else if(this instanceof Endboss) {
-        ctx.beginPath();
-        ctx.lineWidth = '3';
-        ctx.strokeStyle = 'purple';
-        ctx.rect(
-            this.x + this.offsetX,
-            this.y + this.offsetY,
-            this.width - this.offsetWidth,
-            this.height - this.offsetHeight
-        );
-        ctx.stroke();
+
+    getDebugCollisionBox() {
+        const width = this.width - this.offsetWidth;
+        const x = this.otherDiretion ? this.width - this.offsetX - width : this.offsetX;
+        return {
+            x: this.x + x,
+            y: this.y + this.offsetY,
+            width,
+            height: this.height - this.offsetHeight
+        };
     }
-}
 }
