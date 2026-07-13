@@ -11,6 +11,7 @@ class World {
     statusBarPosion = new StatusBarPosion();
     throwableObjects = [];
     runInterval = null;
+    isPaused = false;
 
     constructor(canvas, keyboard, soundManager) {
         this.ctx = canvas.getContext('2d');
@@ -34,6 +35,19 @@ class World {
     setWorld() {
         this.character.world = this;
         this.character.setSoundManager(this.soundManager);
+        this.level.enemies.forEach(enemy => enemy.world = this);
+    }
+
+    pause() {
+        this.isPaused = true;
+        resetKeyboard();
+    }
+
+    resume() {
+        this.isPaused = false;
+        if (this.character) {
+            this.character.dontMove();
+        }
     }
 
     cleanup() {
@@ -68,7 +82,7 @@ class World {
 
     run() {
         this.runInterval = setInterval(() => {
-            if (this.gameOver || this.win) return;
+            if (this.isPaused || this.gameOver || this.win) return;
             this.checkCollisions();
             this.checkThrowObjects();
             this.checkBossSpawn();
@@ -88,7 +102,7 @@ class World {
 
         if (this.character.attackAnimationFinished) {
             if (this.isNormalAttackPending) {
-                let bubble = new ThrowableObject(this.character.x + 100, this.character.y + 100, this.character.otherDiretion);
+                let bubble = new ThrowableObject(this.character.x + 100, this.character.y + 100, this.character.otherDiretion, this);
                 this.throwableObjects.push(bubble);
                 this.character.resetAttack();
                 this.soundManager.playSound('attack');

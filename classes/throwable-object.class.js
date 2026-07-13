@@ -1,8 +1,9 @@
 class ThrowableObject extends MovableObject {
     maxDistance = 400;
     startX = 0;
-    constructor(x, y, otherDiretion = false) {
+    constructor(x, y, otherDiretion = false, world = null) {
         super().loadImage('../assets/img/Sharkie/4.Attack/Bubbletrap/Bubble.png');
+        this.world = world;
         this.startX = x;
         this.x = x;
         this.y = y;
@@ -23,6 +24,10 @@ class ThrowableObject extends MovableObject {
     moveLeft() {
         this.clearMoveInterval();
         this.moveInterval = setInterval(() => {
+            if (this.world && this.world.isPaused) {
+                return;
+            }
+
             let speedX = 10;
             this.x -= speedX;
         }, 1000 / 60);

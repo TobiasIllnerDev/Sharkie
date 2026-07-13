@@ -57,6 +57,10 @@ class Character extends MovableObject {
 
     animate() {
         this.animationIntervalId = setInterval(() => {
+            if (this.world.isPaused) {
+                return;
+            }
+
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
                 if (!this.deadSoundPlayed) {
@@ -100,6 +104,10 @@ class Character extends MovableObject {
         }, 150);
 
         this.moveIntervalId = setInterval(() => {
+            if (this.world.isPaused) {
+                return;
+            }
+
             if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
                 this.x += this.speed;
                 this.otherDiretion = false;

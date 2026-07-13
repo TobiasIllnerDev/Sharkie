@@ -48,6 +48,10 @@ class Endboss extends MovableObject {
         this.currentImage = 0;
 
         this.spawnInterval = setInterval(() => {
+            if (this.world && this.world.isPaused) {
+                return;
+            }
+
             this.playAnimation(this.IMAGES_SPAWN);
             if (this.currentImage >= this.IMAGES_SPAWN.length) {
                 this.isSpawning = false;
@@ -63,6 +67,10 @@ class Endboss extends MovableObject {
     animate() {
         if (!this.isSpawning) {
             this.animationInterval = setInterval(() => {
+                if (this.world && this.world.isPaused) {
+                    return;
+                }
+
                 if(this.isDead()) {
                     if(!this.hasStartedDeadAnimation) {
                         this.currentImage = 0;
@@ -113,6 +121,10 @@ class Endboss extends MovableObject {
         if (!this.world || !this.world.character || this.isDead() ||
             this.world.character.isDead() || this.world.gameOver || this.world.win) {
             this.stopChasing();
+            return;
+        }
+
+        if (this.world.isPaused) {
             return;
         }
 

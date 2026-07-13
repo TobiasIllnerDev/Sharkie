@@ -10,6 +10,10 @@ class MovableObject extends DrawableObject{
     moveRight() {
         this.clearMoveInterval();
         this.moveInterval = setInterval(() => {
+            if (this.world && this.world.isPaused) {
+                return;
+            }
+
             let speedX = 10;
             this.x += speedX;
         }, 1000 / 60);
@@ -18,6 +22,10 @@ class MovableObject extends DrawableObject{
     moveLeft() {
         this.clearMoveInterval();
         this.moveInterval = setInterval(() => {
+            if (this.world && this.world.isPaused) {
+                return;
+            }
+
             this.x -= this.speed;
         }, 1000 / 60);
     }

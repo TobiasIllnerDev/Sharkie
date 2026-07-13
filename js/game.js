@@ -127,6 +127,74 @@ function toggleFullscreen() {
     }
 }
 
+const pauseMenuButtons = [
+    { action: 'resume', text: 'WEITER', x: 240, y: 170, width: 240, height: 50 },
+    { action: 'restart', text: 'NEUSTART', x: 240, y: 240, width: 240, height: 50 },
+    { action: 'menu', text: 'MENU', x: 240, y: 310, width: 240, height: 50 }
+];
+
+function pauseGame() {
+    if (currentScreen === 'playing' && world) {
+        world.pause();
+        currentScreen = 'paused';
+    }
+}
+
+function resumeGame() {
+    if (currentScreen === 'paused' && world) {
+        world.resume();
+        currentScreen = 'playing';
+    }
+}
+
+function isPauseMenuButtonHovered(x, y, button) {
+    return x >= button.x && x <= button.x + button.width &&
+           y >= button.y && y <= button.y + button.height;
+}
+
+function getPauseMenuAction(x, y) {
+    const button = pauseMenuButtons.find(menuButton => isPauseMenuButtonHovered(x, y, menuButton));
+    return button ? button.action : null;
+}
+
+function handlePauseMenuClick(x, y) {
+    const action = getPauseMenuAction(x, y);
+
+    if (action === 'resume') {
+        resumeGame();
+    } else if (action === 'restart') {
+        restartGame();
+    } else if (action === 'menu') {
+        resetGame();
+    }
+}
+
+function drawPauseOverlay(ctx) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = '#1a8fb4';
+    ctx.font = '48px Luckiest Guy';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('PAUSE', 360, 105);
+
+    pauseMenuButtons.forEach(button => {
+        ctx.fillStyle = 'rgba(26, 143, 180, 0.85)';
+        ctx.fillRect(button.x, button.y, button.width, button.height);
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(button.x, button.y, button.width, button.height);
+
+        ctx.fillStyle = 'white';
+        ctx.font = '24px Luckiest Guy';
+        ctx.fillText(button.text, button.x + button.width / 2, button.y + button.height / 2);
+    });
+
+    ctx.restore();
+}
+
 function getCanvasCoordinates(event) {
     const rect = canvas.getBoundingClientRect();
     return {
@@ -229,6 +297,10 @@ function draw() {
     } else if (currentScreen === 'win') {
         world.draw();
         endScreen.draw(ctx, 'win');
+    } else if (currentScreen === 'paused') {
+        world.draw();
+        if (uiControls) uiControls.draw(ctx);
+        drawPauseOverlay(ctx);
     }
     requestAnimationFrame(draw);
 }
@@ -239,16 +311,18 @@ ctx = canvas.getContext('2d');
 
 canvas.addEventListener('click', (e) => {
     const { x, y } = getCanvasCoordinates(e);
-    if (currentScreen === 'start') {
+    if (currentScreen === 'paused') {
+        handlePauseMenuClick(x, y);
+    } else if (currentScreen === 'start') {
         startScreen.checkClick(x, y, startGame, showSettings, showImprint, toggleFullscreen, closeOverlay, setVolume);
     } else if (currentScreen === 'playing' && uiControls) {
         const result = uiControls.handleClick(x, y);
-        if (result === 'back') {
-            resetGame();
-        } else if (result === 'mute') {
+        if (result === 'mute') {
             toggleMute();
         } else if (result === 'fullscreen') {
             toggleFullscreen();
+        } else if (result === 'pause') {
+            pauseGame();
         }
     } else if ((currentScreen === 'gameover' || currentScreen === 'win') && endScreen.isButtonClicked(x, y)) {
         restartGame();
@@ -271,6 +345,8 @@ document.addEventListener('mousemove', (e) => {
         isPointer = startScreen.isInteractiveElementHovered(x, y);
     } else if (currentScreen === 'playing' && uiControls) {
         isPointer = uiControls.isButtonHovered(x, y);
+    } else if (currentScreen === 'paused') {
+        isPointer = Boolean(getPauseMenuAction(x, y));
     } else if ((currentScreen === 'gameover' || currentScreen === 'win') && endScreen) {
         isPointer = endScreen.isButtonClicked(x, y);
     }
@@ -296,6 +372,19 @@ document.addEventListener('mouseup', () => {
 
 window.addEventListener('keydown', (e) => {
     const keyCode = e.keyCode || e.which;
+    if (keyCode === 27 || keyCode === 80) {
+        if (currentScreen === 'playing') {
+            pauseGame();
+        } else if (currentScreen === 'paused') {
+            resumeGame();
+        }
+        return;
+    }
+
+    if (currentScreen === 'paused') {
+        return;
+    }
+
     if (keyCode === 39 || keyCode === 68) keyboard.RIGHT = true;
     if (keyCode === 37 || keyCode === 65) keyboard.LEFT = true;
     if (keyCode === 40 || keyCode === 83) keyboard.DOWN = true;
