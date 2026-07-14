@@ -11,14 +11,14 @@ class WorldRenderer {
     }
 
     /**
-     * Draws the complete world.
+     * Draws the complete world and removes defeated enemies after rendering.
      */
     draw() {
-        this.world.removeDefeatedEnemies();
         this.clearCanvas();
         this.drawBackgroundLayer();
         this.drawStatusBars();
         this.drawWorldLayer();
+        this.world.removeDefeatedEnemies();
     }
 
     /**

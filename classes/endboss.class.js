@@ -18,6 +18,7 @@ class Endboss extends MovableObject {
     energy = 100;
     maxEnergy = 100;
     shouldRemove = false;
+    deadAnimationFinished = false;
     spawnInterval = null;
     isAttacking = false;
     lastAttack = 0;
@@ -141,6 +142,7 @@ class Endboss extends MovableObject {
      * Play dead animation.
      */
     playDeadAnimation() {
+        if (this.deadAnimationFinished) return this.showLastDeadFrame();
         if (!this.hasStartedDeadAnimation) this.startDeadAnimation();
         this.playAnimation(this.IMAGES_DEAD);
         if (this.currentImage >= this.IMAGES_DEAD.length) this.finishDeadAnimation();
@@ -152,6 +154,9 @@ class Endboss extends MovableObject {
     startDeadAnimation() {
         this.currentImage = 0;
         this.hasStartedDeadAnimation = true;
+        this.deadAnimationFinished = false;
+        this.isAttacking = false;
+        this.stopChasing();
     }
 
     /**
@@ -159,11 +164,21 @@ class Endboss extends MovableObject {
      */
     finishDeadAnimation() {
         if (this.deadRemovalTimeout) return;
+        this.deadAnimationFinished = true;
+        this.showLastDeadFrame();
         this.clearAnimationInterval();
         this.deadRemovalTimeout = setTimeout(() => {
             this.shouldRemove = true;
             this.deadRemovalTimeout = null;
         }, 200);
+    }
+
+    /**
+     * Keeps the boss on the final dead frame until it is removed.
+     */
+    showLastDeadFrame() {
+        const lastDeadFrame = this.IMAGES_DEAD[this.IMAGES_DEAD.length - 1];
+        this.img = this.imageCache[lastDeadFrame] || this.img;
     }
 
     /**

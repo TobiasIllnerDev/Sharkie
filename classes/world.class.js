@@ -139,12 +139,11 @@ class World {
         }, 200);
     }
 
-    /** Updates throwable objects. */
+    /** Updates attack input and throwable objects. */
     checkThrowObjects() {
         this.handleAttackInput();
         this.throwPendingAttack();
         this.removeInactiveBubbles();
-        this.removeDefeatedEnemies();
     }
 
     /** Handles attack input. */

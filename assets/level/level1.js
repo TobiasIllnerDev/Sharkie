@@ -1,5 +1,5 @@
 ﻿const LEVEL_END_X = 4200;
-const BOSS_SAFE_DISTANCE = 300;
+const BOSS_SAFE_DISTANCE = 100;
 const RANDOM_AREA_END_X = LEVEL_END_X - BOSS_SAFE_DISTANCE;
 
 /** random number. */

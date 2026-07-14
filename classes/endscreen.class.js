@@ -9,7 +9,7 @@ class EndScreen {
     winImgHeight = 300;
     buttonWidth = 200;
     buttonHeight = 70;
-    menuButtonHeight = 48;
+    menuButtonHeight = 70;
     gap = 20;
     buttonGap = 12;
 
@@ -37,7 +37,7 @@ class EndScreen {
         this.drawOverlay(ctx);
         this.drawTitleImage(ctx, type);
         this.drawRetryButton(ctx, type);
-        this.drawMenuButton(ctx, type);
+        this.drawMenuButton(ctx);
         ctx.restore();
     }
 
@@ -73,12 +73,10 @@ class EndScreen {
     }
 
     /**
-     * Draws the menu button on the win screen.
+     * Draws the menu button on the end screen.
      * @param {CanvasRenderingContext2D} ctx - Canvas rendering context.
-     * @param {string} type - End screen type.
      */
-    drawMenuButton(ctx, type) {
-        if (type !== 'win') return;
+    drawMenuButton(ctx) {
         this.menuButtonX = (ctx.canvas.width - this.buttonWidth) / 2;
         this.menuButtonY = this.buttonY + this.buttonHeight + this.buttonGap;
         this.drawTextButton(ctx, this.menuButtonX, this.menuButtonY, this.buttonWidth, this.menuButtonHeight, 'MENU');
@@ -95,13 +93,13 @@ class EndScreen {
      */
     drawTextButton(ctx, x, y, width, height, text) {
         this.roundRect(ctx, x, y, width, height, 14);
-        ctx.fillStyle = '#1a8fb4';
+        ctx.fillStyle = '#f8f40b';
         ctx.fill();
         ctx.strokeStyle = 'white';
         ctx.lineWidth = 2;
         ctx.stroke();
-        ctx.fillStyle = 'white';
-        ctx.font = '24px Luckiest Guy';
+        ctx.fillStyle = '#601d7c';
+        ctx.font = '30px Luckiest Guy';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(text, x + width / 2, y + height / 2);
@@ -141,7 +139,6 @@ class EndScreen {
      * @returns {number} Button area height in pixels.
      */
     getButtonAreaHeight(type) {
-        if (type !== 'win') return this.buttonHeight;
         return this.buttonHeight + this.buttonGap + this.menuButtonHeight;
     }
 
@@ -154,7 +151,7 @@ class EndScreen {
      */
     getClickedAction(x, y, type) {
         if (this.isInsideButton(x, y, this.buttonX, this.buttonY, this.buttonWidth, this.buttonHeight)) return 'restart';
-        if (type === 'win' && this.isInsideButton(x, y, this.menuButtonX, this.menuButtonY, this.buttonWidth, this.menuButtonHeight)) return 'menu';
+        if (this.isInsideButton(x, y, this.menuButtonX, this.menuButtonY, this.buttonWidth, this.menuButtonHeight)) return 'menu';
         return null;
     }
 
