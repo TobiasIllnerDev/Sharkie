@@ -76,7 +76,17 @@ class Endboss extends MovableObject {
         this.isSpawning = true;
         this.isSpawned = false;
         this.currentImage = 0;
+        this.showFirstSpawnFrame();
         this.spawnInterval = setInterval(() => this.updateSpawnAnimation(), 200);
+    }
+
+    /**
+     * Shows the first spawn frame before the interval advances the animation.
+     */
+    showFirstSpawnFrame() {
+        const firstSpawnFrame = this.IMAGES_SPAWN[0];
+        this.img = this.imageCache[firstSpawnFrame] || this.img;
+        this.currentImage = 1;
     }
 
     /**

@@ -15,6 +15,7 @@ class World {
     isPaused = false;
     maxCoins = 10;
     maxBottles = 10;
+    
     /**
      * Creates a new instance.
      * @param {HTMLCanvasElement} canvas - Game canvas element.
@@ -31,11 +32,13 @@ class World {
         this.renderer = new WorldRenderer(this);
         this.initBarsAndCharacter();
     }
+
     /** Initializes collectible counters. */
     initCounters() {
         this.coinCount = 0;
         this.bottleCount = 0;
     }
+
     /** Initializes runtime state. */
     initState() {
         this.isSpecialAttackPending = false;
@@ -43,6 +46,7 @@ class World {
         this.endboss = null;
         this.spawnTriggerDistance = 500;
     }
+
     /** Initializes status bars and the character. */
     initBarsAndCharacter() {
         this.statusBarBoss = new StatusBarBoss();
@@ -52,17 +56,20 @@ class World {
         this.character.animate();
         this.run();
     }
+
     /** Connects world references to game objects. */
     setWorld() {
         this.character.world = this;
         this.character.setSoundManager(this.soundManager);
         this.level.enemies.forEach(enemy => enemy.world = this);
     }
+
     /** Pauses the world. */
     pause() {
         this.isPaused = true;
         resetKeyboard();
     }
+
     /** Resumes the world. */
     resume() {
         this.isPaused = false;
@@ -70,6 +77,7 @@ class World {
             this.character.dontMove();
         }
     }
+
     /** Cleans up timers and resources. */
     cleanup() {
         this.clearRunInterval();
@@ -78,18 +86,21 @@ class World {
         this.cleanupThrowableObjects();
         this.endboss = null;
     }
+
     /** Clear run interval. */
     clearRunInterval() {
         if (!this.runInterval) return;
         clearInterval(this.runInterval);
         this.runInterval = null;
     }
+
     /** Cleanup character. */
     cleanupCharacter() {
         if (this.character && this.character.cleanup) {
             this.character.cleanup();
         }
     }
+
     /** Cleanup level objects. */
     cleanupLevelObjects() {
         if (this.level && this.level.enemies) {
@@ -102,6 +113,7 @@ class World {
             this.cleanupObjectList('lights');
         }
     }
+
     /**
      * Cleans up one level object list.
      * @param {string} key - Level object list key.
@@ -110,11 +122,13 @@ class World {
         this.level[key].forEach(object => object.cleanup?.());
         this.level[key] = [];
     }
+
     /** Cleanup throwable objects. */
     cleanupThrowableObjects() {
         this.throwableObjects.forEach(throwableObject => throwableObject.cleanup?.());
         this.throwableObjects = [];
     }
+
     /** Starts the world update loop. */
     run() {
         this.runInterval = setInterval(() => {
@@ -124,6 +138,7 @@ class World {
             this.checkBossSpawn();
         }, 200);
     }
+
     /** Updates throwable objects. */
     checkThrowObjects() {
         this.handleAttackInput();
@@ -131,33 +146,39 @@ class World {
         this.removeInactiveBubbles();
         this.removeDefeatedEnemies();
     }
+
     /** Handles attack input. */
     handleAttackInput() {
         if (this.keyboard.SPACE && !this.character.isAttacking) this.startNormalAttack();
         if (this.keyboard.E && !this.character.isAttacking && this.bottleCount > 0) this.startSpecialAttack();
     }
+    
     /** Starts a normal attack. */
     startNormalAttack() {
         this.character.startAttack();
         this.isNormalAttackPending = true;
     }
+
     /** Starts a special attack. */
     startSpecialAttack() {
         this.character.startAttack();
         this.isSpecialAttackPending = true;
     }
+
     /** Throws the pending attack projectile. */
     throwPendingAttack() {
         if (!this.character.attackAnimationFinished) return;
         if (this.isNormalAttackPending) return this.throwNormalBubble();
         if (this.isSpecialAttackPending && this.bottleCount > 0) this.throwSpecialBubble();
     }
+
     /** Throws a normal bubble. */
     throwNormalBubble() {
         this.throwableObjects.push(this.createBubble(ThrowableObject));
         this.finishAttack();
         this.isNormalAttackPending = false;
     }
+
     /** Throws a special bubble. */
     throwSpecialBubble() {
         this.throwableObjects.push(this.createBubble(SpecialBubble));
@@ -165,6 +186,7 @@ class World {
         this.finishAttack();
         this.isSpecialAttackPending = false;
     }
+
     /**
      * Creates a bubble projectile.
      * @param {typeof ThrowableObject} BubbleClass - Bubble class constructor.
@@ -173,16 +195,19 @@ class World {
     createBubble(BubbleClass) {
         return new BubbleClass(this.character.x + 100, this.character.y + 100, this.character.otherDiretion, this);
     }
+
     /** Consumes one poison bottle. */
     consumeBottle() {
         this.bottleCount--;
         this.statusBarPosion.setPercentage((this.bottleCount / this.maxBottles) * 100);
     }
+
     /** Finishes the current attack. */
     finishAttack() {
         this.character.resetAttack();
         this.soundManager.playSound('attack');
     }
+
     /** Removes bubbles that exceeded their range. */
     removeInactiveBubbles() {
         this.throwableObjects = this.throwableObjects.filter((bubble) => {
@@ -194,18 +219,21 @@ class World {
             return isStillActive;
         });
     }
+
     /** Checks all collision groups. */
     checkCollisions() {
         this.checkEnemyCollisions();
         this.checkBubbleCollisions();
         this.checkCollectibleCollisions();
     }
+
     /** Checks collisions with enemies. */
     checkEnemyCollisions() {
         this.level.enemies.forEach(enemy => {
             if (this.canEnemyDamageCharacter(enemy)) this.damageCharacter(enemy.damage);
         });
     }
+
     /**
      * Checks whether an enemy can damage the character.
      * @param {MovableObject} enemy - Enemy object.
@@ -219,6 +247,7 @@ class World {
     checkBubbleCollisions() {
         this.throwableObjects.forEach((bubble, index) => this.checkBubbleHit(bubble, index));
     }
+
     /**
      * Checks whether one bubble hits an enemy.
      * @param {ThrowableObject} bubble - Bubble projectile.
@@ -229,6 +258,7 @@ class World {
             if (bubble.isColliding(enemy, 6)) this.hitEnemyWithBubble(bubble, bubbleIndex, enemy);
         });
     }
+
     /**
      * Applies bubble damage to an enemy.
      * @param {ThrowableObject} bubble - Bubble projectile.
@@ -240,12 +270,14 @@ class World {
         this.throwableObjects.splice(bubbleIndex, 1);
         if (enemy.isDead()) this.soundManager.playSound('enemy_die');
     }
+
     /** Checks collectible collisions. */
     checkCollectibleCollisions() {
         this.level.collectibles.forEach((collectible, index) => {
             if (this.canCollect(collectible)) this.collectItem(collectible, index);
         });
     }
+
     /**
      * Checks whether a collectible can be collected.
      * @param {CollectibleObject} collectible - Collectible object.
@@ -254,6 +286,7 @@ class World {
     canCollect(collectible) {
         return !collectible.collected && this.character.isColliding(collectible);
     }
+
     /**
      * Collects one item.
      * @param {CollectibleObject} collectible - Collectible object.
@@ -266,18 +299,21 @@ class World {
         collectible.cleanup?.();
         this.level.collectibles.splice(index, 1);
     }
+
     /** Collects one coin. */
     collectCoin() {
         this.coinCount++;
         this.statusBarCoin.setPercentage((this.coinCount / this.maxCoins) * 100);
         this.soundManager.playSound('coin');
     }
+
     /** Collects one bottle. */
     collectBottle() {
         this.bottleCount++;
         this.statusBarPosion.setPercentage((this.bottleCount / this.maxBottles) * 100);
         this.soundManager.playSound('bottle');
     }
+
     /**
      * Damages the character.
      * @param {number} damage - Damage amount.
@@ -291,11 +327,13 @@ class World {
             this.gameOver = true;
         }
     }
+
     /** Checks boss spawning and boss updates. */
     checkBossSpawn() {
         this.spawnBossIfNeeded();
         if (this.endboss && this.endboss.isSpawned) this.updateBossFight();
     }
+
     /** Spawns the boss when the trigger is reached. */
     spawnBossIfNeeded() {
         const distanceToEnd = this.level.level_end_x - this.character.x;
@@ -306,22 +344,26 @@ class World {
             this.level.enemies.push(this.endboss);
         }
     }
+
     /** Updates the boss fight. */
     updateBossFight() {
         this.updateBossBar();
         this.endboss.tryAttack();
         if (this.endboss.isDead() && !this.win) this.finishWin();
     }
+
     /** Updates the boss status bar. */
     updateBossBar() {
         const percentage = (this.endboss.energy / this.endboss.maxEnergy) * 100;
         this.statusBarBoss.setPercentage(percentage);
     }
+
     /** Finishes the game with a win. */
     finishWin() {
         this.win = true;
         this.soundManager.playSound('win');
     }
+
     /**
      * Removes defeated enemies from the level.
      */
@@ -338,6 +380,7 @@ class World {
             return false;
         });
     }
+
     /** Draws the object. */
     draw() {
         this.renderer.draw();
