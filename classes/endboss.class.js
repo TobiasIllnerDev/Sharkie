@@ -24,6 +24,7 @@ class Endboss extends MovableObject {
     attackCooldown = 2000;
     attackDamageApplied = false;
     chaseInterval = null;
+    deadRemovalTimeout = null;
     chaseSpeed = 2;
     minY = -80;
     maxY = 180;
@@ -157,8 +158,12 @@ class Endboss extends MovableObject {
      * Finish dead animation.
      */
     finishDeadAnimation() {
-        this.shouldRemove = true;
+        if (this.deadRemovalTimeout) return;
         this.clearAnimationInterval();
+        this.deadRemovalTimeout = setTimeout(() => {
+            this.shouldRemove = true;
+            this.deadRemovalTimeout = null;
+        }, 200);
     }
 
     /**
@@ -296,8 +301,18 @@ class Endboss extends MovableObject {
             clearInterval(this.spawnInterval);
             this.spawnInterval = null;
         }
+        this.clearDeadRemovalTimeout();
         this.stopChasing();
         super.cleanup();
+    }
+
+    /**
+     * Clears the delayed removal timeout after the dead animation.
+     */
+    clearDeadRemovalTimeout() {
+        if (!this.deadRemovalTimeout) return;
+        clearTimeout(this.deadRemovalTimeout);
+        this.deadRemovalTimeout = null;
     }
 }
 

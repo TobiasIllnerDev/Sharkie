@@ -349,7 +349,6 @@ class World {
     updateBossFight() {
         this.updateBossBar();
         this.endboss.tryAttack();
-        if (this.endboss.isDead() && !this.win) this.finishWin();
     }
 
     /** Updates the boss status bar. */
@@ -375,6 +374,7 @@ class World {
 
             enemy.cleanup?.();
             if (enemy === this.endboss) {
+                this.finishWin();
                 this.endboss = null;
             }
             return false;

@@ -9,7 +9,9 @@ class EndScreen {
     winImgHeight = 300;
     buttonWidth = 200;
     buttonHeight = 70;
+    menuButtonHeight = 48;
     gap = 20;
+    buttonGap = 12;
 
     /**
      * Creates a new instance.
@@ -35,6 +37,7 @@ class EndScreen {
         this.drawOverlay(ctx);
         this.drawTitleImage(ctx, type);
         this.drawRetryButton(ctx, type);
+        this.drawMenuButton(ctx, type);
         ctx.restore();
     }
 
@@ -70,6 +73,41 @@ class EndScreen {
     }
 
     /**
+     * Draws the menu button on the win screen.
+     * @param {CanvasRenderingContext2D} ctx - Canvas rendering context.
+     * @param {string} type - End screen type.
+     */
+    drawMenuButton(ctx, type) {
+        if (type !== 'win') return;
+        this.menuButtonX = (ctx.canvas.width - this.buttonWidth) / 2;
+        this.menuButtonY = this.buttonY + this.buttonHeight + this.buttonGap;
+        this.drawTextButton(ctx, this.menuButtonX, this.menuButtonY, this.buttonWidth, this.menuButtonHeight, 'MENU');
+    }
+
+    /**
+     * Draws a canvas text button.
+     * @param {CanvasRenderingContext2D} ctx - Canvas rendering context.
+     * @param {number} x - Horizontal canvas position.
+     * @param {number} y - Vertical canvas position.
+     * @param {number} width - Button width in pixels.
+     * @param {number} height - Button height in pixels.
+     * @param {string} text - Button label.
+     */
+    drawTextButton(ctx, x, y, width, height, text) {
+        this.roundRect(ctx, x, y, width, height, 14);
+        ctx.fillStyle = '#1a8fb4';
+        ctx.fill();
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.fillStyle = 'white';
+        ctx.font = '24px Luckiest Guy';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, x + width / 2, y + height / 2);
+    }
+
+    /**
      * Get layout.
      * @param {CanvasRenderingContext2D} ctx - Canvas rendering context.
      * @param {string} type - End screen type.
@@ -79,7 +117,7 @@ class EndScreen {
         const img = type === 'win' ? this.winImg : this.gameOverImg;
         const imgWidth = type === 'win' ? this.winImgWidth : this.gameOverImgWidth;
         const imgHeight = type === 'win' ? this.winImgHeight : this.gameOverImgHeight;
-        return this.createLayout(ctx, img, imgWidth, imgHeight);
+        return this.createLayout(ctx, img, imgWidth, imgHeight, type);
     }
 
     /**
@@ -88,22 +126,73 @@ class EndScreen {
      * @param {HTMLImageElement} img - Image to draw.
      * @param {number} imgWidth - Image width in pixels.
      * @param {number} imgHeight - Image height in pixels.
+     * @param {string} type - End screen type.
      * @returns {Object} Calculated data object.
      */
-    createLayout(ctx, img, imgWidth, imgHeight) {
-        const totalHeight = imgHeight + this.gap + this.buttonHeight;
+    createLayout(ctx, img, imgWidth, imgHeight, type) {
+        const totalHeight = imgHeight + this.gap + this.getButtonAreaHeight(type);
         const startY = (ctx.canvas.height - totalHeight) / 2;
         return { img, imgWidth, imgHeight, startY, imgX: (ctx.canvas.width - imgWidth) / 2 };
     }
 
     /**
-     * Is button clicked.
+     * Returns the total height used by end screen buttons.
+     * @param {string} type - End screen type.
+     * @returns {number} Button area height in pixels.
+     */
+    getButtonAreaHeight(type) {
+        if (type !== 'win') return this.buttonHeight;
+        return this.buttonHeight + this.buttonGap + this.menuButtonHeight;
+    }
+
+    /**
+     * Returns the clicked end screen action.
      * @param {number} x - Horizontal canvas or world position.
      * @param {number} y - Vertical canvas or world position.
-     * @returns {boolean} True when the condition is met.
+     * @param {string} type - End screen type.
+     * @returns {string|null} Clicked action, or null when no button was hit.
      */
-    isButtonClicked(x, y) {
-        return x >= this.buttonX && x <= this.buttonX + this.buttonWidth &&
-               y >= this.buttonY && y <= this.buttonY + this.buttonHeight;
+    getClickedAction(x, y, type) {
+        if (this.isInsideButton(x, y, this.buttonX, this.buttonY, this.buttonWidth, this.buttonHeight)) return 'restart';
+        if (type === 'win' && this.isInsideButton(x, y, this.menuButtonX, this.menuButtonY, this.buttonWidth, this.menuButtonHeight)) return 'menu';
+        return null;
+    }
+
+    /**
+     * Checks whether a position is inside a button rectangle.
+     * @param {number} x - Horizontal canvas position.
+     * @param {number} y - Vertical canvas position.
+     * @param {number} buttonX - Button horizontal position.
+     * @param {number} buttonY - Button vertical position.
+     * @param {number} buttonWidth - Button width in pixels.
+     * @param {number} buttonHeight - Button height in pixels.
+     * @returns {boolean} True when the position is inside the button.
+     */
+    isInsideButton(x, y, buttonX, buttonY, buttonWidth, buttonHeight) {
+        return x >= buttonX && x <= buttonX + buttonWidth &&
+               y >= buttonY && y <= buttonY + buttonHeight;
+    }
+
+    /**
+     * Draws a rounded rectangle path.
+     * @param {CanvasRenderingContext2D} ctx - Canvas rendering context.
+     * @param {number} x - Horizontal canvas position.
+     * @param {number} y - Vertical canvas position.
+     * @param {number} width - Width in pixels.
+     * @param {number} height - Height in pixels.
+     * @param {number} radius - Corner radius in pixels.
+     */
+    roundRect(ctx, x, y, width, height, radius) {
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.lineTo(x + width - radius, y);
+        ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+        ctx.lineTo(x + width, y + height - radius);
+        ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+        ctx.lineTo(x + radius, y + height);
+        ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+        ctx.lineTo(x, y + radius);
+        ctx.quadraticCurveTo(x, y, x + radius, y);
+        ctx.closePath();
     }
 }

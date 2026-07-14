@@ -152,7 +152,7 @@ function handleScreenClick(x, y) {
     if (currentScreen === 'paused') return handlePauseMenuClick(x, y);
     if (currentScreen === 'start') return handleStartScreenClick(x, y);
     if (currentScreen === 'playing' && uiControls) return handleUiControlClick(x, y);
-    if (isEndScreenButtonClicked(x, y)) restartGame();
+    handleEndScreenClick(x, y);
 }
 
 /**
@@ -183,8 +183,29 @@ function handleUiControlClick(x, y) {
  * @returns {boolean} True when the condition is met.
  */
 function isEndScreenButtonClicked(x, y) {
+    return Boolean(getEndScreenAction(x, y));
+}
+
+/**
+ * Handles clicks on game over and win screens.
+ * @param {number} x - Horizontal canvas or world position.
+ * @param {number} y - Vertical canvas or world position.
+ */
+function handleEndScreenClick(x, y) {
+    const action = getEndScreenAction(x, y);
+    if (action === 'restart') restartGame();
+    else if (action === 'menu') resetGame();
+}
+
+/**
+ * Returns the clicked end screen action.
+ * @param {number} x - Horizontal canvas or world position.
+ * @param {number} y - Vertical canvas or world position.
+ * @returns {string|null} Clicked action, or null when no button was hit.
+ */
+function getEndScreenAction(x, y) {
     const isEndScreen = currentScreen === 'gameover' || currentScreen === 'win';
-    return isEndScreen && endScreen.isButtonClicked(x, y);
+    return isEndScreen ? endScreen.getClickedAction(x, y, currentScreen) : null;
 }
 
 /**
@@ -227,7 +248,7 @@ function getPointerState(x, y) {
     if (currentScreen === 'start' && startScreen) return updateStartHover(x, y);
     if (currentScreen === 'playing' && uiControls) return updateUiHover(x, y);
     if (currentScreen === 'paused') return updatePauseHover(x, y);
-    if (currentScreen === 'gameover' || currentScreen === 'win') return endScreen.isButtonClicked(x, y);
+    if (currentScreen === 'gameover' || currentScreen === 'win') return Boolean(getEndScreenAction(x, y));
     return false;
 }
 
