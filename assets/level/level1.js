@@ -1,5 +1,5 @@
 ﻿const LEVEL_END_X = 4200;
-const BOSS_SAFE_DISTANCE = 800;
+const BOSS_SAFE_DISTANCE = 300;
 const RANDOM_AREA_END_X = LEVEL_END_X - BOSS_SAFE_DISTANCE;
 
 /** random number. */
@@ -66,13 +66,13 @@ function createRandomEnemies() {
     return createRandomObjects(getEnemyZones(), (x, y) => createRandomEnemy(enemyTypes, x, y), 180);
 }
 
-/** get enemy zones. */
+/** Returns the enemy spawn zones, with extra pressure before the boss trigger. */
 function getEnemyZones() {
     return [
         { minX: 650, maxX: 1150, minY: 80, maxY: 380, count: 3 },
         { minX: 1250, maxX: 2000, minY: 80, maxY: 380, count: 3 },
         { minX: 2100, maxX: 2850, minY: 80, maxY: 380, count: 4 },
-        { minX: 2950, maxX: RANDOM_AREA_END_X, minY: 80, maxY: 380, count: 2 }
+        { minX: 2950, maxX: RANDOM_AREA_END_X, minY: 80, maxY: 380, count: 7 }
     ];
 }
 
