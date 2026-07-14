@@ -48,6 +48,7 @@ function setVolume(value) {
  */
 function toggleMute() {
     isMuted = !isMuted;
+    localStorage.setItem('sharkieMuted', isMuted);
     if (soundManager) soundManager.setMuted(isMuted);
 }
 
@@ -67,7 +68,9 @@ function setBackgroundVolumeFactor(factor) {
 function cleanupSoundManager() {
     if (!soundManager) return;
     savedVolume = soundManager.volume;
+    isMuted = soundManager.muted;
     localStorage.setItem('sharkieSavedVolume', savedVolume);
+    localStorage.setItem('sharkieMuted', isMuted);
     soundManager.stopAllSounds();
     soundManager = null;
 }

@@ -27,6 +27,7 @@ function bootstrapGame() {
     gameContainer = document.getElementById('game-container');
     ctx = canvas.getContext('2d');
     restoreSavedVolume();
+    restoreSavedMuteState();
     initTouchControls();
     registerInputListeners();
     loadInitialAssets();

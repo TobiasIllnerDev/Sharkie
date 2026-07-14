@@ -70,6 +70,15 @@ function restoreSavedVolume() {
 }
 
 /**
+ * Restores the persisted mute state from local storage.
+ */
+function restoreSavedMuteState() {
+    const storedMuteState = localStorage.getItem('sharkieMuted');
+    if (storedMuteState === null) return;
+    isMuted = storedMuteState === 'true';
+}
+
+/**
  * Preloads one image and never blocks loading on errors.
  * @param {string} path - Image or asset path.
  * @returns {Promise<void>} Promise that resolves after the load attempt.
