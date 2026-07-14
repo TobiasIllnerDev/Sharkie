@@ -1,4 +1,6 @@
 const TOUCH_DIRECTION_KEYS = ['LEFT', 'RIGHT', 'UP', 'DOWN'];
+const BUFFERED_ACTION_KEYS = ['SPACE', 'E'];
+const ATTACK_INPUT_BUFFER_MS = 300;
 const activeTouchPointers = new Map();
 
 /**
@@ -53,6 +55,7 @@ function pressTouchButton(event, button, key) {
     event.preventDefault();
     button.setPointerCapture(event.pointerId);
     activeTouchPointers.set(event.pointerId, { button, key });
+    bufferActionKey(key);
     syncTouchKey(key);
     button.classList.add('is-pressed');
 }
@@ -119,11 +122,21 @@ function syncTouchKey(key) {
 }
 
 /**
+ * Stores a short-lived action input for quick taps.
+ * @param {string} key - Keyboard state key.
+ */
+function bufferActionKey(key) {
+    if (!BUFFERED_ACTION_KEYS.includes(key)) return;
+    keyboard[`${key}_BUFFERED_UNTIL`] = Date.now() + ATTACK_INPUT_BUFFER_MS;
+}
+
+/**
  * Clears all active touch pointer states.
  */
 function clearTouchInputState() {
     activeTouchPointers.clear();
     TOUCH_DIRECTION_KEYS.forEach(key => keyboard[key] = false);
+    BUFFERED_ACTION_KEYS.forEach(key => keyboard[`${key}_BUFFERED_UNTIL`] = 0);
     document.querySelectorAll('#touch-controls .is-pressed').forEach(button => button.classList.remove('is-pressed'));
 }
 
@@ -352,8 +365,18 @@ function setKeyboardKey(keyCode, value) {
     if (keyCode === 37 || keyCode === 65) keyboard.LEFT = value;
     if (keyCode === 40 || keyCode === 83) keyboard.DOWN = value;
     if (keyCode === 38 || keyCode === 87) keyboard.UP = value;
-    if (keyCode === 32) keyboard.SPACE = value;
-    if (keyCode === 69) keyboard.E = value;
+    if (keyCode === 32) setBufferedKeyboardKey('SPACE', value);
+    if (keyCode === 69) setBufferedKeyboardKey('E', value);
+}
+
+/**
+ * Sets a keyboard key and buffers quick action presses.
+ * @param {string} key - Keyboard state key.
+ * @param {boolean} value - Whether the key is pressed.
+ */
+function setBufferedKeyboardKey(key, value) {
+    keyboard[key] = value;
+    if (value) bufferActionKey(key);
 }
 
 /**

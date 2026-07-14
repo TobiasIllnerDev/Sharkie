@@ -48,6 +48,8 @@ function resetKeyboard() {
     keyboard.DOWN = false;
     keyboard.SPACE = false;
     keyboard.E = false;
+    keyboard.SPACE_BUFFERED_UNTIL = 0;
+    keyboard.E_BUFFERED_UNTIL = 0;
     if (typeof clearTouchInputState === 'function') clearTouchInputState();
 }
 

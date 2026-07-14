@@ -149,8 +149,37 @@ class World {
 
     /** Handles attack input. */
     handleAttackInput() {
-        if (this.keyboard.SPACE && !this.character.isAttacking) this.startNormalAttack();
-        if (this.keyboard.E && !this.character.isAttacking && this.bottleCount > 0) this.startSpecialAttack();
+        if (this.character.isAttacking) return;
+        if (this.isNormalAttackRequested()) return this.startNormalAttack();
+        if (this.isSpecialAttackRequested() && this.bottleCount > 0) this.startSpecialAttack();
+    }
+
+    /**
+     * Checks whether a normal attack was requested.
+     * @returns {boolean} True when the normal attack input is active or buffered.
+     */
+    isNormalAttackRequested() {
+        return this.keyboard.SPACE || this.consumeBufferedInput('SPACE');
+    }
+
+    /**
+     * Checks whether a special attack was requested.
+     * @returns {boolean} True when the special attack input is active or buffered.
+     */
+    isSpecialAttackRequested() {
+        return this.keyboard.E || this.consumeBufferedInput('E');
+    }
+
+    /**
+     * Consumes a buffered attack input if it is still valid.
+     * @param {string} key - Keyboard state key.
+     * @returns {boolean} True when a buffered input was consumed.
+     */
+    consumeBufferedInput(key) {
+        const bufferKey = `${key}_BUFFERED_UNTIL`;
+        const isBuffered = this.keyboard[bufferKey] > Date.now();
+        this.keyboard[bufferKey] = 0;
+        return isBuffered;
     }
     
     /** Starts a normal attack. */
